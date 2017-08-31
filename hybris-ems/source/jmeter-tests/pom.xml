@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.hybris.services.entitlements</groupId>
+		<artifactId>entitlements-project</artifactId>
+		<version>6.3.0.0-RC4</version>
+	</parent>
+
+	<artifactId>jmeter-tests</artifactId>
+	<packaging>pom</packaging>
+	<version>6.3.0.0-RC4</version>
+	<name>jmeter-tests</name>
+
+	<properties>
+		<renamed.war>entitlements-rest.war</renamed.war>
+	</properties>
+
+	<build>
+		<plugins>
+			<!-- This approach had been described in
+			     http://javasplitter.blogspot.ru/2012/01/starting-dependency-war-artifact-using.html
+			-->
+			<!-- copy specific war into a local folder and rename -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.3</version>
+				<executions>
+					<execution>
+						<id>copy-war-to-lib-folder</id>
+						<phase>process-sources</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>com.hybris.services.entitlements</groupId>
+									<artifactId>entitlements-web</artifactId>
+									<version>${project.parent.version}</version>
+									<type>war</type>
+									<overWrite>true</overWrite>
+									<outputDirectory>${project.build.directory}/lib</outputDirectory>
+									<destFileName>${renamed.war}</destFileName>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- configure jetty to run the war as a pre-integration step -->
+			<plugin>
+				<groupId>org.mortbay.jetty</groupId>
+				<artifactId>maven-jetty-plugin</artifactId>
+				<version>6.1.26</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.mortbay.jetty</groupId>
+                        <artifactId>jsp-api-2.1-glassfish</artifactId>
+                        <version>2.1.v20091210</version>
+                    </dependency>
+                </dependencies>
+
+				<configuration>
+					<webApp>${project.build.directory}/lib/${renamed.war}</webApp>
+					<scanIntervalSeconds>10</scanIntervalSeconds>
+					<contextPath>/</contextPath>
+                    <webAppConfig>
+                        <extraClasspath>${project.basedir}/../entitlements/entitlements-test-configuration/deploy/test/</extraClasspath>
+                    </webAppConfig>
+					<connectors>
+						<connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
+							<port>9876</port>
+							<maxIdleTime>60000</maxIdleTime>
+						</connector>
+					</connectors>
+					<stopPort>9999</stopPort>
+					<stopKey>exit</stopKey>
+				</configuration>
+				<executions>
+					<execution>
+						<id>start-jetty</id>
+						<phase>pre-integration-test</phase>
+						<goals>
+							<goal>deploy-war</goal>
+						</goals>
+						<configuration>
+							<scanIntervalSeconds>0</scanIntervalSeconds>
+							<daemon>true</daemon>
+						</configuration>
+					</execution>
+					<execution>
+						<id>stop-jetty</id>
+						<phase>post-integration-test</phase>
+						<goals>
+							<goal>stop</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- execute jMeter scripts from src/test/jmeter -->
+			<plugin>
+				<groupId>com.lazerycode.jmeter</groupId>
+				<artifactId>jmeter-maven-plugin</artifactId>
+				<version>1.9.0</version>
+				<executions>
+					<execution>
+						<id>jmeter-tests</id>
+						<phase>integration-test</phase>
+						<goals>
+							<goal>jmeter</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<propertiesJMeter>
+						<jmeter.exit.check.pause>20000</jmeter.exit.check.pause>
+					</propertiesJMeter>
+					<propertiesUser>
+						<ems_server>localhost</ems_server>
+						<ems_port>9876</ems_port>
+						<ems_warFileName>/</ems_warFileName>
+						<ems_mode>loadcheckuse</ems_mode>
+						<ems_numberOfUsers>100</ems_numberOfUsers>
+						<ems_numberOfThreads>1</ems_numberOfThreads>
+						<ems_loopCount>1</ems_loopCount>
+					</propertiesUser>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<version>2.6</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>hybris-repository</id>
+			<url>https://repository.hybris.com/hybris-repository</url>
+			<releases>
+				<enabled>true</enabled>
+				<updatePolicy>daily</updatePolicy>
+				<checksumPolicy>warn</checksumPolicy>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>daily</updatePolicy>
+				<checksumPolicy>warn</checksumPolicy>
+			</snapshots>
+		</pluginRepository>
+	</pluginRepositories>
+</project>

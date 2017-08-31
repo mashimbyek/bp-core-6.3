@@ -1,0 +1,219 @@
+# -----------------------------------------------------------------------
+# [y] hybris Platform
+#
+# Copyright (c) 2017 SAP SE or an SAP affiliate company.  All rights reserved.
+# 
+# This software is the confidential and proprietary information of SAP
+# ("Confidential Information"). You shall not disclose such Confidential
+# Information and shall use it only in accordance with the terms of the
+# license agreement you entered into with SAP.
+# -----------------------------------------------------------------------
+*** Settings ***
+Resource    entitlements-test/settings_keywords.txt
+Resource    entitlements-test/builder_entitlements_keywords.txt
+Resource    entitlements-test/modify_entitlements_keywords.txt
+Resource    entitlements-test/exceptions_entitlements_keywords.txt
+Resource    entitlements-test/check_entitlements_keywords.txt
+Resource    entitlements-test/use_entitlements_keywords.txt
+
+*** Test Cases ***
+
+Test_MixedEntitlements_CreateAndCheck_MeteredAndStringConditionType
+    [Documentation]    Checks overage can be allowed (true) for metered condition
+    ...                maxQuantity=1, allowOverage=true, quantity=1 or 2
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "1", "allowOverage" : "true"}
+    ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root"}
+	${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    check entitlement with entitlementType "ENT_MIXED" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED}|${CHECK_GEO}" for user "${userId}" is "false"
+    # GRANTING:
+    grant entitlement with entitlementType "ENT_MIXED" and conditions "${GRANT_METERED}|${GRANT_STR}" for user "${userId}"
+    check entitlement with entitlementType "ENT_MIXED" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED}|${CHECK_STR}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED}|${CHECK_GEO}" for user "${userId}" is "false"
+
+Test_MixedEntitlements_CreateAndCheck_MeteredAndPathConditionType
+    [Documentation]    Checks overage can be allowed (true) for metered condition
+    ...                maxQuantity=1, allowOverage=true, quantity=1 or 2
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "1", "allowOverage" : "true"}
+    ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root"}
+	${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    check entitlement with entitlementType "ENT_MIXED" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED}|${CHECK_GEO}" for user "${userId}" is "false"
+    # GRANTING:
+    grant entitlement with entitlementType "ENT_MIXED" and conditions "${GRANT_METERED}|${GRANT_PATH}" for user "${userId}"
+    check entitlement with entitlementType "ENT_MIXED" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED}|${CHECK_PATH}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED}|${CHECK_GEO}" for user "${userId}" is "false"
+
+Test_MixedEntitlements_CreateAndCheck_MeteredAndTimeframeConditionType
+    [Documentation]    Checks overage can be allowed (true) for metered condition
+    ...                maxQuantity=1, allowOverage=true, quantity=1 or 2
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "1", "allowOverage" : "true"}
+    ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root"}
+	${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    check entitlement with entitlementType "ENT_MIXED" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED}|${CHECK_GEO}" for user "${userId}" is "false"
+    # GRANTING:
+    grant entitlement with entitlementType "ENT_MIXED" and conditions "${GRANT_METERED}|${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_MIXED" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED}|${CHECK_TIME}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED}|${CHECK_GEO}" for user "${userId}" is "false"
+
+Test_MixedEntitlements_CreateAndCheck_MeteredAndGeoConditionType
+    [Documentation]    Checks overage can be allowed (true) for metered condition
+    ...                maxQuantity=1, allowOverage=true, quantity=1 or 2
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "1", "allowOverage" : "true"}
+    ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root"}
+	${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    check entitlement with entitlementType "ENT_MIXED" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED}|${CHECK_GEO}" for user "${userId}" is "false"
+    # GRANTING:
+    grant entitlement with entitlementType "ENT_MIXED" and conditions "${GRANT_METERED}|${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "ENT_MIXED" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED}|${CHECK_GEO}" for user "${userId}" is "true"
+
+Test_MixedEntitlements_CreateAndCheck_MeteredAndStringAndPathAndTimeframeAndGeoConditionType
+    [Documentation]    Checks overage can be allowed (true) for metered condition
+    ...                maxQuantity=1, allowOverage=true, quantity=1 or 2
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "1", "allowOverage" : "true"}
+    ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root"}
+	${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    check entitlement with entitlementType "ENT_MIXED" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED}|${CHECK_GEO}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED}|${CHECK_STR}|${CHECK_GEO}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED}|${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED}|${CHECK_STR}|${CHECK_PATH}|${CHECK_GEO}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED}|${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}|${CHECK_GEO}" for user "${userId}" is "false"
+    # GRANTING:
+    grant entitlement with entitlementType "ENT_MIXED" and conditions "${GRANT_METERED}|${GRANT_STR}|${GRANT_PATH}|${GRANT_TIME}|${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "ENT_MIXED" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED}|${CHECK_GEO}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED}|${CHECK_STR}|${CHECK_GEO}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED}|${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED}|${CHECK_STR}|${CHECK_PATH}|${CHECK_GEO}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED}|${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}|${CHECK_GEO}" for user "${userId}" is "true"
+
+########## CREATE:
+# check in case of more than 1 user

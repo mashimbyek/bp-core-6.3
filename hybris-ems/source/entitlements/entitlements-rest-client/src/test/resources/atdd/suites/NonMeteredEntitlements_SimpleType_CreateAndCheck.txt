@@ -1,0 +1,135 @@
+# -----------------------------------------------------------------------
+# [y] hybris Platform
+#
+# Copyright (c) 2017 SAP SE or an SAP affiliate company.  All rights reserved.
+# 
+# This software is the confidential and proprietary information of SAP
+# ("Confidential Information"). You shall not disclose such Confidential
+# Information and shall use it only in accordance with the terms of the
+# license agreement you entered into with SAP.
+# -----------------------------------------------------------------------
+*** Settings ***
+Resource    entitlements-test/settings_keywords.txt
+Resource    entitlements-test/builder_entitlements_keywords.txt
+Resource    entitlements-test/modify_entitlements_keywords.txt
+Resource    entitlements-test/exceptions_entitlements_keywords.txt
+Resource    entitlements-test/check_entitlements_keywords.txt
+Resource    entitlements-test/use_entitlements_keywords.txt
+
+*** Test Cases ***
+Test_NonMeteredEntitlements_SimpleType_CreateAndCheck_CheckWithoutCondition_True
+    [Documentation]    Simple entitlement (no conditions)
+    ${userId} =     generate random id
+    check entitlement with entitlementType "ENT_SIMPLE" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_SIMPLE" for user "${userId}"
+    check entitlement with entitlementType "ENT_SIMPLE" for user "${userId}" is "true"
+
+Test_NonMeteredEntitlements_SimpleType_CreateAndCheck_CheckWithStringCondition_False
+    [Documentation]    Simple entitlement (no conditions)
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"anyString"}
+    ${userId} =     generate random id
+    check entitlement with entitlementType "ENT_SIMPLE" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_SIMPLE" for user "${userId}"
+    check entitlement with entitlementType "ENT_SIMPLE" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_SimpleType_CreateAndCheck_CheckWithPathCondition_False
+    [Documentation]    Simple entitlement (no conditions)
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root/subdirectory"}
+    ${userId} =     generate random id
+    check entitlement with entitlementType "ENT_SIMPLE" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_SIMPLE" for user "${userId}"
+    check entitlement with entitlementType "ENT_SIMPLE" and conditions "${CHECK_PATH}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_SimpleType_CreateAndCheck_CheckWithTimeframeCondition
+    [Documentation]    Unbounded entitlements (entitlements with no conditions) should be valid for any date - the date parameter is ignored for this entitlement
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2011-01-01T01:01:01Z"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"anyString"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root/subdirectory"}
+    ${userId} =     generate random id
+    check entitlement with entitlementType "ENT_SIMPLE" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_SIMPLE" for user "${userId}"
+    check entitlement with entitlementType "ENT_SIMPLE" and conditions "${CHECK_TIME}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_SIMPLE" and conditions "${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_SIMPLE" and conditions "${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_SIMPLE" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+
+### 2Users_2Entitlements
+Test_NonMeteredEntitlements_SimpleType_CreateAndCheck_2Users_2Entitlements
+    [Documentation]    Simple entitlement (no conditions)
+    ${userId1} =     generate random id
+    ${userId2} =     generate random id
+    ${entitlementType1}      Set Variable    ENT_SIMPLE_1
+    ${entitlementType2}      Set Variable    ENT_SIMPLE_2
+    check entitlement with entitlementType "${entitlementType1}" for user "${userId1}" is "false"
+    check entitlement with entitlementType "${entitlementType1}" for user "${userId2}" is "false"
+    grant entitlement with entitlementType "${entitlementType1}" for user "${userId1}"
+    check entitlement with entitlementType "${entitlementType1}" for user "${userId1}" is "true"
+    ensure there are "1" entitlements for user "${userId1}"
+    check entitlement with entitlementType "${entitlementType1}" for user "${userId2}" is "false"
+    ensure there are "0" entitlements for user "${userId2}"
+    grant entitlement with entitlementType "${entitlementType1}" for user "${userId2}"
+    check entitlement with entitlementType "${entitlementType1}" for user "${userId1}" is "true"
+    ensure there are "1" entitlements for user "${userId1}"
+    check entitlement with entitlementType "${entitlementType1}" for user "${userId2}" is "true"
+    ensure there are "1" entitlements for user "${userId2}"
+    grant entitlement with entitlementType "${entitlementType2}" for user "${userId1}"
+    check entitlement with entitlementType "${entitlementType1}" for user "${userId1}" is "true"
+    check entitlement with entitlementType "${entitlementType2}" for user "${userId1}" is "true"
+    ensure there are "2" entitlements for user "${userId1}"
+    check entitlement with entitlementType "${entitlementType1}" for user "${userId2}" is "true"
+    ensure there are "1" entitlements for user "${userId2}"
+    grant entitlement with entitlementType "${entitlementType2}" for user "${userId2}"
+    check entitlement with entitlementType "${entitlementType1}" for user "${userId1}" is "true"
+    check entitlement with entitlementType "${entitlementType2}" for user "${userId1}" is "true"
+    ensure there are "2" entitlements for user "${userId1}"
+    check entitlement with entitlementType "${entitlementType1}" for user "${userId2}" is "true"
+    check entitlement with entitlementType "${entitlementType2}" for user "${userId2}" is "true"
+    ensure there are "2" entitlements for user "${userId2}"
+    
+Test_NonMeteredEntitlements_SimpleType_CreateAndCheck_MulitpleEntitlements_True_No1
+    [Documentation]    Tests if it is possible to create multiple grants for entitlements with same 
+    ...                userId, entitlementType, grantSource & grantSourceId 
+    ${userId} =     generate random id
+    ensure there are "0" entitlements for user "${userId}"
+    grant entitlement with entitlementType "ENT_SIMPLE" for user "${userId}"
+    check entitlement with entitlementType "ENT_SIMPLE" for user "${userId}" is "true"
+    ensure there are "1" entitlements for user "${userId}"    
+    grant entitlement with entitlementType "ENT_SIMPLE" for user "${userId}"  
+    check entitlement with entitlementType "ENT_SIMPLE" for user "${userId}" is "true"
+    ensure there are "2" entitlements for user "${userId}"      
+    grant entitlement with entitlementType "ENT_SIMPLE" for user "${userId}" 
+    check entitlement with entitlementType "ENT_SIMPLE" for user "${userId}" is "true"
+    ensure there are "3" entitlements for user "${userId}"           
+    
+Test_NonMeteredEntitlements_SimpleType_CreateAndCheck_MulitpleEntitlements_True_No2
+    [Documentation]    Tests if it is possible to create multiple grants for entitlements with same 
+    ...                userId, entitlementType, grantSource & grantSourceId 
+    ${userId} =     generate random id
+    ensure there are "0" entitlements for user "${userId}" 
+    # ENTITLEMENT 1:
+    ${entitlement1}=    create entitlement with entitlementType "ENT_SIMPLE" for user "${userId}"
+    assign grantSourceId "grantSourceId" to entitlement "${entitlement1}"
+    assign grantSource "grantSource" to entitlement "${entitlement1}"
+    check entitlement with entitlementType "ENT_SIMPLE" for user "${userId}" is "false"
+    grant entitlement "${entitlement1}"
+    check entitlement with entitlementType "ENT_SIMPLE" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "ENT_SIMPLE" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "true" in DB
+    ensure there are "1" entitlements for user "${userId}" 
+    # ENTITLEMENT 2:
+    ${entitlement2}=    create entitlement with entitlementType "ENT_SIMPLE" for user "${userId}"
+    assign grantSourceId "grantSourceId" to entitlement "${entitlement2}"
+    assign grantSource "grantSource" to entitlement "${entitlement2}"
+    grant entitlement "${entitlement2}"
+    check entitlement with entitlementType "ENT_SIMPLE" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "ENT_SIMPLE" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "true" in DB
+    ensure there are "2" entitlements for user "${userId}"             
+    # ENTITLEMENT 3:
+    ${entitlement3}=    create entitlement with entitlementType "ENT_SIMPLE" for user "${userId}"
+    assign grantSourceId "grantSourceId" to entitlement "${entitlement3}"
+    assign grantSource "grantSource" to entitlement "${entitlement3}"
+    grant entitlement "${entitlement3}"
+    check entitlement with entitlementType "ENT_SIMPLE" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "ENT_SIMPLE" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "true" in DB
+    ensure there are "3" entitlements for user "${userId}"      
+    
+        

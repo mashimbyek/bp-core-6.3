@@ -1,0 +1,557 @@
+# -----------------------------------------------------------------------
+# [y] hybris Platform
+#
+# Copyright (c) 2017 SAP SE or an SAP affiliate company.  All rights reserved.
+# 
+# This software is the confidential and proprietary information of SAP
+# ("Confidential Information"). You shall not disclose such Confidential
+# Information and shall use it only in accordance with the terms of the
+# license agreement you entered into with SAP.
+# -----------------------------------------------------------------------
+*** Settings ***
+Resource    entitlements-test/settings_keywords.txt
+Resource    entitlements-test/builder_entitlements_keywords.txt
+Resource    entitlements-test/modify_entitlements_keywords.txt
+Resource    entitlements-test/exceptions_entitlements_keywords.txt
+Resource    entitlements-test/check_entitlements_keywords.txt
+Resource    entitlements-test/use_entitlements_keywords.txt
+Resource    entitlements-test/add_usage_entitlements_keywords.txt
+
+*** Test Cases ***
+#################################################
+# FOR CHANGING maxQuantity
+# CHECK/USE FAILS IF CHANGING maxQuantity AFTER CALLING USE SUCCESSFULY to higher or lower than was set previously  -
+# IF NO USE WAS CALLED SUCCESSFULY OR NO USE WAS CALLED AT ALL BEFORE UPDATE - update is executed properly without any impact, see:
+# 1)Use was failed before update: Test_MeteredEntitlements_UseUpdateUse_maxQuantity_allowOverageFalse_No3
+# 2)No use before update was executed: Test_MeteredEntitlements_UseUpdateUse_maxQuantity_allowOverageFalse_No_UseBeforeUpdate
+#################################################
+
+### CHECK-USE-UPDATE-CHECK-USE
+
+### maxQuantity AND allowOverage:
+
+#FAILS
+#Test_MeteredEntitlements_UseUpdateUse_maxQuantity_allowOverageFalse_No1
+#    [Documentation]     Update maxQuantity for entitlement with metered condition after executing Use - testing if update resets usedQuantity - SHOULDN'T
+#    ${userId} =         generate random id
+#    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "1", "allowOverage" : "false"}
+#    ${GRANT_METERED_UPDATED} =         Set Variable    "metered" condition with parameters {"maxQuantity": "2", "allowOverage" : "false"}
+#    ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+#    ${entitlementType} =         Set Variable    ENT_METERED
+#    ${entitlement}=    grant entitlement with entitlementType "${entitlementType}" and conditions "${GRANT_METERED}" for user "${userId}"
+#    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+#    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+#    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+#    ${entitlementUpdated}=    remove all conditions from entitlement "${entitlement}"
+#    add condition "${GRANT_METERED_UPDATED}" to entitlement "${entitlementUpdated}"
+#    update entitlement "${entitlementUpdated}"
+#    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+#    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+#    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+#    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+
+#FAILS
+#Test_MeteredEntitlements_UseUpdateUse_maxQuantity_allowOverageFalse_No2
+#    [Documentation]     Update maxQuantity for entitlement with metered condition after executing Use - testing if update resets usedQuantity - SHOULDN'T
+#    ${userId} =         generate random id
+#    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "2", "allowOverage" : "false"}
+#    ${GRANT_METERED_UPDATED} =         Set Variable    "metered" condition with parameters {"maxQuantity": "3", "allowOverage" : "false"}
+#    ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+#    ${entitlementType} =         Set Variable    ENT_METERED
+#    ${entitlement}=    grant entitlement with entitlementType "${entitlementType}" and conditions "${GRANT_METERED}" for user "${userId}"
+#    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+#    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+#    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+#    ${entitlementUpdated}=    remove all conditions from entitlement "${entitlement}"
+#    add condition "${GRANT_METERED_UPDATED}" to entitlement "${entitlementUpdated}"
+#    update entitlement "${entitlementUpdated}"
+#    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+#    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+#    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+#    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+#    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+#    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+
+#OK
+Test_MeteredEntitlements_UseUpdateUse_maxQuantity_allowOverageFalse_No3
+    [Documentation]     Update maxQuantity for entitlement with metered condition after executing Use - testing if update resets usedQuantity - SHOULDN'T
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "1", "allowOverage" : "false"}
+    ${GRANT_METERED_UPDATED} =         Set Variable    "metered" condition with parameters {"maxQuantity": "3", "allowOverage" : "false"}
+    ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "2"}
+    ${entitlementType} =         Set Variable    ENT_METERED
+    ${entitlement}=    grant entitlement with entitlementType "${entitlementType}" and conditions "${GRANT_METERED}" for user "${userId}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    ${entitlementUpdated}=    remove all conditions from entitlement "${entitlement}"
+    add condition "${GRANT_METERED_UPDATED}" to entitlement "${entitlementUpdated}"
+    update entitlement "${entitlementUpdated}"
+    add 2 usage for grant "${entitlementUpdated.id}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+
+#OK
+Test_MeteredEntitlements_UseUpdateUse_maxQuantity_allowOverageFalse_No4
+    [Documentation]     Update maxQuantity for entitlement with metered condition after executing Use - testing if update resets usedQuantity - SHOULDN'T
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "2", "allowOverage" : "false"}
+    ${GRANT_METERED_UPDATED} =         Set Variable    "metered" condition with parameters {"maxQuantity": "3", "allowOverage" : "false"}
+    ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "2"}
+    ${entitlementType} =         Set Variable    ENT_METERED
+    ${entitlement}=    grant entitlement with entitlementType "${entitlementType}" and conditions "${GRANT_METERED}" for user "${userId}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    ${entitlementUpdated}=    remove all conditions from entitlement "${entitlement}"
+    add condition "${GRANT_METERED_UPDATED}" to entitlement "${entitlementUpdated}"
+    update entitlement "${entitlementUpdated}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+
+#FAILS
+#Test_MeteredEntitlements_UseUpdateUse_maxQuantity_allowOverageFalse_No5
+#    [Documentation]     Update maxQuantity for entitlement with metered condition after executing Use - testing if update resets usedQuantity - SHOULDN'T
+#    ${userId} =         generate random id
+#    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "2", "allowOverage" : "false"}
+#    ${GRANT_METERED_UPDATED} =         Set Variable    "metered" condition with parameters {"maxQuantity": "4", "allowOverage" : "false"}
+#    ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "2"}
+#    ${entitlementType} =         Set Variable    ENT_METERED
+#    ${entitlement}=    grant entitlement with entitlementType "${entitlementType}" and conditions "${GRANT_METERED}" for user "${userId}"
+#    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+#    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+#   check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+#    ${entitlementUpdated}=    remove all conditions from entitlement "${entitlement}"
+#    add condition "${GRANT_METERED_UPDATED}" to entitlement "${entitlementUpdated}"
+#    update entitlement "${entitlementUpdated}"
+#    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+#    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+
+#FAILS
+#Test_MeteredEntitlements_UseUpdateUse_maxQuantity_allowOverageFalse_No6
+#    [Documentation]     Update maxQuantity for entitlement with metered condition after executing Use - testing if update resets usedQuantity - SHOULDN'T
+#    ${userId} =         generate random id
+#    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "4", "allowOverage" : "false"}
+#    ${GRANT_METERED_UPDATED} =         Set Variable    "metered" condition with parameters {"maxQuantity": "6", "allowOverage" : "false"}
+#    ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "2"}
+#    ${entitlementType} =         Set Variable    ENT_METERED
+#    ${entitlement}=    grant entitlement with entitlementType "${entitlementType}" and conditions "${GRANT_METERED}" for user "${userId}"
+#    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+#    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+#    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+#    ${entitlementUpdated}=    remove all conditions from entitlement "${entitlement}"
+#    add condition "${GRANT_METERED_UPDATED}" to entitlement "${entitlementUpdated}"
+#    update entitlement "${entitlementUpdated}"
+#    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+#    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+#    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+#    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+#    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+#    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+
+#FAILS
+#Test_MeteredEntitlements_UseUpdateUse_maxQuantity_allowOverageFalse_No7
+#    [Documentation]     Update maxQuantity for entitlement with metered condition after executing Use - testing if update resets usedQuantity - SHOULDN'T
+#    ${userId} =         generate random id
+#    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "2", "allowOverage" : "false"}
+#    ${GRANT_METERED_UPDATED} =         Set Variable    "metered" condition with parameters {"maxQuantity": "1", "allowOverage" : "false"}
+#    ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+#    ${entitlementType} =         Set Variable    ENT_METERED
+#    ${entitlement}=    grant entitlement with entitlementType "${entitlementType}" and conditions "${GRANT_METERED}" for user "${userId}"
+#    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+#    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+#    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+#    ${entitlementUpdated}=    remove all conditions from entitlement "${entitlement}"
+#    add condition "${GRANT_METERED_UPDATED}" to entitlement "${entitlementUpdated}"
+#    update entitlement "${entitlementUpdated}"
+#    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+#    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+
+#FAILS
+#Test_MeteredEntitlements_UseUpdateUse_maxQuantity_allowOverageFalse_No8
+#    [Documentation]     Update maxQuantity for entitlement with metered condition after executing Use - testing if update resets usedQuantity - SHOULDN'T
+#    ${userId} =         generate random id
+#    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "3", "allowOverage" : "false"}
+#    ${GRANT_METERED_UPDATED} =         Set Variable    "metered" condition with parameters {"maxQuantity": "2", "allowOverage" : "false"}
+#    ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+#    ${entitlementType} =         Set Variable    ENT_METERED
+#    ${entitlement}=    grant entitlement with entitlementType "${entitlementType}" and conditions "${GRANT_METERED}" for user "${userId}"
+#    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+#   use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+#   check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+#    ${entitlementUpdated}=    remove all conditions from entitlement "${entitlement}"
+#    add condition "${GRANT_METERED_UPDATED}" to entitlement "${entitlementUpdated}"
+#    update entitlement "${entitlementUpdated}"
+#    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+#    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+#    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+#    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+
+#OK
+Test_MeteredEntitlements_UseUpdateUse_maxQuantity_allowOverageFalse_No9
+    [Documentation]     Update maxQuantity for entitlement with metered condition after executing Use - testing if update resets usedQuantity - SHOULDN'T
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "3", "allowOverage" : "false"}
+    ${GRANT_METERED_UPDATED} =         Set Variable    "metered" condition with parameters {"maxQuantity": "2", "allowOverage" : "false"}
+    ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "2"}
+    ${entitlementType} =         Set Variable    ENT_METERED
+    ${entitlement}=    grant entitlement with entitlementType "${entitlementType}" and conditions "${GRANT_METERED}" for user "${userId}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    ${entitlementUpdated}=    remove all conditions from entitlement "${entitlement}"
+    add condition "${GRANT_METERED_UPDATED}" to entitlement "${entitlementUpdated}"
+    update entitlement "${entitlementUpdated}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+
+#FAILS
+#Test_MeteredEntitlements_UseUpdateUse_maxQuantity_allowOverageFalse_No10
+#    [Documentation]     Update maxQuantity for entitlement with metered condition after executing Use - testing if update resets usedQuantity - SHOULDN'T
+#    ${userId} =         generate random id
+#    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "5", "allowOverage" : "false"}
+#   ${GRANT_METERED_UPDATED} =         Set Variable    "metered" condition with parameters {"maxQuantity": "3", "allowOverage" : "false"}
+#   ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "2"}
+#    ${entitlementType} =         Set Variable    ENT_METERED
+#    ${entitlement}=    grant entitlement with entitlementType "${entitlementType}" and conditions "${GRANT_METERED}" for user "${userId}"
+#    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+#    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+#    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+#    ${entitlementUpdated}=    remove all conditions from entitlement "${entitlement}"
+#    add condition "${GRANT_METERED_UPDATED}" to entitlement "${entitlementUpdated}"
+#   update entitlement "${entitlementUpdated}"
+#    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+#    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+
+#OK
+Test_MeteredEntitlements_UseUpdateUse_maxQuantity_allowOverageFalse_No11
+    [Documentation]     Update maxQuantity for entitlement with metered condition after executing Use - testing if update resets usedQuantity - SHOULDN'T
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "1", "allowOverage" : "false"}
+    ${GRANT_METERED_UPDATED} =         Set Variable    "metered" condition with parameters {"maxQuantity": "1", "allowOverage" : "false"}
+    ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${entitlementType} =         Set Variable    ENT_METERED
+    ${entitlement}=    grant entitlement with entitlementType "${entitlementType}" and conditions "${GRANT_METERED}" for user "${userId}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    ${entitlementUpdated}=    remove all conditions from entitlement "${entitlement}"
+    add condition "${GRANT_METERED_UPDATED}" to entitlement "${entitlementUpdated}"
+    update entitlement "${entitlementUpdated}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+
+#OK
+Test_MeteredEntitlements_UseUpdateUse_maxQuantity_allowOverageFalse_No12
+    [Documentation]     Update maxQuantity for entitlement with metered condition after executing Use - testing if update resets usedQuantity - SHOULDN'T
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "2", "allowOverage" : "false"}
+    ${GRANT_METERED_UPDATED} =         Set Variable    "metered" condition with parameters {"maxQuantity": "2", "allowOverage" : "false"}
+    ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${entitlementType} =         Set Variable    ENT_METERED
+    ${entitlement}=    grant entitlement with entitlementType "${entitlementType}" and conditions "${GRANT_METERED}" for user "${userId}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    ${entitlementUpdated}=    remove all conditions from entitlement "${entitlement}"
+    add condition "${GRANT_METERED_UPDATED}" to entitlement "${entitlementUpdated}"
+    update entitlement "${entitlementUpdated}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+
+#OK
+Test_MeteredEntitlements_UseUpdateUse_maxQuantity_allowOverageFalse_No13
+    [Documentation]     Update maxQuantity for entitlement with metered condition after executing Use - testing if update resets usedQuantity - SHOULDN'T
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "2", "allowOverage" : "false"}
+    ${GRANT_METERED_UPDATED} =         Set Variable    "metered" condition with parameters {"maxQuantity": "2", "allowOverage" : "false"}
+    ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "2"}
+    ${entitlementType} =         Set Variable    ENT_METERED
+    ${entitlement}=    grant entitlement with entitlementType "${entitlementType}" and conditions "${GRANT_METERED}" for user "${userId}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    ${entitlementUpdated}=    remove all conditions from entitlement "${entitlement}"
+    add condition "${GRANT_METERED_UPDATED}" to entitlement "${entitlementUpdated}"
+    update entitlement "${entitlementUpdated}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+
+#OK
+Test_MeteredEntitlements_UseUpdateUse_maxQuantity_allowOverageTrue_No1
+    [Documentation]     Update maxQuantity when allowOverage is true
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "1", "allowOverage" : "true"}
+    ${GRANT_METERED_UPDATED} =         Set Variable    "metered" condition with parameters {"maxQuantity": "2", "allowOverage" : "true"}
+    ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${entitlementType} =         Set Variable    ENT_METERED
+    ${entitlement}=    grant entitlement with entitlementType "${entitlementType}" and conditions "${GRANT_METERED}" for user "${userId}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    ${entitlementUpdated}=    remove all conditions from entitlement "${entitlement}"
+    add condition "${GRANT_METERED_UPDATED}" to entitlement "${entitlementUpdated}"
+    update entitlement "${entitlementUpdated}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+
+#OK
+Test_MeteredEntitlements_UseUpdateUse_maxQuantity_allowOverageTrue_No2
+    [Documentation]     Update maxQuantity when allowOverage is true
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "2", "allowOverage" : "true"}
+    ${GRANT_METERED_UPDATED} =         Set Variable    "metered" condition with parameters {"maxQuantity": "1", "allowOverage" : "true"}
+    ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${entitlementType} =         Set Variable    ENT_METERED
+    ${entitlement}=    grant entitlement with entitlementType "${entitlementType}" and conditions "${GRANT_METERED}" for user "${userId}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    ${entitlementUpdated}=    remove all conditions from entitlement "${entitlement}"
+    add condition "${GRANT_METERED_UPDATED}" to entitlement "${entitlementUpdated}"
+    update entitlement "${entitlementUpdated}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+
+#OK
+Test_MeteredEntitlements_UseUpdateUse_maxQuantity_allowOverageTrueToFalse_No1
+    [Documentation]     Update maxQuantity when allowOverage is true
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "1", "allowOverage" : "true"}
+    ${GRANT_METERED_UPDATED} =         Set Variable    "metered" condition with parameters {"maxQuantity": "1", "allowOverage" : "false"}
+    ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${entitlementType} =         Set Variable    ENT_METERED
+    ${entitlement}=    grant entitlement with entitlementType "${entitlementType}" and conditions "${GRANT_METERED}" for user "${userId}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    ${entitlementUpdated}=    remove all conditions from entitlement "${entitlement}"
+    add condition "${GRANT_METERED_UPDATED}" to entitlement "${entitlementUpdated}"
+    update entitlement "${entitlementUpdated}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+
+#FAILS
+#Test_MeteredEntitlements_UseUpdateUse_maxQuantity_allowOverageTrueToFalse_No2
+#    [Documentation]     Update maxQuantity when allowOverage is true
+#    ${userId} =         generate random id
+#    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "1", "allowOverage" : "true"}
+#    ${GRANT_METERED_UPDATED} =         Set Variable    "metered" condition with parameters {"maxQuantity": "2", "allowOverage" : "false"}
+#    ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+#    ${entitlementType} =         Set Variable    ENT_METERED
+#    ${entitlement}=    grant entitlement with entitlementType "${entitlementType}" and conditions "${GRANT_METERED}" for user "${userId}"
+#    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+#    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+#    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+#    ${entitlementUpdated}=    remove all conditions from entitlement "${entitlement}"
+#    add condition "${GRANT_METERED_UPDATED}" to entitlement "${entitlementUpdated}"
+#    update entitlement "${entitlementUpdated}"
+#    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+#    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+#    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+#    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+
+#FAILS
+#Test_MeteredEntitlements_UseUpdateUse_maxQuantity_allowOverageTrueToFalse_No3
+#    [Documentation]     Update maxQuantity when allowOverage is true
+#    ${userId} =         generate random id
+#    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "2", "allowOverage" : "true"}
+#    ${GRANT_METERED_UPDATED} =         Set Variable    "metered" condition with parameters {"maxQuantity": "1", "allowOverage" : "false"}
+#    ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+#    ${entitlementType} =         Set Variable    ENT_METERED
+#   ${entitlement}=    grant entitlement with entitlementType "${entitlementType}" and conditions "${GRANT_METERED}" for user "${userId}"
+#    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+#    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+#    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+#   ${entitlementUpdated}=    remove all conditions from entitlement "${entitlement}"
+#    add condition "${GRANT_METERED_UPDATED}" to entitlement "${entitlementUpdated}"
+#    update entitlement "${entitlementUpdated}"
+#    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+#    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+
+#OK
+Test_MeteredEntitlements_UseUpdateUse_maxQuantity_allowOverageFalseToTrue_No1
+    [Documentation]     Update maxQuantity when allowOverage is true
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "1", "allowOverage" : "false"}
+    ${GRANT_METERED_UPDATED} =         Set Variable    "metered" condition with parameters {"maxQuantity": "1", "allowOverage" : "true"}
+    ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${entitlementType} =         Set Variable    ENT_METERED
+    ${entitlement}=    grant entitlement with entitlementType "${entitlementType}" and conditions "${GRANT_METERED}" for user "${userId}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    ${entitlementUpdated}=    remove all conditions from entitlement "${entitlement}"
+    add condition "${GRANT_METERED_UPDATED}" to entitlement "${entitlementUpdated}"
+    update entitlement "${entitlementUpdated}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+
+#OK
+Test_MeteredEntitlements_UseUpdateUse_maxQuantity_allowOverageFalseToTrue_No2
+    [Documentation]     Update maxQuantity when allowOverage is true
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "1", "allowOverage" : "false"}
+    ${GRANT_METERED_UPDATED} =         Set Variable    "metered" condition with parameters {"maxQuantity": "2", "allowOverage" : "true"}
+    ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${entitlementType} =         Set Variable    ENT_METERED
+    ${entitlement}=    grant entitlement with entitlementType "${entitlementType}" and conditions "${GRANT_METERED}" for user "${userId}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    ${entitlementUpdated}=    remove all conditions from entitlement "${entitlement}"
+    add condition "${GRANT_METERED_UPDATED}" to entitlement "${entitlementUpdated}"
+    update entitlement "${entitlementUpdated}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+
+#OK
+Test_MeteredEntitlements_UseUpdateUse_maxQuantity_allowOverageFalseToTrue_No3
+    [Documentation]     Update maxQuantity when allowOverage is true
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "2", "allowOverage" : "false"}
+    ${GRANT_METERED_UPDATED} =         Set Variable    "metered" condition with parameters {"maxQuantity": "1", "allowOverage" : "true"}
+    ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${entitlementType} =         Set Variable    ENT_METERED
+    ${entitlement}=    grant entitlement with entitlementType "${entitlementType}" and conditions "${GRANT_METERED}" for user "${userId}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    ${entitlementUpdated}=    remove all conditions from entitlement "${entitlement}"
+    add condition "${GRANT_METERED_UPDATED}" to entitlement "${entitlementUpdated}"
+    update entitlement "${entitlementUpdated}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+
+#FAILS
+#Test_MeteredEntitlements_UseUpdateUse_maxQuantity_allowOverageDefaultToFalse_A
+#    [Documentation]     Update maxQuantity for entitlement with metered condition after executing Use - testing if update resets usedQuantity - SHOULDN'T
+#    ${userId} =         generate random id
+#    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "1"}
+#    ${GRANT_METERED_UPDATED} =         Set Variable    "metered" condition with parameters {"maxQuantity": "2", "allowOverage" : "false"}
+#    ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+#    ${entitlementType} =         Set Variable    ENT_METERED
+#    ${entitlement}=    grant entitlement with entitlementType "${entitlementType}" and conditions "${GRANT_METERED}" for user "${userId}"
+#    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+#    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+#    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+#    ${entitlementUpdated}=    remove all conditions from entitlement "${entitlement}"
+#    add condition "${GRANT_METERED_UPDATED}" to entitlement "${entitlementUpdated}"
+#    update entitlement "${entitlementUpdated}"
+#    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+#    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+#    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+#    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+
+#OK
+Test_MeteredEntitlements_UseUpdateUse_maxQuantity_allowOverageDefaultToTrue_B
+    [Documentation]     Update maxQuantity for entitlement with metered condition after executing Use - testing if update resets usedQuantity - SHOULDN'T
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "1"}
+    ${GRANT_METERED_UPDATED} =         Set Variable    "metered" condition with parameters {"maxQuantity": "2", "allowOverage" : "true"}
+    ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${entitlementType} =         Set Variable    ENT_METERED
+    ${entitlement}=    grant entitlement with entitlementType "${entitlementType}" and conditions "${GRANT_METERED}" for user "${userId}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    ${entitlementUpdated}=    remove all conditions from entitlement "${entitlement}"
+    add condition "${GRANT_METERED_UPDATED}" to entitlement "${entitlementUpdated}"
+    update entitlement "${entitlementUpdated}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+
+#FAILS
+#Test_MeteredEntitlements_UseUpdateUse_maxQuantity_allowOverageDefaultToDefault_C
+#    [Documentation]     Update maxQuantity for entitlement with metered condition after executing Use - testing if update resets usedQuantity - SHOULDN'T
+#    ${userId} =         generate random id
+#    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "1"}
+#    ${GRANT_METERED_UPDATED} =         Set Variable    "metered" condition with parameters {"maxQuantity": "2"}
+#   ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+#   ${entitlementType} =         Set Variable    ENT_METERED
+#   ${entitlement}=    grant entitlement with entitlementType "${entitlementType}" and conditions "${GRANT_METERED}" for user "${userId}"
+#   check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+#    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+#   check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+#    ${entitlementUpdated}=    remove all conditions from entitlement "${entitlement}"
+#   add condition "${GRANT_METERED_UPDATED}" to entitlement "${entitlementUpdated}"
+#   update entitlement "${entitlementUpdated}"
+#   check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+#   use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+#    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+#    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+
+#FAILS
+#Test_MeteredEntitlements_UseUpdateUse_maxQuantity_allowOverageFalseToDefault_D
+#    [Documentation]     Update maxQuantity for entitlement with metered condition after executing Use - testing if update resets usedQuantity - SHOULDN'T
+#    ${userId} =         generate random id
+#    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "1", "allowOverage" : "false"}
+#   ${GRANT_METERED_UPDATED} =         Set Variable    "metered" condition with parameters {"maxQuantity": "2"}
+#    ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+#    ${entitlementType} =         Set Variable    ENT_METERED
+#   ${entitlement}=    grant entitlement with entitlementType "${entitlementType}" and conditions "${GRANT_METERED}" for user "${userId}"
+#   check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+#   use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+#    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+#   ${entitlementUpdated}=    remove all conditions from entitlement "${entitlement}"
+#    add condition "${GRANT_METERED_UPDATED}" to entitlement "${entitlementUpdated}"
+#    update entitlement "${entitlementUpdated}"
+#    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+#   use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+#   check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+#   use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+
+#FAILS
+#Test_MeteredEntitlements_UseUpdateUse_maxQuantity_allowOverageTrueToDefault_E
+#    [Documentation]     Update maxQuantity for entitlement with metered condition after executing Use - testing if update resets usedQuantity - SHOULDN'T
+#    ${userId} =         generate random id
+#    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "1", "allowOverage" : "true"}
+#    ${GRANT_METERED_UPDATED} =         Set Variable    "metered" condition with parameters {"maxQuantity": "2"}
+#    ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+#    ${entitlementType} =         Set Variable    ENT_METERED
+#    ${entitlement}=    grant entitlement with entitlementType "${entitlementType}" and conditions "${GRANT_METERED}" for user "${userId}"
+#    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+#   use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+#    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+#    ${entitlementUpdated}=    remove all conditions from entitlement "${entitlement}"
+#    add condition "${GRANT_METERED_UPDATED}" to entitlement "${entitlementUpdated}"
+#    update entitlement "${entitlementUpdated}"
+#    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+#    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+#    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+#    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+
+### CHECK-UPDATE-CHECK-USE
+Test_MeteredEntitlements_UseUpdateUse_maxQuantity_allowOverageFalse_No_UseBeforeUpdate
+    [Documentation]     Update maxQuantity for entitlement with metered condition after executing Use - testing if update resets usedQuantity - SHOULDN'T
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "1", "allowOverage" : "false"}
+    ${GRANT_METERED_UPDATED} =         Set Variable    "metered" condition with parameters {"maxQuantity": "2", "allowOverage" : "false"}
+    ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${entitlementType} =         Set Variable    ENT_METERED
+    ${entitlement}=    grant entitlement with entitlementType "${entitlementType}" and conditions "${GRANT_METERED}" for user "${userId}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    ${entitlementUpdated}=    remove all conditions from entitlement "${entitlement}"
+    add condition "${GRANT_METERED_UPDATED}" to entitlement "${entitlementUpdated}"
+    update entitlement "${entitlementUpdated}"
+    add 1 usage for grant "${entitlementUpdated.id}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    use entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"

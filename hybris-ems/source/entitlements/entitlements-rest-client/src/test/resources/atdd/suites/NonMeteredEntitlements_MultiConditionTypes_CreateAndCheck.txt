@@ -1,0 +1,1346 @@
+# -----------------------------------------------------------------------
+# [y] hybris Platform
+#
+# Copyright (c) 2017 SAP SE or an SAP affiliate company.  All rights reserved.
+# 
+# This software is the confidential and proprietary information of SAP
+# ("Confidential Information"). You shall not disclose such Confidential
+# Information and shall use it only in accordance with the terms of the
+# license agreement you entered into with SAP.
+# -----------------------------------------------------------------------
+*** Settings ***
+Resource    entitlements-test/settings_keywords.txt
+Resource    entitlements-test/builder_entitlements_keywords.txt
+Resource    entitlements-test/modify_entitlements_keywords.txt
+Resource    entitlements-test/exceptions_entitlements_keywords.txt
+Resource    entitlements-test/check_entitlements_keywords.txt
+Resource    entitlements-test/use_entitlements_keywords.txt
+
+*** Test Cases ***
+#String+Timeframe
+Test_NonMeteredEntitlements_MultiConditionTypes_CreateAndCheck_StringFalse_TimeframeFalse_False
+    [Documentation]    ALL conditions types must be TRUE for check response = TRUE
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"cba"}
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2011-01-01T00:00:01Z"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_STR_TIME" and conditions "${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_STR_TIME" and conditions "${GRANT_STR}|${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR_TIME" and conditions "${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME" and conditions "${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR" and conditions "${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_TIME_STR" and conditions "${GRANT_TIME}|${GRANT_STR}" for user "${userId}"
+    check entitlement with entitlementType "ENT_TIME_STR" and conditions "${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR" and conditions "${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_MultiConditionTypes_CreateAndCheck_StringTrue_TimeframeFalse_False
+    [Documentation]    ALL conditions types must be TRUE for check response = TRUE
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2011-01-01T00:00:01Z"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_STR_TIME" and conditions "${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_STR_TIME" and conditions "${GRANT_STR}|${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR_TIME" and conditions "${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME" and conditions "${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR" and conditions "${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_TIME_STR" and conditions "${GRANT_TIME}|${GRANT_STR}" for user "${userId}"
+    check entitlement with entitlementType "ENT_TIME_STR" and conditions "${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR" and conditions "${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_MultiConditionTypes_CreateAndCheck_StringFalse_TimeframeTrue_False
+    [Documentation]    ALL conditions types must be TRUE for check response = TRUE
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"cba"}
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_STR_TIME" and conditions "${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_STR_TIME" and conditions "${GRANT_STR}|${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR_TIME" and conditions "${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME" and conditions "${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR" and conditions "${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_TIME_STR" and conditions "${GRANT_TIME}|${GRANT_STR}" for user "${userId}"
+    check entitlement with entitlementType "ENT_TIME_STR" and conditions "${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR" and conditions "${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_MultiConditionTypes_CreateAndCheck_StringTrue_TimeframeTrue_True
+    [Documentation]    ALL conditions types must be TRUE for check response = TRUE
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_STR_TIME" and conditions "${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_STR_TIME" and conditions "${GRANT_STR}|${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR_TIME" and conditions "${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_STR_TIME" and conditions "${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_TIME_STR" and conditions "${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_TIME_STR" and conditions "${GRANT_TIME}|${GRANT_STR}" for user "${userId}"
+    check entitlement with entitlementType "ENT_TIME_STR" and conditions "${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_TIME_STR" and conditions "${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "true"
+
+#String+Path
+Test_NonMeteredEntitlements_MultiConditionTypes_CreateAndCheck_StringFalse_PathFalse_False
+    [Documentation]    ALL conditions types must be TRUE for check response = TRUE
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"cba"}
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/rootA"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_STR_PATH" and conditions "${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_STR_PATH" and conditions "${GRANT_STR}|${GRANT_PATH}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR_PATH" and conditions "${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH" and conditions "${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR" and conditions "${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_PATH_STR" and conditions "${GRANT_PATH}|${GRANT_STR}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH_STR" and conditions "${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR" and conditions "${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_MultiConditionTypes_CreateAndCheck_StringTrue_PathFalse_False
+    [Documentation]    ALL conditions types must be TRUE for check response = TRUE
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/rootA"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_STR_PATH" and conditions "${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_STR_PATH" and conditions "${GRANT_STR}|${GRANT_PATH}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR_PATH" and conditions "${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH" and conditions "${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR" and conditions "${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_PATH_STR" and conditions "${GRANT_PATH}|${GRANT_STR}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH_STR" and conditions "${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR" and conditions "${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_MultiConditionTypes_CreateAndCheck_StringFalse_PathTrue_False
+    [Documentation]    ALL conditions types must be TRUE for check response = TRUE
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"cba"}
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_STR_PATH" and conditions "${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_STR_PATH" and conditions "${GRANT_STR}|${GRANT_PATH}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR_PATH" and conditions "${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH" and conditions "${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR" and conditions "${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_PATH_STR" and conditions "${GRANT_PATH}|${GRANT_STR}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH_STR" and conditions "${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR" and conditions "${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_MultiConditionTypes_CreateAndCheck_StringTrue_PathTrue_True
+    [Documentation]    ALL conditions types must be TRUE for check response = TRUE
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_STR_PATH" and conditions "${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_STR_PATH" and conditions "${GRANT_STR}|${GRANT_PATH}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR_PATH" and conditions "${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_STR_PATH" and conditions "${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_PATH_STR" and conditions "${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_PATH_STR" and conditions "${GRANT_PATH}|${GRANT_STR}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH_STR" and conditions "${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_PATH_STR" and conditions "${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "true"
+
+#String+Geocondition
+Test_NonMeteredEntitlements_MultiConditionTypes_CreateAndCheck_StringFalse_GeoFalse_False
+    [Documentation]    ALL conditions types must be TRUE for check response = TRUE
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"cba"}
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Municha"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_STR_GEO" and conditions "${CHECK_STR}|${CHECK_GEO}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_STR_GEO" and conditions "${GRANT_STR}|${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR_GEO" and conditions "${CHECK_STR}|${CHECK_GEO}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_GEO" and conditions "${CHECK_GEO}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_GEO_STR" and conditions "${CHECK_GEO}|${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_GEO_STR" and conditions "${GRANT_GEO}|${GRANT_STR}" for user "${userId}"
+    check entitlement with entitlementType "ENT_GEO_STR" and conditions "${CHECK_GEO}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_GEO_STR" and conditions "${CHECK_STR}|${CHECK_GEO}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_MultiConditionTypes_CreateAndCheck_StringTrue_GeoFalse_False
+    [Documentation]    ALL conditions types must be TRUE for check response = TRUE
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Municha"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_STR_GEO" and conditions "${CHECK_STR}|${CHECK_GEO}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_STR_GEO" and conditions "${GRANT_STR}|${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR_GEO" and conditions "${CHECK_STR}|${CHECK_GEO}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_GEO" and conditions "${CHECK_GEO}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_GEO_STR" and conditions "${CHECK_GEO}|${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_GEO_STR" and conditions "${GRANT_GEO}|${GRANT_STR}" for user "${userId}"
+    check entitlement with entitlementType "ENT_GEO_STR" and conditions "${CHECK_GEO}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_GEO_STR" and conditions "${CHECK_STR}|${CHECK_GEO}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_MultiConditionTypes_CreateAndCheck_StringFalse_GeoTrue_False
+    [Documentation]    ALL conditions types must be TRUE for check response = TRUE
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"cba"}
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_STR_GEO" and conditions "${CHECK_STR}|${CHECK_GEO}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_STR_GEO" and conditions "${GRANT_STR}|${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR_GEO" and conditions "${CHECK_STR}|${CHECK_GEO}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_GEO" and conditions "${CHECK_GEO}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_GEO_STR" and conditions "${CHECK_GEO}|${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_GEO_STR" and conditions "${GRANT_GEO}|${GRANT_STR}" for user "${userId}"
+    check entitlement with entitlementType "ENT_GEO_STR" and conditions "${CHECK_GEO}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_GEO_STR" and conditions "${CHECK_STR}|${CHECK_GEO}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_MultiConditionTypes_CreateAndCheck_StringTrue_GeoTrue_True
+    [Documentation]    ALL conditions types must be TRUE for check response = TRUE
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_STR_GEO" and conditions "${CHECK_STR}|${CHECK_GEO}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_STR_GEO" and conditions "${GRANT_STR}|${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR_GEO" and conditions "${CHECK_STR}|${CHECK_GEO}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_STR_GEO" and conditions "${CHECK_GEO}|${CHECK_STR}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_GEO_STR" and conditions "${CHECK_GEO}|${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_GEO_STR" and conditions "${GRANT_GEO}|${GRANT_STR}" for user "${userId}"
+    check entitlement with entitlementType "ENT_GEO_STR" and conditions "${CHECK_GEO}|${CHECK_STR}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_GEO_STR" and conditions "${CHECK_STR}|${CHECK_GEO}" for user "${userId}" is "true"
+
+#Path+Timeframe
+Test_NonMeteredEntitlements_MultiConditionTypes_CreateAndCheck_PathFalse_TimeframeFalse_False
+    [Documentation]    ALL conditions types must be TRUE for check response = TRUE
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/rootA"}
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2011-01-01T00:00:01Z"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_PATH_TIME" and conditions "${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_PATH_TIME" and conditions "${GRANT_PATH}|${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH_TIME" and conditions "${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME" and conditions "${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH" and conditions "${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_TIME_PATH" and conditions "${GRANT_TIME}|${GRANT_PATH}" for user "${userId}"
+    check entitlement with entitlementType "ENT_TIME_PATH" and conditions "${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH" and conditions "${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_MultiConditionTypes_CreateAndCheck_PathTrue_TimeframeFalse_False
+    [Documentation]    ALL conditions types must be TRUE for check response = TRUE
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root"}
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2011-01-01T00:00:01Z"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_PATH_TIME" and conditions "${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_PATH_TIME" and conditions "${GRANT_PATH}|${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH_TIME" and conditions "${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME" and conditions "${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH" and conditions "${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_TIME_PATH" and conditions "${GRANT_TIME}|${GRANT_PATH}" for user "${userId}"
+    check entitlement with entitlementType "ENT_TIME_PATH" and conditions "${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH" and conditions "${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_MultiConditionTypes_CreateAndCheck_PathFalse_TimeframeTrue_False
+    [Documentation]    ALL conditions types must be TRUE for check response = TRUE
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/rootA"}
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_PATH_TIME" and conditions "${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_PATH_TIME" and conditions "${GRANT_PATH}|${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH_TIME" and conditions "${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME" and conditions "${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH" and conditions "${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_TIME_PATH" and conditions "${GRANT_TIME}|${GRANT_PATH}" for user "${userId}"
+    check entitlement with entitlementType "ENT_TIME_PATH" and conditions "${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH" and conditions "${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_MultiConditionTypes_CreateAndCheck_PathTrue_TimeframeTrue_True
+    [Documentation]    ALL conditions types must be TRUE for check response = TRUE
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root"}
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_PATH_TIME" and conditions "${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_PATH_TIME" and conditions "${GRANT_PATH}|${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH_TIME" and conditions "${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_PATH_TIME" and conditions "${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_TIME_PATH" and conditions "${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_TIME_PATH" and conditions "${GRANT_TIME}|${GRANT_PATH}" for user "${userId}"
+    check entitlement with entitlementType "ENT_TIME_PATH" and conditions "${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_TIME_PATH" and conditions "${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "true"
+
+#Path+Geocondition
+Test_NonMeteredEntitlements_MultiConditionTypes_CreateAndCheck_PathFalse_GeoFalse_False
+    [Documentation]    ALL conditions types must be TRUE for check response = TRUE
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/rootA"}
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Municha"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_PATH_GEO" and conditions "${CHECK_PATH}|${CHECK_GEO}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_PATH_GEO" and conditions "${GRANT_PATH}|${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH_GEO" and conditions "${CHECK_PATH}|${CHECK_GEO}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_GEO" and conditions "${CHECK_GEO}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_GEO_PATH" and conditions "${CHECK_GEO}|${CHECK_PATH}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_GEO_PATH" and conditions "${GRANT_GEO}|${GRANT_PATH}" for user "${userId}"
+    check entitlement with entitlementType "ENT_GEO_PATH" and conditions "${CHECK_GEO}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_GEO_PATH" and conditions "${CHECK_PATH}|${CHECK_GEO}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_MultiConditionTypes_CreateAndCheck_PathTrue_GeoFalse_False
+    [Documentation]    ALL conditions types must be TRUE for check response = TRUE
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root"}
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Municha"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_PATH_GEO" and conditions "${CHECK_PATH}|${CHECK_GEO}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_PATH_GEO" and conditions "${GRANT_PATH}|${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH_GEO" and conditions "${CHECK_PATH}|${CHECK_GEO}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_GEO" and conditions "${CHECK_GEO}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_GEO_PATH" and conditions "${CHECK_GEO}|${CHECK_PATH}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_GEO_PATH" and conditions "${GRANT_GEO}|${GRANT_PATH}" for user "${userId}"
+    check entitlement with entitlementType "ENT_GEO_PATH" and conditions "${CHECK_GEO}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_GEO_PATH" and conditions "${CHECK_PATH}|${CHECK_GEO}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_MultiConditionTypes_CreateAndCheck_PathFalse_GeoTrue_False
+    [Documentation]    ALL conditions types must be TRUE for check response = TRUE
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/rootA"}
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_PATH_GEO" and conditions "${CHECK_PATH}|${CHECK_GEO}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_PATH_GEO" and conditions "${GRANT_PATH}|${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH_GEO" and conditions "${CHECK_PATH}|${CHECK_GEO}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_GEO" and conditions "${CHECK_GEO}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_GEO_PATH" and conditions "${CHECK_GEO}|${CHECK_PATH}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_GEO_PATH" and conditions "${GRANT_GEO}|${GRANT_PATH}" for user "${userId}"
+    check entitlement with entitlementType "ENT_GEO_PATH" and conditions "${CHECK_GEO}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_GEO_PATH" and conditions "${CHECK_PATH}|${CHECK_GEO}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_MultiConditionTypes_CreateAndCheck_PathTrue_GeoTrue_True
+    [Documentation]    ALL conditions types must be TRUE for check response = TRUE
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root"}
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_PATH_GEO" and conditions "${CHECK_PATH}|${CHECK_GEO}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_PATH_GEO" and conditions "${GRANT_PATH}|${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH_GEO" and conditions "${CHECK_PATH}|${CHECK_GEO}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_PATH_GEO" and conditions "${CHECK_GEO}|${CHECK_PATH}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_GEO_PATH" and conditions "${CHECK_GEO}|${CHECK_PATH}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_GEO_PATH" and conditions "${GRANT_GEO}|${GRANT_PATH}" for user "${userId}"
+    check entitlement with entitlementType "ENT_GEO_PATH" and conditions "${CHECK_GEO}|${CHECK_PATH}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_GEO_PATH" and conditions "${CHECK_PATH}|${CHECK_GEO}" for user "${userId}" is "true"
+    ################
+
+#Timeframe+Geo
+Test_NonMeteredEntitlements_MultiConditionTypes_CreateAndCheck_TimeframeFalse_GeoFalse_False
+    [Documentation]    ALL conditions types must be TRUE for check response = TRUE
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2011-01-01T00:00:01Z"}
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Municha"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_GEO_TIME" and conditions "${CHECK_GEO}|${CHECK_TIME}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_GEO_TIME" and conditions "${GRANT_GEO}|${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_GEO_TIME" and conditions "${CHECK_GEO}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_GEO_TIME" and conditions "${CHECK_TIME}|${CHECK_GEO}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_GEO" and conditions "${CHECK_TIME}|${CHECK_GEO}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_TIME_GEO" and conditions "${GRANT_TIME}|${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "ENT_TIME_GEO" and conditions "${CHECK_TIME}|${CHECK_GEO}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_GEO" and conditions "${CHECK_GEO}|${CHECK_TIME}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_MultiConditionTypes_CreateAndCheck_TimeframeTrue_GeoFalse_False
+    [Documentation]    ALL conditions types must be TRUE for check response = TRUE
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2012-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2011-01-01T00:00:01Z"}
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Municha"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_GEO_TIME" and conditions "${CHECK_GEO}|${CHECK_TIME}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_GEO_TIME" and conditions "${GRANT_GEO}|${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_GEO_TIME" and conditions "${CHECK_GEO}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_GEO_TIME" and conditions "${CHECK_TIME}|${CHECK_GEO}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_GEO" and conditions "${CHECK_TIME}|${CHECK_GEO}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_TIME_GEO" and conditions "${GRANT_TIME}|${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "ENT_TIME_GEO" and conditions "${CHECK_TIME}|${CHECK_GEO}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_GEO" and conditions "${CHECK_GEO}|${CHECK_TIME}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_MultiConditionTypes_CreateAndCheck_TimeframeFalse_GeoTrue_False
+    [Documentation]    ALL conditions types must be TRUE for check response = TRUE
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2011-01-01T00:00:01Z"}
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_GEO_TIME" and conditions "${CHECK_GEO}|${CHECK_TIME}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_GEO_TIME" and conditions "${GRANT_GEO}|${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_GEO_TIME" and conditions "${CHECK_GEO}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_GEO_TIME" and conditions "${CHECK_TIME}|${CHECK_GEO}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_GEO" and conditions "${CHECK_TIME}|${CHECK_GEO}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_TIME_GEO" and conditions "${GRANT_TIME}|${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "ENT_TIME_GEO" and conditions "${CHECK_TIME}|${CHECK_GEO}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_GEO" and conditions "${CHECK_GEO}|${CHECK_TIME}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_MultiConditionTypes_CreateAndCheck_TimeframeTrue_GeoTrue_True
+    [Documentation]    ALL conditions types must be TRUE for check response = TRUE
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_GEO_TIME" and conditions "${CHECK_GEO}|${CHECK_TIME}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_GEO_TIME" and conditions "${GRANT_GEO}|${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_GEO_TIME" and conditions "${CHECK_GEO}|${CHECK_TIME}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_GEO_TIME" and conditions "${CHECK_TIME}|${CHECK_GEO}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_TIME_GEO" and conditions "${CHECK_TIME}|${CHECK_GEO}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_TIME_GEO" and conditions "${GRANT_TIME}|${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "ENT_TIME_GEO" and conditions "${CHECK_TIME}|${CHECK_GEO}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_TIME_GEO" and conditions "${CHECK_GEO}|${CHECK_TIME}" for user "${userId}" is "true"
+###################
+
+#String+Path+Timeframe
+Test_NonMeteredEntitlements_MultiConditionTypes_CreateAndCheck_StringFalse_PathFalse_TimeframeFalse_False
+    [Documentation]    ALL conditions types must be TRUE for check response = TRUE
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"cba"}
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/rootA"}
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2011-01-01T00:00:01Z"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${GRANT_STR}|${GRANT_PATH}|${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${GRANT_STR}|${GRANT_TIME}|${GRANT_PATH}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${GRANT_PATH}|${GRANT_STR}|${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${GRANT_PATH}|${GRANT_TIME}|${GRANT_STR}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${GRANT_TIME}|${GRANT_STR}|${GRANT_PATH}" for user "${userId}"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${GRANT_TIME}|${GRANT_PATH}|${GRANT_STR}" for user "${userId}"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_MultiConditionTypes_CreateAndCheck_StringTrue_PathFalse_TimeframeFalse_False
+    [Documentation]    ALL conditions types must be TRUE for check response = TRUE
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/rootA"}
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2011-01-01T00:00:01Z"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${GRANT_STR}|${GRANT_PATH}|${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${GRANT_STR}|${GRANT_TIME}|${GRANT_PATH}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${GRANT_PATH}|${GRANT_STR}|${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${GRANT_PATH}|${GRANT_TIME}|${GRANT_STR}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${GRANT_TIME}|${GRANT_STR}|${GRANT_PATH}" for user "${userId}"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${GRANT_TIME}|${GRANT_PATH}|${GRANT_STR}" for user "${userId}"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_MultiConditionTypes_CreateAndCheck_StringFalse_PathTrue_TimeframeFalse_False
+    [Documentation]    ALL conditions types must be TRUE for check response = TRUE
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"cba"}
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root"}
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2011-01-01T00:00:01Z"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${GRANT_STR}|${GRANT_PATH}|${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${GRANT_STR}|${GRANT_TIME}|${GRANT_PATH}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${GRANT_PATH}|${GRANT_STR}|${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${GRANT_PATH}|${GRANT_TIME}|${GRANT_STR}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${GRANT_TIME}|${GRANT_STR}|${GRANT_PATH}" for user "${userId}"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${GRANT_TIME}|${GRANT_PATH}|${GRANT_STR}" for user "${userId}"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_MultiConditionTypes_CreateAndCheck_StringFalse_PathFalse_TimeframeTrue_False
+    [Documentation]    ALL conditions types must be TRUE for check response = TRUE
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"cba"}
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/rootA"}
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${GRANT_STR}|${GRANT_PATH}|${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${GRANT_STR}|${GRANT_TIME}|${GRANT_PATH}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${GRANT_PATH}|${GRANT_STR}|${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${GRANT_PATH}|${GRANT_TIME}|${GRANT_STR}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${GRANT_TIME}|${GRANT_STR}|${GRANT_PATH}" for user "${userId}"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${GRANT_TIME}|${GRANT_PATH}|${GRANT_STR}" for user "${userId}"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_MultiConditionTypes_CreateAndCheck_StringTrue_PathTrue_TimeframeFalse_False
+    [Documentation]    ALL conditions types must be TRUE for check response = TRUE
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root"}
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2011-01-01T00:00:01Z"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${GRANT_STR}|${GRANT_PATH}|${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${GRANT_STR}|${GRANT_TIME}|${GRANT_PATH}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${GRANT_PATH}|${GRANT_STR}|${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${GRANT_PATH}|${GRANT_TIME}|${GRANT_STR}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${GRANT_TIME}|${GRANT_STR}|${GRANT_PATH}" for user "${userId}"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${GRANT_TIME}|${GRANT_PATH}|${GRANT_STR}" for user "${userId}"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_MultiConditionTypes_CreateAndCheck_StringTrue_PathFalse_TimeframeTrue_False
+    [Documentation]    ALL conditions types must be TRUE for check response = TRUE
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/rootA"}
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${GRANT_STR}|${GRANT_PATH}|${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${GRANT_STR}|${GRANT_TIME}|${GRANT_PATH}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${GRANT_PATH}|${GRANT_STR}|${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${GRANT_PATH}|${GRANT_TIME}|${GRANT_STR}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${GRANT_TIME}|${GRANT_STR}|${GRANT_PATH}" for user "${userId}"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${GRANT_TIME}|${GRANT_PATH}|${GRANT_STR}" for user "${userId}"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_MultiConditionTypes_CreateAndCheck_StringFalse_PathTrue_TimeframeTrue_False
+    [Documentation]    ALL conditions types must be TRUE for check response = TRUE
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"cba"}
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/rootA"}
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${GRANT_STR}|${GRANT_PATH}|${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${GRANT_STR}|${GRANT_TIME}|${GRANT_PATH}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${GRANT_PATH}|${GRANT_STR}|${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${GRANT_PATH}|${GRANT_TIME}|${GRANT_STR}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${GRANT_TIME}|${GRANT_STR}|${GRANT_PATH}" for user "${userId}"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${GRANT_TIME}|${GRANT_PATH}|${GRANT_STR}" for user "${userId}"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_MultiConditionTypes_CreateAndCheck_StringTrue_PathTrue_TimeframeTrue_True
+    [Documentation]    ALL conditions types must be TRUE for check response = TRUE
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root"}
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${GRANT_STR}|${GRANT_PATH}|${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${GRANT_STR}|${GRANT_TIME}|${GRANT_PATH}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_STR_TIME_PATH" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${GRANT_PATH}|${GRANT_STR}|${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_PATH_STR_TIME" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${GRANT_PATH}|${GRANT_TIME}|${GRANT_STR}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_PATH_TIME_STR" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${GRANT_TIME}|${GRANT_STR}|${GRANT_PATH}" for user "${userId}"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_TIME_STR_PATH" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${GRANT_TIME}|${GRANT_PATH}|${GRANT_STR}" for user "${userId}"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_TIME_PATH_STR" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "true"
+
+Test_NonMeteredEntitlements_MultiConditionTypes_CreateAndCheck_StringNone_PathTrue_TimeframeTrue_False
+    [Documentation]    ALL conditions types must be TRUE for check response = TRUE
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root"}
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${GRANT_STR}|${GRANT_PATH}|${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_MultiConditionTypes_CreateAndCheck_StringTrue_PathNone_TimeframeTrue_False
+    [Documentation]    ALL conditions types must be TRUE for check response = TRUE
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root"}
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${GRANT_STR}|${GRANT_PATH}|${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_MultiConditionTypes_CreateAndCheck_StringTrue_PathTrue_TimeframeNone_CurrentTimeMeetsTimeframe_True
+    [Documentation]    ALL conditions types must be TRUE for check response = TRUE
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root"}
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"now-30","endTime":"now+30"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"now+0"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${GRANT_STR}|${GRANT_PATH}|${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "true"
+
+Test_NonMeteredEntitlements_MultiConditionTypes_CreateAndCheck_StringTrue_PathTrue_TimeframeNone_CurrentTimeNotMeetsTimeframe_False
+    [Documentation]    ALL conditions types must be TRUE for check response = TRUE
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root"}
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"now-300","endTime":"now-200"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"now+0"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${GRANT_STR}|${GRANT_PATH}|${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_MultiConditionTypes_CreateAndCheck_StringNone_PathNone_TimeframeTrue_False
+    [Documentation]    ALL conditions types must be TRUE for check response = TRUE
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root"}
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${GRANT_STR}|${GRANT_PATH}|${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_MultiConditionTypes_CreateAndCheck_StringNone_PathTrue_TimeframeNone_CurrentTimeMeetsTimeframe_False
+    [Documentation]    ALL conditions types must be TRUE for check response = TRUE
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root"}
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"now-30","endTime":"now+30"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"now+0"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${GRANT_STR}|${GRANT_PATH}|${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_PATH}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_MultiConditionTypes_CreateAndCheck_StringNone_PathTrue_TimeframeNone_CurrentTimeNotMeetsTimeframe_False
+    [Documentation]    ALL conditions types must be TRUE for check response = TRUE
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root"}
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"now-300","endTime":"now-200"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"now+0"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${GRANT_STR}|${GRANT_PATH}|${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_PATH}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_MultiConditionTypes_CreateAndCheck_StringTrue_PathNone_TimeframeNone_CurrentTimeMeetsTimeframe_False
+    [Documentation]    ALL conditions types must be TRUE for check response = TRUE
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root"}
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"now-30","endTime":"now+30"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"now+0"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${GRANT_STR}|${GRANT_PATH}|${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_MultiConditionTypes_CreateAndCheck_StringTrue_PathNone_TimeframeNone_CurrentTimeNotMeetsTimeframe_False
+    [Documentation]    ALL conditions types must be TRUE for check response = TRUE
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root"}
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"now-300","endTime":"now-200"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"now+0"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${GRANT_STR}|${GRANT_PATH}|${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_MultiConditionTypes_CreateAndCheck_StringNone_PathNone_TimeframeNone_CurrentTimeMeetsTimeframe_False
+    [Documentation]    ALL conditions types must be TRUE for check response = TRUE
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root"}
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"now-30","endTime":"now+30"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"now+0"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${GRANT_STR}|${GRANT_PATH}|${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_MultiConditionTypes_CreateAndCheck_StringNone_PathNone_TimeframeNone_CurrentTimeNotMeetsTimeframe_False
+    [Documentation]    ALL conditions types must be TRUE for check response = TRUE
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root"}
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"now-300","endTime":"now-200"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"now+0"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${GRANT_STR}|${GRANT_PATH}|${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" for user "${userId}" is "false"
+
+### STRING+PATH+TIMEFRAME+GEOCONDITION (not every combination tested):
+
+Test_NonMeteredEntitlements_MultiConditionTypes_CreateAndCheck_StringTrue_PathTrue_TimeframeTrue_GeoTrue_True
+    [Documentation]    ALL conditions types must be TRUE for check response = TRUE  - Geocondition true
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root"}
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}|${CHECK_GEO}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_GEO}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${CHECK_PATH}|${CHECK_GEO}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${CHECK_GEO}|${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${GRANT_STR}|${GRANT_PATH}|${GRANT_TIME}|${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}|${CHECK_GEO}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_GEO}|${CHECK_PATH}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${CHECK_PATH}|${CHECK_GEO}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${CHECK_GEO}|${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "true"
+
+Test_NonMeteredEntitlements_MultiConditionTypes_CreateAndCheck_StringTrue_PathTrue_TimeframeTrue_GeoFalse_False
+    [Documentation]    ALL conditions types must be TRUE for check response = TRUE  - Geocondition true
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root"}
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Muniche"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}|${CHECK_GEO}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_GEO}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${CHECK_PATH}|${CHECK_GEO}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${CHECK_GEO}|${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${GRANT_STR}|${GRANT_PATH}|${GRANT_TIME}|${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}|${CHECK_GEO}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_GEO}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${CHECK_PATH}|${CHECK_GEO}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${CHECK_GEO}|${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_MultiConditionTypes_CreateAndCheck_StringTrue_PathTrue_TimeframeTrue_GeoNone_False
+    [Documentation]    ALL conditions types must be TRUE for check response = TRUE
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root"}
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}|${CHECK_GEO}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${GRANT_STR}|${GRANT_PATH}|${GRANT_TIME}|${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}|${CHECK_GEO}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_STR}|${CHECK_TIME}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_TIME}|${CHECK_STR}|${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_TIME}|${CHECK_PATH}|${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_PATH}|${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME" and conditions "${CHECK_PATH}|${CHECK_TIME}|${CHECK_STR}" for user "${userId}" is "false"
+############
+
+###TBD:
+#TESTSING FOR MORE THAN 1 CONDITION PER CONDITION TYPE
+#Test_NonMeteredEntitlements_MultiConditionTypes_CreateAndCheck_CheckWithStringCondition_For2Conditions_True
+    [Documentation]    At least 1 of conditions must be TRUE for check response = TRUE
+    [Documentation]    ALL conditions types must be TRUE for check response = TRUE
+    #TO BE IMPLEMENTED IF FEATURE READY

@@ -1,0 +1,2104 @@
+# -----------------------------------------------------------------------
+# [y] hybris Platform
+#
+# Copyright (c) 2017 SAP SE or an SAP affiliate company.  All rights reserved.
+# 
+# This software is the confidential and proprietary information of SAP
+# ("Confidential Information"). You shall not disclose such Confidential
+# Information and shall use it only in accordance with the terms of the
+# license agreement you entered into with SAP.
+# -----------------------------------------------------------------------
+*** Settings ***
+Resource    entitlements-test/settings_keywords.txt
+Resource    entitlements-test/builder_entitlements_keywords.txt
+Resource    entitlements-test/modify_entitlements_keywords.txt
+Resource    entitlements-test/exceptions_entitlements_keywords.txt
+Resource    entitlements-test/check_entitlements_keywords.txt
+Resource    entitlements-test/use_entitlements_keywords.txt
+
+*** Test Cases ***
+##########################################################################
+# Tests:
+# changing statuses of entitlements:
+# - status: ACTIVE, SUSPENDED, REVOKED
+# - entitlements: without condition(simple), string, path, timeframe, mixed(str+path+time), metered
+# updating entitlements properties for statuses: ACTIVE and SUSPENDED
+##########################################################################
+# CAN NOT BE TESTED, BECAUSE:
+# - NO POSSIBILITY TO TEST STATUS DIRECTLY FOR REVOKED ENTITLEMENT
+# - IT IS NOT POSSIBLE TO CHANGE STATUS FOR ENTITLEMENT THAT IS REVOKED:
+#
+# Test_Entitlements_Statuses_ConditionType_WithoutCondition_Revoked_To_Active
+# Test_Entitlements_Statuses_ConditionType_WithoutCondition_Revoked_To_Suspended
+# Test_Entitlements_Statuses_ConditionType_WithoutCondition_Revoked_To_Revoked
+# ABOVE IS RELEVANT FOR EVERY CONDITION TYPE, NOT SIMPLE ONLY
+##########################################################################
+
+### SIMPLE:
+
+Test_Entitlements_Statuses_ConditionType_WithoutCondition_Active_To_Suspended
+    [Documentation]    Suspended entitlement must not exists for check
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_SIMPLE"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    check entitlement with entitlementType "${entitlementType}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "SUSPENDED" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+    check entitlement with entitlementType "${entitlementType}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+
+Test_Entitlements_Statuses_ConditionType_WithoutCondition_Active_To_Active
+    [Documentation]    Suspended entitlement must not exists for check
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_SIMPLE"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    check entitlement with entitlementType "${entitlementType}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    set status "ACTIVE" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+
+Test_Entitlements_Statuses_ConditionType_WithoutCondition_Suspended_To_Active
+    [Documentation]    Suspended entitlement must not exists for check
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_SIMPLE"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    check entitlement with entitlementType "${entitlementType}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "SUSPENDED" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+    check entitlement with entitlementType "${entitlementType}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "ACTIVE" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+
+Test_Entitlements_Statuses_ConditionType_WithoutCondition_Suspended_To_Suspended
+    [Documentation]    Suspended entitlement must not exists for check
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_SIMPLE"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    check entitlement with entitlementType "${entitlementType}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "SUSPENDED" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+    check entitlement with entitlementType "${entitlementType}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "SUSPENDED" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+    check entitlement with entitlementType "${entitlementType}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+
+Test_Entitlements_Statuses_ConditionType_WithoutCondition_Active_To_Revoked_No1
+    [Documentation]    Suspended entitlement must be available for admin actions
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_SIMPLE"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    check entitlement with entitlementType "${entitlementType}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    revoke entitlement for user "${userId}" and entitlementType "${entitlementType}" and grantSource "${grantSource}" and grantSourceId "${grantSourceId}"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType}" for user "${userId}" is "false"
+
+Test_Entitlements_Statuses_ConditionType_WithoutCondition_Active_To_Revoked_No2
+    [Documentation]    Suspended entitlement must be available for admin actions
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_SIMPLE"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    check entitlement with entitlementType "${entitlementType}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "REVOKED" for entitlement with id "${entitlement.id}"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType}" for user "${userId}" is "false"
+
+Test_Entitlements_Statuses_ConditionType_WithoutCondition_Suspended_To_Revoked_No1
+    [Documentation]    Suspended entitlement must be available for admin actions
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_SIMPLE"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    check entitlement with entitlementType "${entitlementType}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "SUSPENDED" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+    check entitlement with entitlementType "${entitlementType}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    revoke entitlement for user "${userId}" and entitlementType "${entitlementType}" and grantSource "${grantSource}" and grantSourceId "${grantSourceId}"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType}" for user "${userId}" is "false"
+
+Test_Entitlements_Statuses_ConditionType_WithoutCondition_Suspended_To_Revoked_No2
+    [Documentation]    Suspended entitlement must be available for admin actions
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_SIMPLE"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    check entitlement with entitlementType "${entitlementType}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "SUSPENDED" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+    check entitlement with entitlementType "${entitlementType}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "REVOKED" for entitlement with id "${entitlement.id}"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType}" for user "${userId}" is "false"
+
+Test_Entitlements_Statuses_ConditionType_WithoutCondition_Active_PropertyUpdate
+    [Documentation]    Properties for running entitlements must updates
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_SIMPLE"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set property name "propertyNew" and value "propertyNewValue" for entitlement with id "${entitlement.id}"
+    check property name "propertyNew" equals to value "propertyNewValue" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    change property "propertyNew" of entitlement with id "${entitlement.id}" to "propertyNewUpdatedValue"
+    check property name "propertyNew" equals to value "propertyNewUpdatedValue" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+
+Test_Entitlements_Statuses_ConditionType_WithoutCondition_Suspended_PropertyUpdate
+    [Documentation]    Properties for suspended entitlements must updates
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_SIMPLE"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "SUSPENDED" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set property name "propertyNew" and value "propertyNewValue" for entitlement with id "${entitlement.id}"
+    check property name "propertyNew" equals to value "propertyNewValue" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    change property "propertyNew" of entitlement with id "${entitlement.id}" to "propertyNewUpdatedValue"
+    check property name "propertyNew" equals to value "propertyNewUpdatedValue" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+
+### STRING:
+
+Test_Entitlements_Statuses_ConditionType_StringCondition_Active_To_Suspended
+    [Documentation]    Suspended entitlement must not exists for check
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_STR"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_STR}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_STR}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "SUSPENDED" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+
+Test_Entitlements_Statuses_ConditionType_StringCondition_Active_To_Active
+    [Documentation]    Suspended entitlement must not exists for check
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_STR"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_STR}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    set status "ACTIVE" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_STR}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+
+Test_Entitlements_Statuses_ConditionType_StringCondition_Suspended_To_Active
+    [Documentation]    Suspended entitlement must not exists for check
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_STR"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_STR}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_STR}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "SUSPENDED" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "ACTIVE" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_STR}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+
+Test_Entitlements_Statuses_ConditionType_StringCondition_Suspended_To_Suspended
+    [Documentation]    Suspended entitlement must not exists for check
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_STR"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_STR}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_STR}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "SUSPENDED" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "SUSPENDED" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+
+Test_Entitlements_Statuses_ConditionType_StringCondition_Active_To_Revoked_No1
+    [Documentation]    Suspended entitlement must be available for admin actions
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_STR"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_STR}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_STR}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    revoke entitlement for user "${userId}" and entitlementType "${entitlementType}" and grantSource "${grantSource}" and grantSourceId "${grantSourceId}"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+
+Test_Entitlements_Statuses_ConditionType_StringCondition_Active_To_Revoked_No2
+    [Documentation]    Suspended entitlement must be available for admin actions
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_STR"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_STR}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_STR}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "REVOKED" for entitlement with id "${entitlement.id}"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+
+Test_Entitlements_Statuses_ConditionType_StringCondition_Suspended_To_Revoked_No1
+    [Documentation]    Suspended entitlement must be available for admin actions
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_STR"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_STR}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_STR}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "SUSPENDED" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    revoke entitlement for user "${userId}" and entitlementType "${entitlementType}" and grantSource "${grantSource}" and grantSourceId "${grantSourceId}"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+
+Test_Entitlements_Statuses_ConditionType_StringCondition_Suspended_To_Revoked_No2
+    [Documentation]    Suspended entitlement must be available for admin actions
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_STR"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_STR}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_STR}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "SUSPENDED" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "REVOKED" for entitlement with id "${entitlement.id}"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+
+Test_Entitlements_Statuses_ConditionType_StringCondition_Active_PropertyUpdate
+    [Documentation]    Properties for running entitlements must updates
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_STR"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_STR}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set property name "propertyNew" and value "propertyNewValue" for entitlement with id "${entitlement.id}"
+    check property name "propertyNew" equals to value "propertyNewValue" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    change property "propertyNew" of entitlement with id "${entitlement.id}" to "propertyNewUpdatedValue"
+    check property name "propertyNew" equals to value "propertyNewUpdatedValue" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+
+Test_Entitlements_Statuses_ConditionType_StringCondition_Suspended_PropertyUpdate
+    [Documentation]    Properties for suspended entitlements must updates
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_STR"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_STR}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "SUSPENDED" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set property name "propertyNew" and value "propertyNewValue" for entitlement with id "${entitlement.id}"
+    check property name "propertyNew" equals to value "propertyNewValue" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    change property "propertyNew" of entitlement with id "${entitlement.id}" to "propertyNewUpdatedValue"
+    check property name "propertyNew" equals to value "propertyNewUpdatedValue" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+
+### PATH:
+
+Test_Entitlements_Statuses_ConditionType_PathCondition_Active_To_Suspended
+    [Documentation]    Suspended entitlement must not exists for check
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_PATH"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_PATH}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_PATH}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_PATH}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "SUSPENDED" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_PATH}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+
+Test_Entitlements_Statuses_ConditionType_PathCondition_Active_To_Active
+    [Documentation]    Suspended entitlement must not exists for check
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_PATH"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_PATH}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_PATH}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    set status "ACTIVE" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_PATH}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+
+Test_Entitlements_Statuses_ConditionType_PathCondition_Suspended_To_Active
+    [Documentation]    Suspended entitlement must not exists for check
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_PATH"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_PATH}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_PATH}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_PATH}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "SUSPENDED" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_PATH}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "ACTIVE" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_PATH}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+
+Test_Entitlements_Statuses_ConditionType_PathCondition_Suspended_To_Suspended
+    [Documentation]    Suspended entitlement must not exists for check
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_PATH"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_PATH}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_PATH}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_PATH}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "SUSPENDED" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_PATH}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "SUSPENDED" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_PATH}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+
+Test_Entitlements_Statuses_ConditionType_PathCondition_Active_To_Revoked_No1
+    [Documentation]    Suspended entitlement must be available for admin actions
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_PATH"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_PATH}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_PATH}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_PATH}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    revoke entitlement for user "${userId}" and entitlementType "${entitlementType}" and grantSource "${grantSource}" and grantSourceId "${grantSourceId}"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_PATH}" for user "${userId}" is "false"
+
+Test_Entitlements_Statuses_ConditionType_PathCondition_Active_To_Revoked_No2
+    [Documentation]    Suspended entitlement must be available for admin actions
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_PATH"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_PATH}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_PATH}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_PATH}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "REVOKED" for entitlement with id "${entitlement.id}"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_PATH}" for user "${userId}" is "false"
+
+Test_Entitlements_Statuses_ConditionType_PathCondition_Suspended_To_Revoked_No1
+    [Documentation]    Suspended entitlement must be available for admin actions
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_PATH"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_PATH}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_PATH}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_PATH}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "SUSPENDED" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_PATH}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    revoke entitlement for user "${userId}" and entitlementType "${entitlementType}" and grantSource "${grantSource}" and grantSourceId "${grantSourceId}"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_PATH}" for user "${userId}" is "false"
+
+Test_Entitlements_Statuses_ConditionType_PathCondition_Suspended_To_Revoked_No2
+    [Documentation]    Suspended entitlement must be available for admin actions
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_PATH"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_PATH}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_PATH}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_PATH}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "SUSPENDED" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_PATH}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "REVOKED" for entitlement with id "${entitlement.id}"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_PATH}" for user "${userId}" is "false"
+
+Test_Entitlements_Statuses_ConditionType_PathCondition_Active_PropertyUpdate
+    [Documentation]    Properties for running entitlements must updates
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_PATH"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_PATH}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set property name "propertyNew" and value "propertyNewValue" for entitlement with id "${entitlement.id}"
+    check property name "propertyNew" equals to value "propertyNewValue" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    change property "propertyNew" of entitlement with id "${entitlement.id}" to "propertyNewUpdatedValue"
+    check property name "propertyNew" equals to value "propertyNewUpdatedValue" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+
+Test_Entitlements_Statuses_ConditionType_PathCondition_Suspended_PropertyUpdate
+    [Documentation]    Properties for suspended entitlements must updates
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_PATH"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_PATH}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "SUSPENDED" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set property name "propertyNew" and value "propertyNewValue" for entitlement with id "${entitlement.id}"
+    check property name "propertyNew" equals to value "propertyNewValue" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    change property "propertyNew" of entitlement with id "${entitlement.id}" to "propertyNewUpdatedValue"
+    check property name "propertyNew" equals to value "propertyNewUpdatedValue" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+
+### TIMEFRAME:
+
+Test_Entitlements_Statuses_ConditionType_TimeframeCondition_Active_SetWhenGranted_No1
+    [Documentation]    Check if timeframe condition type doesn't affect setting ACTIVE status when granting entitlement
+    [Documentation]    Timeframe condition doesn't meet current time - in the past
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"now-6000","endTime":"now-3000"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_TIME"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_TIME}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+
+Test_Entitlements_Statuses_ConditionType_TimeframeCondition_Active_SetWhenGranted_No2
+    [Documentation]    Check if timeframe condition type doesn't affect setting ACTIVE status when granting entitlement
+    [Documentation]    Timeframe condition doesn't meet current time - in the future
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"now+3000","endTime":"now+6000"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_TIME"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_TIME}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+
+Test_Entitlements_Statuses_ConditionType_TimeframeCondition_Active_SetWhenGranted_No3
+    [Documentation]    Check if timeframe condition type doesn't affect setting ACTIVE status when granting entitlement
+    [Documentation]    Timeframe condition meets current time
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"now-3000","endTime":"now+3000"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_TIME"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_TIME}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+
+Test_Entitlements_Statuses_ConditionType_TimeframeCondition_Active_To_Suspended
+    [Documentation]    Suspended entitlement must not exists for check
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_TIME"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_TIME}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_TIME}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "SUSPENDED" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+
+Test_Entitlements_Statuses_ConditionType_TimeframeCondition_Active_To_Active
+    [Documentation]    Suspended entitlement must not exists for check
+	${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_TIME"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_TIME}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    set status "ACTIVE" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_TIME}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+
+Test_Entitlements_Statuses_ConditionType_TimeframeCondition_Suspended_To_Active
+    [Documentation]    Suspended entitlement must not exists for check
+	${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_TIME"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_TIME}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_TIME}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "SUSPENDED" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "ACTIVE" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_TIME}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+
+Test_Entitlements_Statuses_ConditionType_TimeframeCondition_Suspended_To_Suspended
+    [Documentation]    Suspended entitlement must not exists for check
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_TIME"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_TIME}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_TIME}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "SUSPENDED" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "SUSPENDED" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+
+Test_Entitlements_Statuses_ConditionType_TimeframeCondition_Active_To_Revoked_No1
+    [Documentation]    Suspended entitlement must be available for admin actions
+	${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_TIME"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_TIME}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_TIME}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    revoke entitlement for user "${userId}" and entitlementType "${entitlementType}" and grantSource "${grantSource}" and grantSourceId "${grantSourceId}"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+
+Test_Entitlements_Statuses_ConditionType_TimeframeCondition_Active_To_Revoked_No2
+    [Documentation]    Suspended entitlement must be available for admin actions
+	${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_TIME"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_TIME}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_TIME}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "REVOKED" for entitlement with id "${entitlement.id}"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+
+Test_Entitlements_Statuses_ConditionType_TimeframeCondition_Suspended_To_Revoked_No1
+    [Documentation]    Suspended entitlement must be available for admin actions
+	${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_TIME"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_TIME}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_TIME}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "SUSPENDED" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    revoke entitlement for user "${userId}" and entitlementType "${entitlementType}" and grantSource "${grantSource}" and grantSourceId "${grantSourceId}"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+
+Test_Entitlements_Statuses_ConditionType_TimeframeCondition_Suspended_To_Revoked_No2
+    [Documentation]    Suspended entitlement must be available for admin actions
+	${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_TIME"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_TIME}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_TIME}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "SUSPENDED" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "REVOKED" for entitlement with id "${entitlement.id}"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+
+Test_Entitlements_Statuses_ConditionType_TimeframeCondition_Active_PropertyUpdate
+    [Documentation]    Properties for running entitlements must updates
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_TIME"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_TIME}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set property name "propertyNew" and value "propertyNewValue" for entitlement with id "${entitlement.id}"
+    check property name "propertyNew" equals to value "propertyNewValue" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    change property "propertyNew" of entitlement with id "${entitlement.id}" to "propertyNewUpdatedValue"
+    check property name "propertyNew" equals to value "propertyNewUpdatedValue" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+
+Test_Entitlements_Statuses_ConditionType_TimeframeCondition_Suspended_PropertyUpdate
+    [Documentation]    Properties for suspended entitlements must updates
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_TIME"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_TIME}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "SUSPENDED" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set property name "propertyNew" and value "propertyNewValue" for entitlement with id "${entitlement.id}"
+    check property name "propertyNew" equals to value "propertyNewValue" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    change property "propertyNew" of entitlement with id "${entitlement.id}" to "propertyNewUpdatedValue"
+    check property name "propertyNew" equals to value "propertyNewUpdatedValue" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+
+### GEO:
+
+Test_Entitlements_Statuses_ConditionType_GeoCondition_Active_To_Suspended
+    [Documentation]    Suspended entitlement must not exists for check
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_GEO"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_GEO}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_GEO}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "SUSPENDED" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+
+Test_Entitlements_Statuses_ConditionType_GeoCondition_Active_To_Active
+    [Documentation]    Suspended entitlement must not exists for check
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_GEO"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_GEO}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    set status "ACTIVE" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_GEO}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+
+Test_Entitlements_Statuses_ConditionType_GeoCondition_Suspended_To_Active
+    [Documentation]    Suspended entitlement must not exists for check
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_GEO"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_GEO}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_GEO}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "SUSPENDED" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "ACTIVE" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_GEO}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+
+Test_Entitlements_Statuses_ConditionType_GeoCondition_Suspended_To_Suspended
+    [Documentation]    Suspended entitlement must not exists for check
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_GEO"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_GEO}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_GEO}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "SUSPENDED" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "SUSPENDED" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+
+Test_Entitlements_Statuses_ConditionType_GeoCondition_Active_To_Revoked_No1
+    [Documentation]    Suspended entitlement must be available for admin actions
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_GEO"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_GEO}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_GEO}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    revoke entitlement for user "${userId}" and entitlementType "${entitlementType}" and grantSource "${grantSource}" and grantSourceId "${grantSourceId}"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+
+Test_Entitlements_Statuses_ConditionType_GeoCondition_Active_To_Revoked_No2
+    [Documentation]    Suspended entitlement must be available for admin actions
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_GEO"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_GEO}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_GEO}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "REVOKED" for entitlement with id "${entitlement.id}"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+
+Test_Entitlements_Statuses_ConditionType_GeoCondition_Suspended_To_Revoked_No1
+    [Documentation]    Suspended entitlement must be available for admin actions
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_GEO"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_GEO}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_GEO}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "SUSPENDED" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    revoke entitlement for user "${userId}" and entitlementType "${entitlementType}" and grantSource "${grantSource}" and grantSourceId "${grantSourceId}"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+
+Test_Entitlements_Statuses_ConditionType_GeoCondition_Suspended_To_Revoked_No2
+    [Documentation]    Suspended entitlement must be available for admin actions
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_GEO"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_GEO}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_GEO}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "SUSPENDED" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "REVOKED" for entitlement with id "${entitlement.id}"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+
+Test_Entitlements_Statuses_ConditionType_GeoCondition_Active_PropertyUpdate
+    [Documentation]    Properties for running entitlements must updates
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_GEO"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_GEO}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set property name "propertyNew" and value "propertyNewValue" for entitlement with id "${entitlement.id}"
+    check property name "propertyNew" equals to value "propertyNewValue" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    change property "propertyNew" of entitlement with id "${entitlement.id}" to "propertyNewUpdatedValue"
+    check property name "propertyNew" equals to value "propertyNewUpdatedValue" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+
+Test_Entitlements_Statuses_ConditionType_GeoCondition_Suspended_PropertyUpdate
+    [Documentation]    Properties for suspended entitlements must updates
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_GEO"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_GEO}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "SUSPENDED" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set property name "propertyNew" and value "propertyNewValue" for entitlement with id "${entitlement.id}"
+    check property name "propertyNew" equals to value "propertyNewValue" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    change property "propertyNew" of entitlement with id "${entitlement.id}" to "propertyNewUpdatedValue"
+    check property name "propertyNew" equals to value "propertyNewUpdatedValue" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+
+### MIXED-STRING/PATH/TIMEFRAME:
+
+Test_Entitlements_Statuses_ConditionType_StringAndPathAndTimeCondition_Active_To_Suspended
+    [Documentation]    Suspended entitlement must not exists for check
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root"}
+	${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_MIX"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_STR}" to entitlement "${entitlement}"
+    add condition "${GRANT_PATH}" to entitlement "${entitlement}"
+    add condition "${GRANT_TIME}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "SUSPENDED" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+
+Test_Entitlements_Statuses_ConditionType_StringAndPathAndTimeCondition_Active_To_Active
+    [Documentation]    Suspended entitlement must not exists for check
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root"}
+	${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_MIX"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_STR}" to entitlement "${entitlement}"
+    add condition "${GRANT_PATH}" to entitlement "${entitlement}"
+    add condition "${GRANT_TIME}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    set status "ACTIVE" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+
+Test_Entitlements_Statuses_ConditionType_StringAndPathAndTimeCondition_Suspended_To_Active
+    [Documentation]    Suspended entitlement must not exists for check
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root"}
+	${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_MIX"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_STR}" to entitlement "${entitlement}"
+    add condition "${GRANT_PATH}" to entitlement "${entitlement}"
+    add condition "${GRANT_TIME}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "SUSPENDED" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "ACTIVE" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+
+Test_Entitlements_Statuses_ConditionType_StringAndPathAndTimeCondition_Suspended_To_Suspended
+    [Documentation]    Suspended entitlement must not exists for check
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root"}
+	${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_MIX"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_STR}" to entitlement "${entitlement}"
+    add condition "${GRANT_PATH}" to entitlement "${entitlement}"
+    add condition "${GRANT_TIME}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "SUSPENDED" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "SUSPENDED" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+
+Test_Entitlements_Statuses_ConditionType_StringAndPathAndTimeCondition_Active_To_Revoked_No1
+    [Documentation]    Suspended entitlement must be available for admin actions
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root"}
+	${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_MIX"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_STR}" to entitlement "${entitlement}"
+    add condition "${GRANT_PATH}" to entitlement "${entitlement}"
+    add condition "${GRANT_TIME}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    revoke entitlement for user "${userId}" and entitlementType "${entitlementType}" and grantSource "${grantSource}" and grantSourceId "${grantSourceId}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+
+Test_Entitlements_Statuses_ConditionType_StringAndPathAndTimeCondition_Active_To_Revoked_No2
+    [Documentation]    Suspended entitlement must be available for admin actions
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root"}
+	${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_MIX"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_STR}" to entitlement "${entitlement}"
+    add condition "${GRANT_PATH}" to entitlement "${entitlement}"
+    add condition "${GRANT_TIME}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "REVOKED" for entitlement with id "${entitlement.id}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+
+Test_Entitlements_Statuses_ConditionType_StringAndPathAndTimeCondition_Suspended_To_Revoked_No1
+    [Documentation]    Suspended entitlement must be available for admin actions
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root"}
+	${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_MIX"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_STR}" to entitlement "${entitlement}"
+    add condition "${GRANT_PATH}" to entitlement "${entitlement}"
+    add condition "${GRANT_TIME}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "SUSPENDED" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    revoke entitlement for user "${userId}" and entitlementType "${entitlementType}" and grantSource "${grantSource}" and grantSourceId "${grantSourceId}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+
+Test_Entitlements_Statuses_ConditionType_StringAndPathAndTimeCondition_Suspended_To_Revoked_No2
+    [Documentation]    Suspended entitlement must be available for admin actions
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root"}
+	${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_MIX"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_STR}" to entitlement "${entitlement}"
+    add condition "${GRANT_PATH}" to entitlement "${entitlement}"
+    add condition "${GRANT_TIME}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "SUSPENDED" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "REVOKED" for entitlement with id "${entitlement.id}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+
+Test_Entitlements_Statuses_ConditionType_StringAndPathAndTimeCondition_Active_PropertyUpdate
+    [Documentation]    Properties for running entitlements must updates
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+	${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_MIX"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_STR}" to entitlement "${entitlement}"
+    add condition "${GRANT_PATH}" to entitlement "${entitlement}"
+    add condition "${GRANT_TIME}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set property name "propertyNew" and value "propertyNewValue" for entitlement with id "${entitlement.id}"
+    check property name "propertyNew" equals to value "propertyNewValue" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    change property "propertyNew" of entitlement with id "${entitlement.id}" to "propertyNewUpdatedValue"
+    check property name "propertyNew" equals to value "propertyNewUpdatedValue" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+
+Test_Entitlements_Statuses_ConditionType_StringAndPathAndTimeCondition_Suspended_PropertyUpdate
+    [Documentation]    Properties for suspended entitlements must updates
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+	${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_MIX"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_STR}" to entitlement "${entitlement}"
+    add condition "${GRANT_PATH}" to entitlement "${entitlement}"
+    add condition "${GRANT_TIME}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "SUSPENDED" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set property name "propertyNew" and value "propertyNewValue" for entitlement with id "${entitlement.id}"
+    check property name "propertyNew" equals to value "propertyNewValue" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    change property "propertyNew" of entitlement with id "${entitlement.id}" to "propertyNewUpdatedValue"
+    check property name "propertyNew" equals to value "propertyNewUpdatedValue" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+
+### METERED:
+
+Test_Entitlements_Statuses_ConditionType_MeteredCondition_Active_To_Suspended
+    [Documentation]    Suspended entitlement must not exists for check
+    ${GRANT_METERED}    Set Variable    "metered" condition with parameters {"maxQuantity": "10", "allowOverage" : "false"}
+    ${CHECK_METERED}    Set Variable    "metered" condition with parameters {"quantity": "1"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_METERED"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "SUSPENDED" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+
+Test_Entitlements_Statuses_ConditionType_MeteredCondition_Active_To_Active
+    [Documentation]    Suspended entitlement must not exists for check
+    ${GRANT_METERED}    Set Variable    "metered" condition with parameters {"maxQuantity": "10", "allowOverage" : "false"}
+    ${CHECK_METERED}    Set Variable    "metered" condition with parameters {"quantity": "1"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_METERED"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    set status "ACTIVE" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+
+Test_Entitlements_Statuses_ConditionType_MeteredCondition_Suspended_To_Active
+    [Documentation]    Suspended entitlement must not exists for check
+    ${GRANT_METERED}    Set Variable    "metered" condition with parameters {"maxQuantity": "10", "allowOverage" : "false"}
+    ${CHECK_METERED}    Set Variable    "metered" condition with parameters {"quantity": "1"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_METERED"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "SUSPENDED" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "ACTIVE" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+
+Test_Entitlements_Statuses_ConditionType_MeteredCondition_Suspended_To_Suspended
+    [Documentation]    Suspended entitlement must not exists for check
+    ${GRANT_METERED}    Set Variable    "metered" condition with parameters {"maxQuantity": "10", "allowOverage" : "false"}
+    ${CHECK_METERED}    Set Variable    "metered" condition with parameters {"quantity": "1"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_METERED"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "SUSPENDED" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "SUSPENDED" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+
+Test_Entitlements_Statuses_ConditionType_MeteredCondition_Active_To_Revoked_No1
+    [Documentation]    Suspended entitlement must be available for admin actions
+    ${GRANT_METERED}    Set Variable    "metered" condition with parameters {"maxQuantity": "10", "allowOverage" : "false"}
+    ${CHECK_METERED}    Set Variable    "metered" condition with parameters {"quantity": "1"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_METERED"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    revoke entitlement for user "${userId}" and entitlementType "${entitlementType}" and grantSource "${grantSource}" and grantSourceId "${grantSourceId}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+
+Test_Entitlements_Statuses_ConditionType_MeteredCondition_Active_To_Revoked_No2
+    [Documentation]    Suspended entitlement must be available for admin actions
+    ${GRANT_METERED}    Set Variable    "metered" condition with parameters {"maxQuantity": "10", "allowOverage" : "false"}
+    ${CHECK_METERED}    Set Variable    "metered" condition with parameters {"quantity": "1"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_METERED"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "REVOKED" for entitlement with id "${entitlement.id}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+
+Test_Entitlements_Statuses_ConditionType_MeteredCondition_Suspended_To_Revoked_No1
+    [Documentation]    Suspended entitlement must be available for admin actions
+    ${GRANT_METERED}    Set Variable    "metered" condition with parameters {"maxQuantity": "10", "allowOverage" : "false"}
+    ${CHECK_METERED}    Set Variable    "metered" condition with parameters {"quantity": "1"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_METERED"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "SUSPENDED" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    revoke entitlement for user "${userId}" and entitlementType "${entitlementType}" and grantSource "${grantSource}" and grantSourceId "${grantSourceId}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+
+Test_Entitlements_Statuses_ConditionType_MeteredCondition_Suspended_To_Revoked_No2
+    [Documentation]    Suspended entitlement must be available for admin actions
+    ${GRANT_METERED}    Set Variable    "metered" condition with parameters {"maxQuantity": "10", "allowOverage" : "false"}
+    ${CHECK_METERED}    Set Variable    "metered" condition with parameters {"quantity": "1"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_METERED"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "SUSPENDED" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "REVOKED" for entitlement with id "${entitlement.id}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+
+Test_Entitlements_Statuses_ConditionType_MeteredCondition_Active_PropertyUpdate
+    [Documentation]    Properties for running entitlements must update
+    ${GRANT_METERED}    Set Variable    "metered" condition with parameters {"maxQuantity": "10", "allowOverage" : "false"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_METERED"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set property name "propertyNew" and value "propertyNewValue" for entitlement with id "${entitlement.id}"
+    check property name "propertyNew" equals to value "propertyNewValue" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    change property "propertyNew" of entitlement with id "${entitlement.id}" to "propertyNewUpdatedValue"
+    check property name "propertyNew" equals to value "propertyNewUpdatedValue" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+
+Test_Entitlements_Statuses_ConditionType_MeteredCondition_Suspended_PropertyUpdate
+    [Documentation]    Properties for suspended entitlements must update
+    ${GRANT_METERED}    Set Variable    "metered" condition with parameters {"maxQuantity": "10", "allowOverage" : "false"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_METERED"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "SUSPENDED" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set property name "propertyNew" and value "propertyNewValue" for entitlement with id "${entitlement.id}"
+    check property name "propertyNew" equals to value "propertyNewValue" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    change property "propertyNew" of entitlement with id "${entitlement.id}" to "propertyNewUpdatedValue"
+    check property name "propertyNew" equals to value "propertyNewUpdatedValue" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+
+### MIXED:
+
+Test_Entitlements_Statuses_ConditionType_MixedCondition_Active_To_Suspended
+    [Documentation]    Suspended entitlement must not exists for check
+    ${GRANT_METERED}    Set Variable    "metered" condition with parameters {"maxQuantity": "10", "allowOverage" : "false"}
+    ${CHECK_METERED}    Set Variable    "metered" condition with parameters {"quantity": "1"}
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_MIXED"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}|${CHECK_STR}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlement}"
+    add condition "${GRANT_STR}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}|${CHECK_STR}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "SUSPENDED" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}|${CHECK_STR}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+
+Test_Entitlements_Statuses_ConditionType_MixedCondition_Active_To_Active
+    [Documentation]    Suspended entitlement must not exists for check
+    ${GRANT_METERED}    Set Variable    "metered" condition with parameters {"maxQuantity": "10", "allowOverage" : "false"}
+    ${CHECK_METERED}    Set Variable    "metered" condition with parameters {"quantity": "1"}
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_MIXED"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}|${CHECK_STR}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlement}"
+    add condition "${GRANT_STR}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    set status "ACTIVE" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}|${CHECK_STR}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+
+Test_Entitlements_Statuses_ConditionType_MixedCondition_Suspended_To_Active
+    [Documentation]    Suspended entitlement must not exists for check
+    ${GRANT_METERED}    Set Variable    "metered" condition with parameters {"maxQuantity": "10", "allowOverage" : "false"}
+    ${CHECK_METERED}    Set Variable    "metered" condition with parameters {"quantity": "1"}
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_MIXED"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}|${CHECK_STR}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlement}"
+    add condition "${GRANT_STR}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}|${CHECK_STR}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "SUSPENDED" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}|${CHECK_STR}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "ACTIVE" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}|${CHECK_STR}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+
+Test_Entitlements_Statuses_ConditionType_MixedCondition_Suspended_To_Suspended
+    [Documentation]    Suspended entitlement must not exists for check
+    ${GRANT_METERED}    Set Variable    "metered" condition with parameters {"maxQuantity": "10", "allowOverage" : "false"}
+    ${CHECK_METERED}    Set Variable    "metered" condition with parameters {"quantity": "1"}
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_MIXED"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}|${CHECK_STR}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlement}"
+    add condition "${GRANT_STR}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}|${CHECK_STR}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "SUSPENDED" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}|${CHECK_STR}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "SUSPENDED" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}|${CHECK_STR}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+
+Test_Entitlements_Statuses_ConditionType_MixedCondition_Active_To_Revoked_No1
+    [Documentation]    Suspended entitlement must be available for admin actions
+    ${GRANT_METERED}    Set Variable    "metered" condition with parameters {"maxQuantity": "10", "allowOverage" : "false"}
+    ${CHECK_METERED}    Set Variable    "metered" condition with parameters {"quantity": "1"}
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_MIXED"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}|${CHECK_STR}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlement}"
+    add condition "${GRANT_STR}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}|${CHECK_STR}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    revoke entitlement for user "${userId}" and entitlementType "${entitlementType}" and grantSource "${grantSource}" and grantSourceId "${grantSourceId}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}|${CHECK_STR}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+
+Test_Entitlements_Statuses_ConditionType_MixedCondition_Active_To_Revoked_No2
+    [Documentation]    Suspended entitlement must be available for admin actions
+    ${GRANT_METERED}    Set Variable    "metered" condition with parameters {"maxQuantity": "10", "allowOverage" : "false"}
+    ${CHECK_METERED}    Set Variable    "metered" condition with parameters {"quantity": "1"}
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_MIXED"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}|${CHECK_STR}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlement}"
+    add condition "${GRANT_STR}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}|${CHECK_STR}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "REVOKED" for entitlement with id "${entitlement.id}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}|${CHECK_STR}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+
+Test_Entitlements_Statuses_ConditionType_MixedCondition_Suspended_To_Revoked_No1
+    [Documentation]    Suspended entitlement must be available for admin actions
+    ${GRANT_METERED}    Set Variable    "metered" condition with parameters {"maxQuantity": "10", "allowOverage" : "false"}
+    ${CHECK_METERED}    Set Variable    "metered" condition with parameters {"quantity": "1"}
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_MIXED"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}|${CHECK_STR}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlement}"
+    add condition "${GRANT_STR}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}|${CHECK_STR}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "SUSPENDED" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}|${CHECK_STR}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    revoke entitlement for user "${userId}" and entitlementType "${entitlementType}" and grantSource "${grantSource}" and grantSourceId "${grantSourceId}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}|${CHECK_STR}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+
+Test_Entitlements_Statuses_ConditionType_MixedCondition_Suspended_To_Revoked_No2
+    [Documentation]    Suspended entitlement must be available for admin actions
+    ${GRANT_METERED}    Set Variable    "metered" condition with parameters {"maxQuantity": "10", "allowOverage" : "false"}
+    ${CHECK_METERED}    Set Variable    "metered" condition with parameters {"quantity": "1"}
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_MIXED"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}|${CHECK_STR}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlement}"
+    add condition "${GRANT_STR}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}|${CHECK_STR}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "SUSPENDED" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}|${CHECK_STR}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "REVOKED" for entitlement with id "${entitlement.id}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}|${CHECK_STR}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+
+Test_Entitlements_Statuses_ConditionType_MixedCondition_Active_PropertyUpdate
+    [Documentation]    Properties for running entitlements must update
+    ${GRANT_METERED}    Set Variable    "metered" condition with parameters {"maxQuantity": "10", "allowOverage" : "false"}
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_MIXED"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlement}"
+    add condition "${GRANT_STR}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set property name "propertyNew" and value "propertyNewValue" for entitlement with id "${entitlement.id}"
+    check property name "propertyNew" equals to value "propertyNewValue" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    change property "propertyNew" of entitlement with id "${entitlement.id}" to "propertyNewUpdatedValue"
+    check property name "propertyNew" equals to value "propertyNewUpdatedValue" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+
+Test_Entitlements_Statuses_ConditionType_MixedCondition_Suspended_PropertyUpdate
+    [Documentation]    Properties for suspended entitlements must update
+    ${GRANT_METERED}    Set Variable    "metered" condition with parameters {"maxQuantity": "10", "allowOverage" : "false"}
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${userId} =        generate random id
+    ${entitlementType} =        Set Variable   "ENT_MIXED"
+    ${grantSourceId} =      Set Variable   "grantSourceId"
+    ${grantSource} =        Set Variable   "grantSource"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlement}"
+    add condition "${GRANT_STR}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with id "${entitlement.id}" has status "ACTIVE"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set status "SUSPENDED" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    set property name "propertyNew" and value "propertyNewValue" for entitlement with id "${entitlement.id}"
+    check property name "propertyNew" equals to value "propertyNewValue" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    change property "propertyNew" of entitlement with id "${entitlement.id}" to "propertyNewUpdatedValue"
+    check property name "propertyNew" equals to value "propertyNewUpdatedValue" for entitlement with id "${entitlement.id}"
+    check entitlement with id "${entitlement.id}" has status "SUSPENDED"

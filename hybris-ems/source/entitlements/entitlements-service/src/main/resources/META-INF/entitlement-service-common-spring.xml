@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ [y] hybris Platform
+
+ Copyright (c) 2017 SAP SE or an SAP affiliate company.  All rights reserved.
+
+ This software is the confidential and proprietary information of SAP
+ ("Confidential Information"). You shall not disclose such Confidential
+ Information and shall use it only in accordance with the terms of the
+ license agreement you entered into with SAP.
+-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns:p="http://www.springframework.org/schema/p" xmlns:context="http://www.springframework.org/schema/context"
+xmlns:tx="http://www.springframework.org/schema/tx"
+xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+<alias name="defaultGrantService" alias="grantService"/>
+
+<context:annotation-config/>
+<context:component-scan base-package="com.hybris.services.entitlements" />
+
+<tx:annotation-driven/>
+
+<import resource="classpath:/hybris-kernel-jdbc-spring.xml" />
+<import resource="string-condition-spring.xml"/>
+<import resource="path-condition-spring.xml"/>
+<import resource="timeframe-condition-spring.xml"/>
+<import resource="metered-condition-spring.xml"/>
+<import resource="geo-condition-spring.xml"/>
+<import resource="classpath:/META-INF/mongodb-spring.xml" />
+<import resource="entitlement-api-spring.xml"/>
+
+<alias alias="lazyLoadAttributesStrategy" name="eagerGrantAttributesStrategy" />
+<bean id = "eagerGrantAttributesStrategy" class ="com.hybris.services.entitlements.service.impl.EagerGrantAttributesStrategy">
+	<property name="fallbackStrategy" ref="atomicsAndReferencesLoadStrategy" />
+</bean>
+
+<bean id="enginesConfiguration" class="com.hybris.kernel.persistence.config.EngineConfiguration"
+	p:defaultEngine-ref="mongoDBPersistenceEngine">
+	<property name="typeEngineMappings">
+		<list>
+			<bean class="com.hybris.kernel.persistence.config.TypeEngineMapping"
+				p:engine-ref="mongoDBPersistenceEngine" p:includeTypeCodes="Grant"/>
+		</list>
+	</property>
+</bean>
+
+<bean id="defaultGrantService" class="com.hybris.services.entitlements.service.impl.DefaultGrantService">
+	<property name="persistenceManager" ref="persistenceManager"/>
+	<property name="conditionTypeFactory" ref="conditionTypeFactory"/>
+	<property name="grantComparatorFactory" ref="grantComparatorFactory"/>
+</bean>
+
+
+<alias name="defaultConditionTypeFactory" alias="conditionTypeFactory"/>
+<bean id="defaultConditionTypeFactory" class="com.hybris.services.entitlements.condition.DefaultConditionTypeFactory"/>
+
+<alias name="defaultGrantComparatorFactory" alias="grantComparatorFactory"/>
+<bean id="defaultGrantComparatorFactory" class="com.hybris.services.entitlements.sorting.DefaultGrantComparatorFactory"/>
+
+<bean id="defaultGrantComparator" class="com.hybris.services.entitlements.sorting.DefaultGrantComparator"/>
+
+<bean id="booleanValidator" class="com.hybris.services.entitlements.validation.BooleanConversionStrategy"/>
+<bean id="geoPathValidator" class="com.hybris.services.entitlements.validation.GeoPathConversionStrategy"/>
+<bean id="dateTimeValidator" class="com.hybris.services.entitlements.validation.DateTimeConversionStrategy">
+	<property name="converter" ref="dateTimeConverter"/>
+</bean>
+<bean id="positiveIntegerValidator" class="com.hybris.services.entitlements.validation.PositiveIntegerConversionStrategy"/>
+<bean id="integerValidator" class="com.hybris.services.entitlements.validation.IntegerConversionStrategy"/>
+
+</beans>

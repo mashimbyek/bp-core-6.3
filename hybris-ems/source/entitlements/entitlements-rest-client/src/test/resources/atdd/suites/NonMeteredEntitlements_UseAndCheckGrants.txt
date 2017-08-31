@@ -1,0 +1,628 @@
+# -----------------------------------------------------------------------
+# [y] hybris Platform
+#
+# Copyright (c) 2017 SAP SE or an SAP affiliate company.  All rights reserved.
+# 
+# This software is the confidential and proprietary information of SAP
+# ("Confidential Information"). You shall not disclose such Confidential
+# Information and shall use it only in accordance with the terms of the
+# license agreement you entered into with SAP.
+# -----------------------------------------------------------------------
+*** Settings ***
+Resource    entitlements-test/settings_keywords.txt
+Resource    entitlements-test/builder_entitlements_keywords.txt
+Resource    entitlements-test/modify_entitlements_keywords.txt
+Resource    entitlements-test/exceptions_entitlements_keywords.txt
+Resource    entitlements-test/check_entitlements_keywords.txt
+Resource    entitlements-test/use_entitlements_keywords.txt
+
+*** Test Cases ***
+### CONDITION TYPE - SIMPLE
+Test_NonMeteredEntitlements_UseAndCheckGrants_SimpleType_Use_x1_True
+    [Documentation]    Simple entitlement (no conditions)
+    ${userId} =     generate random id
+    grant entitlement with entitlementType "ENT_SIMPLE" for user "${userId}"
+    check entitlement with entitlementType "ENT_SIMPLE" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_SIMPLE" for user "${userId}" is "true"
+
+Test_NonMeteredEntitlements_UseAndCheckGrants_SimpleType_Use_quantity
+    [Documentation]    Simple entitlement (no conditions) with quantity
+    ${userId} =     generate random id
+    ${metered_criterion} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    grant entitlement with entitlementType "ENT_SIMPLE" for user "${userId}"
+    use entitlement with entitlementType "ENT_SIMPLE" and conditions "${metered_criterion}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_SIMPLE" and conditions "${metered_criterion}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_UseAndCheckGrants_SimpleType_Use_x2_TrueTrue
+    [Documentation]    Simple entitlement (no conditions)
+    ${userId} =     generate random id
+    grant entitlement with entitlementType "ENT_SIMPLE" for user "${userId}"
+    check entitlement with entitlementType "ENT_SIMPLE" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_SIMPLE" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_SIMPLE" for user "${userId}" is "true"
+    
+Test_NonMeteredEntitlements_UseAndCheckGrants_SimpleType_UseForMultiple
+    [Documentation]    Tests if it is possible to use/check for entitlements with same 
+    ...                userId, entitlementType, grantSource & grantSourceId 
+    ${userId} =     generate random id
+    grant entitlement with entitlementType "ENT_SIMPLE" for user "${userId}"
+    grant entitlement with entitlementType "ENT_SIMPLE" for user "${userId}"  
+    grant entitlement with entitlementType "ENT_SIMPLE" for user "${userId}" 
+    ensure there are "3" entitlements for user "${userId}"
+    use entitlement with entitlementType "ENT_SIMPLE" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_SIMPLE" for user "${userId}" is "true"
+
+Test_NonMeteredEntitlements_UseAndCheckGrants_SimpleType_CheckGrants_DetailsFlag
+    [Documentation]    Simple entitlement (no conditions)
+    ${userId} =     generate random id
+    check entitlement with entitlementType "ENT_SIMPLE" if retrieve details set to "true" for user "${userId}" is "false" and has "0" grants
+    check entitlement with entitlementType "ENT_SIMPLE" if retrieve details set to "false" for user "${userId}" is "false" and has "0" grants
+    use entitlement with entitlementType "ENT_SIMPLE" if retrieve details set to "true" for user "${userId}" is "false" and has "0" grants
+    use entitlement with entitlementType "ENT_SIMPLE" if retrieve details set to "false" for user "${userId}" is "false" and has "0" grants
+    grant entitlement with entitlementType "ENT_SIMPLE" for user "${userId}"
+    check entitlement with entitlementType "ENT_SIMPLE" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_SIMPLE" if retrieve details set to "true" for user "${userId}" is "true" and has "1" grants
+    check entitlement with entitlementType "ENT_SIMPLE" if retrieve details set to "false" for user "${userId}" is "true" and has "0" grants
+    use entitlement with entitlementType "ENT_SIMPLE" if retrieve details set to "true" for user "${userId}" is "true" and has "1" grants
+    use entitlement with entitlementType "ENT_SIMPLE" if retrieve details set to "false" for user "${userId}" is "true" and has "0" grants
+    check entitlement with entitlementType "ENT_SIMPLE" if retrieve details set to "true" for user "${userId}" is "true" and has "1" grants
+    check entitlement with entitlementType "ENT_SIMPLE" if retrieve details set to "false" for user "${userId}" is "true" and has "0" grants
+
+### CONDITION TYPE - STRING
+Test_NonMeteredEntitlements_UseAndCheckGrants_StringConditionType_Use_x1_True
+    [Documentation]
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${USE_STR_TRUE}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${userId} =     generate random id
+    grant entitlement with entitlementType "ENT_STR" and conditions "${GRANT_STR}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_STR" and conditions "${USE_STR_TRUE}" for user "${userId}" is "true"
+
+Test_NonMeteredEntitlements_UseAndCheckGrants_StringConditionType_Use_x1_False
+    [Documentation]
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${USE_STR_FALSE}    Set Variable    "string" condition with parameters {"string":"ab"}
+    ${userId} =     generate random id
+    grant entitlement with entitlementType "ENT_STR" and conditions "${GRANT_STR}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_STR" and conditions "${USE_STR_FALSE}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_UseAndCheckGrants_StringConditionType_Use_x2_TrueTrue
+    [Documentation]
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${USE_STR_TRUE}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${userId} =     generate random id
+    grant entitlement with entitlementType "ENT_STR" and conditions "${GRANT_STR}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_STR" and conditions "${USE_STR_TRUE}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_STR" and conditions "${USE_STR_TRUE}" for user "${userId}" is "true"
+
+Test_NonMeteredEntitlements_UseAndCheckGrants_StringConditionType_Use_x2_FalseTrue
+    [Documentation]
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${USE_STR_TRUE}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${USE_STR_FALSE}    Set Variable    "string" condition with parameters {"string":"ab"}
+    ${userId} =     generate random id
+    grant entitlement with entitlementType "ENT_STR" and conditions "${GRANT_STR}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_STR" and conditions "${USE_STR_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_STR" and conditions "${USE_STR_TRUE}" for user "${userId}" is "true"
+
+Test_NonMeteredEntitlements_UseAndCheckGrants_StringConditionType_CheckGrants_DetailsFlag_No1
+    [Documentation]
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR_VALID}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${USE_STR_VALID}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${userId} =     generate random id
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR_VALID}" if retrieve details set to "true" for user "${userId}" is "false" and has "0" grants
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR_VALID}" if retrieve details set to "false" for user "${userId}" is "false" and has "0" grants
+    use entitlement with entitlementType "ENT_STR" and conditions "${USE_STR_VALID}" if retrieve details set to "true" for user "${userId}" is "false" and has "0" grants
+    use entitlement with entitlementType "ENT_STR" and conditions "${USE_STR_VALID}" if retrieve details set to "false" for user "${userId}" is "false" and has "0" grants
+    grant entitlement with entitlementType "ENT_STR" and conditions "${GRANT_STR}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR_VALID}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR_VALID}" if retrieve details set to "true" for user "${userId}" is "true" and has "1" grants
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR_VALID}" if retrieve details set to "false" for user "${userId}" is "true" and has "0" grants
+    use entitlement with entitlementType "ENT_STR" and conditions "${USE_STR_VALID}" if retrieve details set to "true" for user "${userId}" is "true" and has "1" grants
+    use entitlement with entitlementType "ENT_STR" and conditions "${USE_STR_VALID}" if retrieve details set to "false" for user "${userId}" is "true" and has "0" grants
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR_VALID}" if retrieve details set to "true" for user "${userId}" is "true" and has "1" grants
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR_VALID}" if retrieve details set to "false" for user "${userId}" is "true" and has "0" grants
+
+Test_NonMeteredEntitlements_UseAndCheckGrants_StringConditionType_CheckGrants_DetailsFlag_No2
+    [Documentation]    Invalid USE_STR condition
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR_VALID}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR_INVALID}    Set Variable    "string" condition with parameters {"string":"qwe"}
+    ${USE_STR_INVALID}    Set Variable    "string" condition with parameters {"string":"qwe"}
+    ${userId} =     generate random id
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR_INVALID}" if retrieve details set to "true" for user "${userId}" is "false" and has "0" grants
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR_INVALID}" if retrieve details set to "false" for user "${userId}" is "false" and has "0" grants
+    use entitlement with entitlementType "ENT_STR" and conditions "${USE_STR_INVALID}" if retrieve details set to "true" for user "${userId}" is "false" and has "0" grants
+    use entitlement with entitlementType "ENT_STR" and conditions "${USE_STR_INVALID}" if retrieve details set to "false" for user "${userId}" is "false" and has "0" grants
+    grant entitlement with entitlementType "ENT_STR" and conditions "${GRANT_STR}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR_VALID}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR_INVALID}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR_INVALID}" if retrieve details set to "true" for user "${userId}" is "false" and has "1" grants
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR_INVALID}" if retrieve details set to "false" for user "${userId}" is "false" and has "0" grants
+    use entitlement with entitlementType "ENT_STR" and conditions "${USE_STR_INVALID}" if retrieve details set to "true" for user "${userId}" is "false" and has "1" grants
+    use entitlement with entitlementType "ENT_STR" and conditions "${USE_STR_INVALID}" if retrieve details set to "false" for user "${userId}" is "false" and has "0" grants
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR_INVALID}" if retrieve details set to "true" for user "${userId}" is "false" and has "1" grants
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR_INVALID}" if retrieve details set to "false" for user "${userId}" is "false" and has "0" grants
+
+### CONDITION TYPE - PATH
+Test_NonMeteredEntitlements_UseAndCheckGrants_PathConditionType_Use_x1_True
+    [Documentation]
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root/subdirectory"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root/subdirectory"}
+    ${USE_PATH_TRUE}    Set Variable    "path" condition with parameters {"file":"/root/subdirectory"}
+    ${USE_PATH_FALSE}    Set Variable    "path" condition with parameters {"file":"/root"}
+    ${userId} =     generate random id
+    grant entitlement with entitlementType "ENT_PATH" and conditions "${GRANT_PATH}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_PATH" and conditions "${USE_PATH_TRUE}" for user "${userId}" is "true"
+
+Test_NonMeteredEntitlements_UseAndCheckGrants_PathConditionType_Use_x1_False
+    [Documentation]
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root/subdirectory"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root/subdirectory"}
+    ${USE_PATH_TRUE}    Set Variable    "path" condition with parameters {"file":"/root/subdirectory"}
+    ${USE_PATH_FALSE}    Set Variable    "path" condition with parameters {"file":"/root"}
+    ${userId} =     generate random id
+    grant entitlement with entitlementType "ENT_PATH" and conditions "${GRANT_PATH}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_PATH" and conditions "${USE_PATH_FALSE}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_UseAndCheckGrants_PathConditionType_Use_x2_TrueTrue
+    [Documentation]
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root/subdirectory"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root/subdirectory"}
+    ${USE_PATH_TRUE}    Set Variable    "path" condition with parameters {"file":"/root/subdirectory"}
+    ${USE_PATH_FALSE}    Set Variable    "path" condition with parameters {"file":"/root"}
+    ${userId} =     generate random id
+    grant entitlement with entitlementType "ENT_PATH" and conditions "${GRANT_PATH}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_PATH" and conditions "${USE_PATH_TRUE}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_PATH" and conditions "${USE_PATH_TRUE}" for user "${userId}" is "true"
+
+Test_NonMeteredEntitlements_UseAndCheckGrants_PathConditionType_Use_x2_FalseTrue_No1
+    [Documentation]
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root/subdirectory"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root/subdirectory"}
+    ${USE_PATH_TRUE}    Set Variable    "path" condition with parameters {"file":"/root/subdirectory"}
+    ${USE_PATH_FALSE}    Set Variable    "path" condition with parameters {"file":"/root"}
+    ${userId} =     generate random id
+    grant entitlement with entitlementType "ENT_PATH" and conditions "${GRANT_PATH}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_PATH" and conditions "${USE_PATH_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_PATH" and conditions "${USE_PATH_TRUE}" for user "${userId}" is "true"
+
+Test_NonMeteredEntitlements_UseAndCheckGrants_PathConditionType_Use_x2_FalseTrue_No2
+    [Documentation]
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root/subdirectory"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root/subdirectory"}
+    ${USE_PATH_TRUE_1}    Set Variable    "path" condition with parameters {"file":"/root/subdirectory/a"}
+    ${USE_PATH_TRUE_2}    Set Variable    "path" condition with parameters {"file":"/root/subdirectory/a/b"}
+    ${USE_PATH_FALSE_1}    Set Variable    "path" condition with parameters {"file":"/root/sub"}
+    ${USE_PATH_FALSE_2}    Set Variable    "path" condition with parameters {"file":"/root/subdirectoryA"}
+    ${userId} =     generate random id
+    grant entitlement with entitlementType "ENT_PATH" and conditions "${GRANT_PATH}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_PATH" and conditions "${USE_PATH_FALSE_1}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_PATH" and conditions "${USE_PATH_TRUE_1}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_PATH" and conditions "${USE_PATH_FALSE_2}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_PATH" and conditions "${USE_PATH_TRUE_2}" for user "${userId}" is "true"
+
+Test_NonMeteredEntitlements_UseAndCheckGrants_PathConditionType_CheckGrants_DetailsFlag_No1
+    [Documentation]
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root/subdirectory"}
+    ${CHECK_PATH_VALID}    Set Variable    "path" condition with parameters {"file":"/root/subdirectory"}
+    ${USE_PATH_VALID}    Set Variable    "path" condition with parameters {"file":"/root/subdirectory"}
+    ${userId} =     generate random id
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH_VALID}" if retrieve details set to "true" for user "${userId}" is "false" and has "0" grants
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH_VALID}" if retrieve details set to "false" for user "${userId}" is "false" and has "0" grants
+    use entitlement with entitlementType "ENT_PATH" and conditions "${USE_PATH_VALID}" if retrieve details set to "true" for user "${userId}" is "false" and has "0" grants
+    use entitlement with entitlementType "ENT_PATH" and conditions "${USE_PATH_VALID}" if retrieve details set to "false" for user "${userId}" is "false" and has "0" grants
+    grant entitlement with entitlementType "ENT_PATH" and conditions "${GRANT_PATH}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH_VALID}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH_VALID}" if retrieve details set to "true" for user "${userId}" is "true" and has "1" grants
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH_VALID}" if retrieve details set to "false" for user "${userId}" is "true" and has "0" grants
+    use entitlement with entitlementType "ENT_PATH" and conditions "${USE_PATH_VALID}" if retrieve details set to "true" for user "${userId}" is "true" and has "1" grants
+    use entitlement with entitlementType "ENT_PATH" and conditions "${USE_PATH_VALID}" if retrieve details set to "false" for user "${userId}" is "true" and has "0" grants
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH_VALID}" if retrieve details set to "true" for user "${userId}" is "true" and has "1" grants
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH_VALID}" if retrieve details set to "false" for user "${userId}" is "true" and has "0" grants
+
+Test_NonMeteredEntitlements_UseAndCheckGrants_PathConditionType_CheckGrants_DetailsFlag_No2
+    [Documentation]
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root/subdirectory"}
+    ${CHECK_PATH_VALID}    Set Variable    "path" condition with parameters {"file":"/root/subdirectory"}
+    ${CHECK_PATH_INVALID}    Set Variable    "path" condition with parameters {"file":"/root"}
+    ${USE_PATH_INVALID}    Set Variable    "path" condition with parameters {"file":"/root"}
+    ${userId} =     generate random id
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH_INVALID}" if retrieve details set to "true" for user "${userId}" is "false" and has "0" grants
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH_INVALID}" if retrieve details set to "false" for user "${userId}" is "false" and has "0" grants
+    use entitlement with entitlementType "ENT_PATH" and conditions "${USE_PATH_INVALID}" if retrieve details set to "true" for user "${userId}" is "false" and has "0" grants
+    use entitlement with entitlementType "ENT_PATH" and conditions "${USE_PATH_INVALID}" if retrieve details set to "false" for user "${userId}" is "false" and has "0" grants
+    grant entitlement with entitlementType "ENT_PATH" and conditions "${GRANT_PATH}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH_VALID}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH_INVALID}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH_INVALID}" if retrieve details set to "true" for user "${userId}" is "false" and has "1" grants
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH_INVALID}" if retrieve details set to "false" for user "${userId}" is "false" and has "0" grants
+    use entitlement with entitlementType "ENT_PATH" and conditions "${USE_PATH_INVALID}" if retrieve details set to "true" for user "${userId}" is "false" and has "1" grants
+    use entitlement with entitlementType "ENT_PATH" and conditions "${USE_PATH_INVALID}" if retrieve details set to "false" for user "${userId}" is "false" and has "0" grants
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH_INVALID}" if retrieve details set to "true" for user "${userId}" is "false" and has "1" grants
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH_INVALID}" if retrieve details set to "false" for user "${userId}" is "false" and has "0" grants
+
+### CONDITION TYPE - TIMEFRAME
+Test_NonMeteredEntitlements_UseAndCheckGrants_TimeframeConditionType_Use_x1_True
+    [Documentation]
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${USE_TIME_TRUE}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${userId} =     generate random id
+    grant entitlement with entitlementType "ENT_TIME" and conditions "${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_TIME" and conditions "${USE_TIME_TRUE}" for user "${userId}" is "true"
+    
+Test_NonMeteredEntitlements_UseAndCheckGrants_TimeframeConditionType_NoEndTime
+    [Documentation]    Timeframe condition - timeframe open (no end time defined)
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-02T00:00:00Z"}
+    ${CHECK_TIME_FALSE}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T23:59:59Z"}
+    ${USE_TIME_FALSE}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T23:59:59Z"}    
+    ${CHECK_TIME1}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-02T00:00:00Z"}
+    ${USE_TIME_TRUE1}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-02T00:00:00Z"}
+    ${CHECK_TIME2}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-02T00:00:01Z"}
+    ${USE_TIME_TRUE2}    Set Variable    "timeframe" condition with parameters {"time":"2010-02-01T00:00:01Z"}
+    ${CHECK_TIME3}    Set Variable    "timeframe" condition with parameters {"time":"9999-01-01T00:00:00Z"}
+    ${USE_TIME_TRUE3}    Set Variable    "timeframe" condition with parameters {"time":"9999-01-01T00:00:00Z"}    
+    ${userId} =     generate random id
+    grant entitlement with entitlementType "ENT_TIME" and conditions "${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_TIME" and conditions "${USE_TIME_FALSE}" for user "${userId}" is "false"    
+	#
+	check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME1}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_TIME" and conditions "${USE_TIME_TRUE1}" for user "${userId}" is "true"
+    #
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME2}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_TIME" and conditions "${USE_TIME_TRUE2}" for user "${userId}" is "true"
+    #
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME3}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_TIME" and conditions "${USE_TIME_TRUE3}" for user "${userId}" is "true"
+    
+Test_NonMeteredEntitlements_UseAndCheckGrants_TimeframeConditionType_Use_x1_False
+    [Documentation]
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${USE_TIME_FALSE}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:03Z"}
+    ${userId} =     generate random id
+    grant entitlement with entitlementType "ENT_TIME" and conditions "${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_TIME" and conditions "${USE_TIME_FALSE}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_UseAndCheckGrants_TimeframeConditionType_Use_x2_TrueTrue
+    [Documentation]
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${USE_TIME_TRUE}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${userId} =     generate random id
+    grant entitlement with entitlementType "ENT_TIME" and conditions "${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_TIME" and conditions "${USE_TIME_TRUE}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_TIME" and conditions "${USE_TIME_TRUE}" for user "${userId}" is "true"
+
+Test_NonMeteredEntitlements_UseAndCheckGrants_TimeframeConditionType_Use_x2_FalseTrue
+    [Documentation]
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${USE_TIME_TRUE}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${USE_TIME_FALSE}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:03Z"}
+    ${userId} =     generate random id
+    grant entitlement with entitlementType "ENT_TIME" and conditions "${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_TIME" and conditions "${USE_TIME_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_TIME" and conditions "${USE_TIME_TRUE}" for user "${userId}" is "true"
+
+Test_NonMeteredEntitlements_UseAndCheckGrants_TimeframeConditionType_CheckGrants_DetailsFlag_No1
+    [Documentation]
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME_VALID}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${USE_TIME_VALID}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${userId} =     generate random id
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME_VALID}" if retrieve details set to "true" for user "${userId}" is "false" and has "0" grants
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME_VALID}" if retrieve details set to "false" for user "${userId}" is "false" and has "0" grants
+    use entitlement with entitlementType "ENT_TIME" and conditions "${USE_TIME_VALID}" if retrieve details set to "true" for user "${userId}" is "false" and has "0" grants
+    use entitlement with entitlementType "ENT_TIME" and conditions "${USE_TIME_VALID}" if retrieve details set to "false" for user "${userId}" is "false" and has "0" grants
+    grant entitlement with entitlementType "ENT_TIME" and conditions "${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME_VALID}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME_VALID}" if retrieve details set to "true" for user "${userId}" is "true" and has "1" grants
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME_VALID}" if retrieve details set to "false" for user "${userId}" is "true" and has "0" grants
+    use entitlement with entitlementType "ENT_TIME" and conditions "${USE_TIME_VALID}" if retrieve details set to "true" for user "${userId}" is "true" and has "1" grants
+    use entitlement with entitlementType "ENT_TIME" and conditions "${USE_TIME_VALID}" if retrieve details set to "false" for user "${userId}" is "true" and has "0" grants
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME_VALID}" if retrieve details set to "true" for user "${userId}" is "true" and has "1" grants
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME_VALID}" if retrieve details set to "false" for user "${userId}" is "true" and has "0" grants
+
+Test_NonMeteredEntitlements_UseAndCheckGrants_TimeframeConditionType_CheckGrants_DetailsFlag_No2
+    [Documentation]
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME_VALID}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${CHECK_TIME_INVALID}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:03Z"}
+    ${USE_TIME_INVALID}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:03Z"}
+    ${userId} =     generate random id
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME_INVALID}" if retrieve details set to "true" for user "${userId}" is "false" and has "0" grants
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME_INVALID}" if retrieve details set to "false" for user "${userId}" is "false" and has "0" grants
+    use entitlement with entitlementType "ENT_TIME" and conditions "${USE_TIME_INVALID}" if retrieve details set to "true" for user "${userId}" is "false" and has "0" grants
+    use entitlement with entitlementType "ENT_TIME" and conditions "${USE_TIME_INVALID}" if retrieve details set to "false" for user "${userId}" is "false" and has "0" grants
+    grant entitlement with entitlementType "ENT_TIME" and conditions "${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME_VALID}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME_INVALID}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME_INVALID}" if retrieve details set to "true" for user "${userId}" is "false" and has "1" grants
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME_INVALID}" if retrieve details set to "false" for user "${userId}" is "false" and has "0" grants
+    use entitlement with entitlementType "ENT_TIME" and conditions "${USE_TIME_INVALID}" if retrieve details set to "true" for user "${userId}" is "false" and has "1" grants
+    use entitlement with entitlementType "ENT_TIME" and conditions "${USE_TIME_INVALID}" if retrieve details set to "false" for user "${userId}" is "false" and has "0" grants
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME_INVALID}" if retrieve details set to "true" for user "${userId}" is "false" and has "1" grants
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME_INVALID}" if retrieve details set to "false" for user "${userId}" is "false" and has "0" grants
+    #### check for 2nd ent type that user has no grants for
+    # check entitlement with entitlementType "ENT_NEW" and conditions "${CHECK_TIME_VALID}" if retrieve details set to "false" for user "${userId}" is "false" and has "0" grants
+    ###
+    check entitlement with entitlementType "ENT_NEW" and conditions "${CHECK_TIME_VALID}" if retrieve details set to "false" for user "${userId}" is "false" and has "0" grants
+
+### CONDITION TYPE - GEO
+Test_NonMeteredEntitlements_UseAndCheckGrants_GeoConditionType_Use_x1_True
+    [Documentation]
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${USE_GEO_TRUE}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${userId} =     generate random id
+    grant entitlement with entitlementType "ENT_GEO" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "ENT_GEO" and conditions "${CHECK_GEO}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_GEO" and conditions "${USE_GEO_TRUE}" for user "${userId}" is "true"
+
+Test_NonMeteredEntitlements_UseAndCheckGrants_GeoConditionType_Use_x1_False
+    [Documentation]
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${USE_GEO_FALSE}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/MunichInvalid"}
+    ${userId} =     generate random id
+    grant entitlement with entitlementType "ENT_GEO" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "ENT_GEO" and conditions "${CHECK_GEO}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_GEO" and conditions "${USE_GEO_FALSE}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_UseAndCheckGrants_GeoConditionType_Use_x2_TrueTrue
+    [Documentation]
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${USE_GEO_TRUE}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${userId} =     generate random id
+    grant entitlement with entitlementType "ENT_GEO" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "ENT_GEO" and conditions "${CHECK_GEO}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_GEO" and conditions "${USE_GEO_TRUE}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_GEO" and conditions "${USE_GEO_TRUE}" for user "${userId}" is "true"
+
+Test_NonMeteredEntitlements_UseAndCheckGrants_GeoConditionType_Use_x2_FalseTrue
+    [Documentation]
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${USE_GEO_TRUE}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${USE_GEO_FALSE}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/MunichInvalid"}
+    ${userId} =     generate random id
+    grant entitlement with entitlementType "ENT_GEO" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "ENT_GEO" and conditions "${CHECK_GEO}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_GEO" and conditions "${USE_GEO_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_GEO" and conditions "${USE_GEO_TRUE}" for user "${userId}" is "true"
+
+Test_NonMeteredEntitlements_UseAndCheckGrants_GeoConditionType_CheckGrants_DetailsFlag_No1
+    [Documentation]
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO_VALID}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO_INVALID}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/MunichInvalid"}
+    ${USE_GEO_VALID}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${USE_GEO_INVALID}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/MunichInvalid"}
+    ${userId} =     generate random id
+    check entitlement with entitlementType "ENT_GEO" and conditions "${CHECK_GEO_VALID}" if retrieve details set to "true" for user "${userId}" is "false" and has "0" grants
+    check entitlement with entitlementType "ENT_GEO" and conditions "${CHECK_GEO_VALID}" if retrieve details set to "false" for user "${userId}" is "false" and has "0" grants
+    use entitlement with entitlementType "ENT_GEO" and conditions "${USE_GEO_VALID}" if retrieve details set to "true" for user "${userId}" is "false" and has "0" grants
+    use entitlement with entitlementType "ENT_GEO" and conditions "${USE_GEO_VALID}" if retrieve details set to "false" for user "${userId}" is "false" and has "0" grants
+    grant entitlement with entitlementType "ENT_GEO" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "ENT_GEO" and conditions "${CHECK_GEO_VALID}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_GEO" and conditions "${CHECK_GEO_VALID}" if retrieve details set to "true" for user "${userId}" is "true" and has "1" grants
+    check entitlement with entitlementType "ENT_GEO" and conditions "${CHECK_GEO_VALID}" if retrieve details set to "false" for user "${userId}" is "true" and has "0" grants
+    use entitlement with entitlementType "ENT_GEO" and conditions "${USE_GEO_VALID}" if retrieve details set to "true" for user "${userId}" is "true" and has "1" grants
+    use entitlement with entitlementType "ENT_GEO" and conditions "${USE_GEO_VALID}" if retrieve details set to "false" for user "${userId}" is "true" and has "0" grants
+    check entitlement with entitlementType "ENT_GEO" and conditions "${CHECK_GEO_VALID}" if retrieve details set to "true" for user "${userId}" is "true" and has "1" grants
+    check entitlement with entitlementType "ENT_GEO" and conditions "${CHECK_GEO_VALID}" if retrieve details set to "false" for user "${userId}" is "true" and has "0" grants
+
+Test_NonMeteredEntitlements_UseAndCheckGrants_GeoConditionType_CheckGrants_DetailsFlag_No2
+    [Documentation]    Invalid USE_GEO condition
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO_VALID}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO_INVALID}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/MunichInvalid"}
+    ${USE_GEO_VALID}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${USE_GEO_INVALID}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/MunichInvalid"}
+    ${userId} =     generate random id
+    check entitlement with entitlementType "ENT_GEO" and conditions "${CHECK_GEO_INVALID}" if retrieve details set to "true" for user "${userId}" is "false" and has "0" grants
+    check entitlement with entitlementType "ENT_GEO" and conditions "${CHECK_GEO_INVALID}" if retrieve details set to "false" for user "${userId}" is "false" and has "0" grants
+    use entitlement with entitlementType "ENT_GEO" and conditions "${USE_GEO_INVALID}" if retrieve details set to "true" for user "${userId}" is "false" and has "0" grants
+    use entitlement with entitlementType "ENT_GEO" and conditions "${USE_GEO_INVALID}" if retrieve details set to "false" for user "${userId}" is "false" and has "0" grants
+    grant entitlement with entitlementType "ENT_GEO" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "ENT_GEO" and conditions "${CHECK_GEO_VALID}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_GEO" and conditions "${CHECK_GEO_INVALID}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_GEO" and conditions "${CHECK_GEO_INVALID}" if retrieve details set to "true" for user "${userId}" is "false" and has "1" grants
+    check entitlement with entitlementType "ENT_GEO" and conditions "${CHECK_GEO_INVALID}" if retrieve details set to "false" for user "${userId}" is "false" and has "0" grants
+    use entitlement with entitlementType "ENT_GEO" and conditions "${USE_GEO_INVALID}" if retrieve details set to "true" for user "${userId}" is "false" and has "1" grants
+    use entitlement with entitlementType "ENT_GEO" and conditions "${USE_GEO_INVALID}" if retrieve details set to "false" for user "${userId}" is "false" and has "0" grants
+    check entitlement with entitlementType "ENT_GEO" and conditions "${CHECK_GEO_INVALID}" if retrieve details set to "true" for user "${userId}" is "false" and has "1" grants
+    check entitlement with entitlementType "ENT_GEO" and conditions "${CHECK_GEO_INVALID}" if retrieve details set to "false" for user "${userId}" is "false" and has "0" grants
+
+### CONDITION TYPE - MIXED: STRING, PATH, TIMEFRAME, GEO
+Test_NonMeteredEntitlements_UseAndCheckGrants_StringAndPathAndTimeframeAndGeoConditionType_Use_FalseTrue
+    [Documentation]
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root/subdirectory"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root/subdirectory"}
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${USE_STR_TRUE}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${USE_STR_FALSE}    Set Variable    "string" condition with parameters {"string":"ab"}
+    ${USE_PATH_TRUE}    Set Variable    "path" condition with parameters {"file":"/root/subdirectory/a"}
+    ${USE_PATH_FALSE}    Set Variable    "path" condition with parameters {"file":"/root/subdirectoryA"}
+    ${USE_TIME_TRUE}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:00Z"}
+    ${USE_TIME_FALSE}    Set Variable    "timeframe" condition with parameters {"time":"2012-01-01T00:00:03Z"}
+    ${USE_GEO_TRUE}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${USE_GEO_FALSE}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/MunichInvalid"}
+    ${userId} =     generate random id
+    grant entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${GRANT_STR}|${GRANT_PATH}|${GRANT_TIME}|${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}|${CHECK_GEO} " for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${USE_STR_FALSE}|${USE_PATH_FALSE}|${USE_TIME_FALSE}|${USE_GEO_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${USE_STR_TRUE}|${USE_PATH_TRUE}|${USE_TIME_TRUE}|${USE_GEO_TRUE}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${USE_STR_FALSE}|${USE_PATH_TRUE}|${USE_TIME_TRUE}|${USE_GEO_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${USE_STR_TRUE}|${USE_PATH_FALSE}|${USE_TIME_TRUE}|${USE_GEO_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${USE_STR_TRUE}|${USE_PATH_TRUE}|${USE_TIME_FALSE}|${USE_GEO_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${USE_STR_TRUE}|${USE_PATH_TRUE}|${USE_TIME_TRUE}|${USE_GEO_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${USE_STR_FALSE}|${USE_PATH_FALSE}|${USE_TIME_TRUE}|${USE_GEO_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${USE_STR_FALSE}|${USE_PATH_TRUE}|${USE_TIME_FALSE}|${USE_GEO_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${USE_STR_FALSE}|${USE_PATH_TRUE}|${USE_TIME_TRUE}|${USE_GEO_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${USE_STR_TRUE}|${USE_PATH_FALSE}|${USE_TIME_FALSE}|${USE_GEO_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${USE_STR_TRUE}|${USE_PATH_FALSE}|${USE_TIME_TRUE}|${USE_GEO_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${USE_STR_TRUE}|${USE_PATH_TRUE}|${USE_TIME_FALSE}|${USE_GEO_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${USE_PATH_TRUE}|${USE_TIME_TRUE}|${USE_GEO_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${USE_STR_TRUE}|${USE_TIME_TRUE}|${USE_GEO_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${USE_STR_TRUE}|${USE_PATH_TRUE}|${USE_GEO_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${USE_STR_TRUE}|${USE_PATH_TRUE}|${USE_TIME_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${USE_TIME_TRUE}|${USE_GEO_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${USE_PATH_TRUE}|${USE_GEO_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${USE_PATH_TRUE}|${USE_TIME_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${USE_STR_TRUE}|${USE_GEO_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${USE_STR_TRUE}|${USE_TIME_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${USE_STR_TRUE}|${USE_PATH_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${USE_STR_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${USE_PATH_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${USE_TIME_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${USE_GEO_TRUE}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_UseAndCheckGrants_StringAndPathAndTimeframeAndGeoConditionType_CheckGrants_DetailsFlag_No1
+    [Documentation]
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR_VALID}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${USE_STR_VALID}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root/subdirectory"}
+    ${CHECK_PATH_VALID}    Set Variable    "path" condition with parameters {"file":"/root/subdirectory"}
+    ${USE_PATH_VALID}    Set Variable    "path" condition with parameters {"file":"/root/subdirectory/a"}
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME_VALID}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${USE_TIME_VALID}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:00Z"}
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO_VALID}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${USE_GEO_VALID}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${userId} =     generate random id
+    check entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${CHECK_STR_VALID}|${CHECK_PATH_VALID}|${CHECK_TIME_VALID}|${CHECK_GEO_VALID}" if retrieve details set to "true" for user "${userId}" is "false" and has "0" grants
+    check entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${CHECK_STR_VALID}|${CHECK_PATH_VALID}|${CHECK_TIME_VALID}|${CHECK_GEO_VALID}" if retrieve details set to "false" for user "${userId}" is "false" and has "0" grants
+    use entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${USE_STR_VALID}|${USE_PATH_VALID}|${USE_TIME_VALID}|${USE_GEO_VALID}" if retrieve details set to "true" for user "${userId}" is "false" and has "0" grants
+    use entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${USE_STR_VALID}|${USE_PATH_VALID}|${USE_TIME_VALID}|${USE_GEO_VALID}" if retrieve details set to "false" for user "${userId}" is "false" and has "0" grants
+    grant entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${GRANT_STR}|${GRANT_PATH}|${GRANT_TIME}|${GRANT_GEO} " for user "${userId}"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${CHECK_STR_VALID}|${CHECK_PATH_VALID}|${CHECK_TIME_VALID}|${CHECK_GEO_VALID}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${CHECK_STR_VALID}|${CHECK_PATH_VALID}|${CHECK_TIME_VALID}|${CHECK_GEO_VALID}" if retrieve details set to "true" for user "${userId}" is "true" and has "1" grants
+    check entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${CHECK_STR_VALID}|${CHECK_PATH_VALID}|${CHECK_TIME_VALID}|${CHECK_GEO_VALID}" if retrieve details set to "false" for user "${userId}" is "true" and has "0" grants
+    use entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${USE_STR_VALID}|${USE_PATH_VALID}|${USE_TIME_VALID}|${USE_GEO_VALID}" if retrieve details set to "true" for user "${userId}" is "true" and has "1" grants
+    use entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${USE_STR_VALID}|${USE_PATH_VALID}|${USE_TIME_VALID}|${USE_GEO_VALID}" if retrieve details set to "false" for user "${userId}" is "true" and has "0" grants
+    check entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${CHECK_STR_VALID}|${CHECK_PATH_VALID}|${CHECK_TIME_VALID}|${CHECK_GEO_VALID}" if retrieve details set to "true" for user "${userId}" is "true" and has "1" grants
+    check entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${CHECK_STR_VALID}|${CHECK_PATH_VALID}|${CHECK_TIME_VALID}|${CHECK_GEO_VALID}" if retrieve details set to "false" for user "${userId}" is "true" and has "0" grants
+
+Test_NonMeteredEntitlements_UseAndCheckGrants_StringAndPathAndTimeframeAndGeoConditionType_CheckGrants_DetailsFlag_No2
+    [Documentation]
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR_VALID}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR_INVALID}    Set Variable    "string" condition with parameters {"string":"qwe"}
+    ${USE_STR_INVALID}    Set Variable    "string" condition with parameters {"string":"qwe"}
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root/subdirectory"}
+    ${CHECK_PATH_VALID}    Set Variable    "path" condition with parameters {"file":"/root/subdirectory"}
+    ${CHECK_PATH_INVALID}    Set Variable    "path" condition with parameters {"file":"/root/subdirectoryA"}
+    ${USE_PATH_INVALID}    Set Variable    "path" condition with parameters {"file":"/root/subdirectoryA"}
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME_VALID}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${CHECK_TIME_INVALID}    Set Variable    "timeframe" condition with parameters {"time":"2012-01-01T00:00:03Z"}
+    ${USE_TIME_INVALID}    Set Variable    "timeframe" condition with parameters {"time":"2012-01-01T00:00:03Z"}
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO_VALID}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO_INVALID}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/MunichInvalid"}
+    ${USE_GEO_INVALID}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/MunichInvalid"}
+    ${userId} =     generate random id
+    check entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${CHECK_STR_INVALID}|${CHECK_PATH_INVALID}|${CHECK_TIME_INVALID}|${CHECK_GEO_INVALID}" if retrieve details set to "true" for user "${userId}" is "false" and has "0" grants
+    check entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${CHECK_STR_INVALID}|${CHECK_PATH_INVALID}|${CHECK_TIME_INVALID}|${CHECK_GEO_INVALID}" if retrieve details set to "false" for user "${userId}" is "false" and has "0" grants
+    use entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${USE_STR_INVALID}|${USE_PATH_INVALID}|${USE_TIME_INVALID}|${USE_GEO_INVALID}" if retrieve details set to "true" for user "${userId}" is "false" and has "0" grants
+    use entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${USE_STR_INVALID}|${USE_PATH_INVALID}|${USE_TIME_INVALID}|${USE_GEO_INVALID}" if retrieve details set to "false" for user "${userId}" is "false" and has "0" grants
+    grant entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${GRANT_STR}|${GRANT_PATH}|${GRANT_TIME}|${GRANT_GEO} " for user "${userId}"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${CHECK_STR_VALID}|${CHECK_PATH_VALID}|${CHECK_TIME_VALID}|${CHECK_GEO_VALID}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${CHECK_STR_INVALID}|${CHECK_PATH_INVALID}|${CHECK_TIME_INVALID}|${CHECK_GEO_INVALID}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${CHECK_STR_INVALID}|${CHECK_PATH_INVALID}|${CHECK_TIME_INVALID}|${CHECK_GEO_INVALID}" if retrieve details set to "true" for user "${userId}" is "false" and has "1" grants
+    check entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${CHECK_STR_INVALID}|${CHECK_PATH_INVALID}|${CHECK_TIME_INVALID}|${CHECK_GEO_INVALID}" if retrieve details set to "false" for user "${userId}" is "false" and has "0" grants
+    use entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${USE_STR_INVALID}|${USE_PATH_INVALID}|${USE_TIME_INVALID}|${USE_GEO_INVALID}" if retrieve details set to "true" for user "${userId}" is "false" and has "1" grants
+    use entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${USE_STR_INVALID}|${USE_PATH_INVALID}|${USE_TIME_INVALID}|${USE_GEO_INVALID}" if retrieve details set to "false" for user "${userId}" is "false" and has "0" grants
+    check entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${CHECK_STR_INVALID}|${CHECK_PATH_INVALID}|${CHECK_TIME_INVALID}|${CHECK_GEO_INVALID}" if retrieve details set to "true" for user "${userId}" is "false" and has "1" grants
+    check entitlement with entitlementType "ENT_STR_PATH_TIME_GEO" and conditions "${CHECK_STR_INVALID}|${CHECK_PATH_INVALID}|${CHECK_TIME_INVALID}|${CHECK_GEO_INVALID}" if retrieve details set to "false" for user "${userId}" is "false" and has "0" grants
+
+### CheckGrants:
+### Without condition:
+
+Test_NonMeteredEntitlements_UseAndCheckGrants_WithoutCondition_CheckGrants_Grants
+    [Documentation]    If 'details' flag is true, and applicable grant have run out,
+    ...                execute should return the grant despite of execution result is false.
+    ...                It can help to determine which grant has run out.
+    ${userId} =                generate random id
+    ${USE_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    grant entitlement with entitlementType "ENT_SIMPLE" for user "${userId}"
+    use entitlement with entitlementType "ENT_SIMPLE" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_SIMPLE" if retrieve details set to "true" for user "${userId}" is "true" and has "1" grants
+    # use with conditions: false!!!
+    use entitlement with entitlementType "ENT_SIMPLE" and conditions "${USE_STR}" if retrieve details set to "true" for user "${userId}" is "false" and has "0" grants
+
+Test_NonMeteredEntitlements_UseAndCheckGrants_WithoutCondition_CheckGrants_GrantSourceId
+    [Documentation]    Returned grantSourceId is depends on the particular entitlement that
+    ...                was tried to be used(the result: false/true does not matter).
+    ${userId} =                generate random id
+    ${USE_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${noConditionGrant} =          create entitlement with entitlementType "ENT_SIMPLE" for user "${userId}"
+    assign grantSourceId "noConditionGrantSourceId" to entitlement "${noConditionGrant}"
+    grant entitlement "${noConditionGrant}"
+    # use with result='true':
+    use entitlement with entitlementType "ENT_SIMPLE" for user "${userId}" and verify that grantSourceId is "noConditionGrantSourceId"
+    # use with result='true':
+    use entitlement with entitlementType "ENT_SIMPLE" for user "${userId}" and verify that grantSourceId is "noConditionGrantSourceId"
+
+### String condition:
+
+Test_NonMeteredEntitlements_UseAndCheckGrants_StringConditionType_CheckGrants_Grants
+    [Documentation]    If 'details' flag is true, and applicable grant have run out,
+    ...                execute should return the grant despite of execution result is false.
+    ...                It can help to determine which grant has run out.
+    ${userId} =                generate random id
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${USE_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${USE_STR_INVALID}    Set Variable    "string" condition with parameters {"string":"qwe"}
+    grant entitlement with entitlementType "ENT_STR" and conditions "${GRANT_STR}" for user "${userId}"
+    use entitlement with entitlementType "ENT_STR" and conditions "${USE_STR}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_STR" and conditions "${USE_STR}" if retrieve details set to "true" for user "${userId}" is "true" and has "1" grants
+    # use with incorrect conditions: false!!!
+    use entitlement with entitlementType "ENT_SIMPLE" and conditions "${USE_STR_INVALID}" if retrieve details set to "true" for user "${userId}" is "false" and has "0" grants
+    # use with no conditions: false!!!
+    use entitlement with entitlementType "ENT_SIMPLE" if retrieve details set to "true" for user "${userId}" is "false" and has "0" grants
+
+Test_NonMeteredEntitlements_UseAndCheckGrants_StringConditionType_CheckGrants_GrantSourceId
+    [Documentation]    Returned grantSourceId is depends on the particular entitlement that
+    ...                was tried to be used(the result: false/true does not matter).
+    ${userId} =                generate random id
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${USE_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${USE_STR_INVALID}    Set Variable    "string" condition with parameters {"string":"qwe"}
+    ${strGrant} =          create entitlement with entitlementType "ENT_STR" for user "${userId}"
+    add condition "${GRANT_STR}" to entitlement "${strGrant}"
+    assign grantSourceId "strGrantSourceId" to entitlement "${strGrant}"
+    grant entitlement "${strGrant}"
+    # use with result='true':
+    use entitlement with entitlementType "ENT_STR" and conditions "${USE_STR}" for user "${userId}" and verify that grantSourceId is "strGrantSourceId"
+    # use with result='true':
+    use entitlement with entitlementType "ENT_STR" and conditions "${USE_STR}" for user "${userId}" and verify that grantSourceId is "strGrantSourceId"

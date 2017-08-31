@@ -1,0 +1,973 @@
+# -----------------------------------------------------------------------
+# [y] hybris Platform
+#
+# Copyright (c) 2017 SAP SE or an SAP affiliate company.  All rights reserved.
+# 
+# This software is the confidential and proprietary information of SAP
+# ("Confidential Information"). You shall not disclose such Confidential
+# Information and shall use it only in accordance with the terms of the
+# license agreement you entered into with SAP.
+# -----------------------------------------------------------------------
+*** Settings ***
+Resource    entitlements-test/settings_keywords.txt
+Resource    entitlements-test/builder_entitlements_keywords.txt
+Resource    entitlements-test/modify_entitlements_keywords.txt
+Resource    entitlements-test/exceptions_entitlements_keywords.txt
+Resource    entitlements-test/check_entitlements_keywords.txt
+Resource    entitlements-test/use_entitlements_keywords.txt
+
+*** Test Cases ***
+
+### WITHOUT CONDITION:
+
+Test_NonMeteredEntitlements_Update_ConditionForConditionType_WithoutCondition_GrantSource_And_GrantSourceId
+    [Documentation]    Update entitlement without condition using different variants of grantSourceId and grantSource parameter values
+    ...                grantSource and grantSourceId shouldn't be possible to update
+    ${entitlementType}      Set Variable    ENT_SIMPLE
+    ${userId} =     generate random id
+    check entitlement with entitlementType "${entitlementType}" for user "${userId}" is "false"
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSourceId "grantSourceId-1" to entitlement "${entitlement}"
+    assign grantSource "grantSource-1" to entitlement "${entitlement}"
+    check entitlement with entitlementType "${entitlementType}" for user "${userId}" is "false"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with entitlementType "${entitlementType}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "grantSource-1", grantSourceId "grantSourceId-1" for user "${userId}" is "true" in DB
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "grantSource-2", grantSourceId "grantSourceId-1" for user "${userId}" is "false" in DB
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "grantSource-2", grantSourceId "grantSourceId-2" for user "${userId}" is "false" in DB
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "grantSource-3", grantSourceId "grantSourceId-3" for user "${userId}" is "false" in DB
+    assign grantSource "grantSource-2" to entitlement "${entitlement}"
+    update entitlement "${entitlement}"
+    check entitlement with entitlementType "${entitlementType}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "grantSource-1", grantSourceId "grantSourceId-1" for user "${userId}" is "true" in DB
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "grantSource-2", grantSourceId "grantSourceId-1" for user "${userId}" is "false" in DB
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "grantSource-2", grantSourceId "grantSourceId-2" for user "${userId}" is "false" in DB
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "grantSource-3", grantSourceId "grantSourceId-3" for user "${userId}" is "false" in DB
+    assign grantSourceId "grantSourceId-2" to entitlement "${entitlement}"
+    update entitlement "${entitlement}"
+    check entitlement with entitlementType "${entitlementType}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "grantSource-1", grantSourceId "grantSourceId-1" for user "${userId}" is "true" in DB
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "grantSource-2", grantSourceId "grantSourceId-1" for user "${userId}" is "false" in DB
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "grantSource-2", grantSourceId "grantSourceId-2" for user "${userId}" is "false" in DB
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "grantSource-3", grantSourceId "grantSourceId-3" for user "${userId}" is "false" in DB
+    assign grantSource "grantSource-3" to entitlement "${entitlement}"
+    assign grantSourceId "grantSourceId-3" to entitlement "${entitlement}"
+    update entitlement "${entitlement}"
+    check entitlement with entitlementType "${entitlementType}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "grantSource-1", grantSourceId "grantSourceId-1" for user "${userId}" is "true" in DB
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "grantSource-2", grantSourceId "grantSourceId-1" for user "${userId}" is "false" in DB
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "grantSource-2", grantSourceId "grantSourceId-2" for user "${userId}" is "false" in DB
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "grantSource-3", grantSourceId "grantSourceId-3" for user "${userId}" is "false" in DB
+    ensure there are "1" entitlements for user "${userId}"
+
+Test_NonMeteredEntitlements_Update_ConditionForConditionType_WithoutCondition_No2
+    [Documentation]    Update entitlement without condition using the same grantSourceId and grantSource parameter values
+    ${userId} =     generate random id
+    check entitlement with entitlementType "ENT_SIMPLE" for user "${userId}" is "false"
+    ${entitlement}=    create entitlement with entitlementType "ENT_SIMPLE" for user "${userId}"
+    assign grantSourceId "grantSourceId-1" to entitlement "${entitlement}"
+    assign grantSource "grantSource-1" to entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_SIMPLE" for user "${userId}" is "false"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_SIMPLE" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "ENT_SIMPLE" and grantSource "grantSource-1", grantSourceId "grantSourceId-1" for user "${userId}" is "true" in DB
+    assign grantSourceId "grantSourceId-1" to entitlement "${entitlement}"
+    assign grantSource "grantSource-1" to entitlement "${entitlement}"
+    update entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_SIMPLE" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "ENT_SIMPLE" and grantSource "grantSource-1", grantSourceId "grantSourceId-1" for user "${userId}" is "true" in DB
+    ensure there are "1" entitlements for user "${userId}"
+
+Test_NonMeteredEntitlements_Update_ConditionType_WithoutCondition_To_WithoutCondition
+    [Documentation]    Update entitlement without condition by adding string condition
+    ${userId} =     generate random id
+    check entitlement with entitlementType "ENT_SIMPLE" for user "${userId}" is "false"
+    ${entitlement}=    create entitlement with entitlementType "ENT_SIMPLE" for user "${userId}"
+    assign grantSourceId "grantSourceId" to entitlement "${entitlement}"
+    assign grantSource "grantSource" to entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_SIMPLE" for user "${userId}" is "false"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_SIMPLE" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "ENT_SIMPLE" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "true" in DB
+    assign grantSourceId "grantSourceId" to entitlement "${entitlement}"
+    assign grantSource "grantSource" to entitlement "${entitlement}"
+    ${entitlement}=    remove all conditions from entitlement "${entitlement}"
+    update entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_SIMPLE" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "ENT_SIMPLE" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "true" in DB
+    ensure there are "1" entitlements for user "${userId}"
+
+Test_NonMeteredEntitlements_Update_ConditionType_WithoutCondition_To_StringCondition
+    [Documentation]    Update entitlement without condition by adding string condition
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${userId} =     generate random id
+    check entitlement with entitlementType "ENT_SIMPLE" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_SIMPLE" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "ENT_SIMPLE" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "ENT_SIMPLE" for user "${userId}"
+    assign grantSourceId "grantSourceId" to entitlement "${entitlement}"
+    assign grantSource "grantSource" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_SIMPLE" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_SIMPLE" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "ENT_SIMPLE" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "true" in DB
+    assign grantSourceId "grantSourceId" to entitlement "${entitlement}"
+    assign grantSource "grantSource" to entitlement "${entitlement}"
+    ${entitlement}=    remove all conditions from entitlement "${entitlement}"
+    add condition "${GRANT_STR}" to entitlement "${entitlement}"
+    update entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_SIMPLE" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_SIMPLE" and conditions "${CHECK_STR}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "ENT_SIMPLE" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "true" in DB
+    ensure there are "1" entitlements for user "${userId}"
+
+Test_NonMeteredEntitlements_Update_ConditionType_WithoutCondition_To_PathCondition
+    [Documentation]    Update entitlement without condition by adding string condition
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root"}
+    ${userId} =     generate random id
+    check entitlement with entitlementType "ENT_SIMPLE" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_SIMPLE" and conditions "${CHECK_PATH}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "ENT_SIMPLE" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "ENT_SIMPLE" for user "${userId}"
+    assign grantSourceId "grantSourceId" to entitlement "${entitlement}"
+    assign grantSource "grantSource" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_SIMPLE" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_SIMPLE" and conditions "${CHECK_PATH}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "ENT_SIMPLE" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "true" in DB
+    assign grantSourceId "grantSourceId" to entitlement "${entitlement}"
+    assign grantSource "grantSource" to entitlement "${entitlement}"
+    ${entitlement}=    remove all conditions from entitlement "${entitlement}"
+    add condition "${GRANT_PATH}" to entitlement "${entitlement}"
+    update entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_SIMPLE" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_SIMPLE" and conditions "${CHECK_PATH}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "ENT_SIMPLE" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "true" in DB
+    ensure there are "1" entitlements for user "${userId}"
+
+Test_NonMeteredEntitlements_Update_ConditionType_WithoutCondition_To_TimeframeCondition
+    [Documentation]    Update entitlement without condition by adding string condition
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${userId} =     generate random id
+    check entitlement with entitlementType "ENT_SIMPLE" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_SIMPLE" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "ENT_SIMPLE" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "ENT_SIMPLE" for user "${userId}"
+    assign grantSourceId "grantSourceId" to entitlement "${entitlement}"
+    assign grantSource "grantSource" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_SIMPLE" for user "${userId}" is "true"
+    #Entitlement without conditions is valid against any time value:
+    check entitlement with entitlementType "ENT_SIMPLE" and conditions "${CHECK_TIME}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "ENT_SIMPLE" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "true" in DB
+    assign grantSourceId "grantSourceId" to entitlement "${entitlement}"
+    assign grantSource "grantSource" to entitlement "${entitlement}"
+    ${entitlement}=    remove all conditions from entitlement "${entitlement}"
+    add condition "${GRANT_TIME}" to entitlement "${entitlement}"
+    update entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_SIMPLE" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_SIMPLE" and conditions "${CHECK_TIME}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "ENT_SIMPLE" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "true" in DB
+    ensure there are "1" entitlements for user "${userId}"
+
+Test_NonMeteredEntitlements_Update_ConditionType_WithoutCondition_To_GeoCondition
+    [Documentation]    Update entitlement without condition by adding string condition
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${userId} =     generate random id
+    check entitlement with entitlementType "ENT_SIMPLE" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_SIMPLE" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "ENT_SIMPLE" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "ENT_SIMPLE" for user "${userId}"
+    assign grantSourceId "grantSourceId" to entitlement "${entitlement}"
+    assign grantSource "grantSource" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_SIMPLE" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_SIMPLE" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "ENT_SIMPLE" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "true" in DB
+    assign grantSourceId "grantSourceId" to entitlement "${entitlement}"
+    assign grantSource "grantSource" to entitlement "${entitlement}"
+    ${entitlement}=    remove all conditions from entitlement "${entitlement}"
+    add condition "${GRANT_GEO}" to entitlement "${entitlement}"
+    update entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_SIMPLE" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_SIMPLE" and conditions "${CHECK_GEO}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "ENT_SIMPLE" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "true" in DB
+    ensure there are "1" entitlements for user "${userId}"
+
+### STRING CONDITION:
+
+Test_NonMeteredEntitlements_Update_ConditionForConditionType_StringCondition
+    [Documentation]    Update entitlement with string condition type - updating conditions for condition type
+    ${GRANT_STR1}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR1}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${GRANT_STR2}    Set Variable    "string" condition with parameters {"string":"qwe"}
+    ${CHECK_STR2}    Set Variable    "string" condition with parameters {"string":"qwe"}
+    ${GRANT_STR3}    Set Variable    "string" condition with parameters {"string":"123"}
+    ${CHECK_STR3}    Set Variable    "string" condition with parameters {"string":"123"}
+    ${GRANT_STR4}    Set Variable    "string" condition with parameters {"string":"789"}
+    ${CHECK_STR4}    Set Variable    "string" condition with parameters {"string":"789"}
+    ${userId} =     generate random id
+    ${entitlement}=    create entitlement with entitlementType "ENT_STR" for user "${userId}"
+    assign grantSourceId "grantSourceId-1" to entitlement "${entitlement}"
+    assign grantSource "grantSource-1" to entitlement "${entitlement}"
+    add condition "${GRANT_STR1}" to entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR2}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR3}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR4}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "ENT_STR" and grantSource "grantSource-1", grantSourceId "grantSourceId-1" for user "${userId}" is "false" in DB
+    ensure that entitlement with entitlementType "ENT_STR" and grantSource "grantSource-2", grantSourceId "grantSourceId-2" for user "${userId}" is "false" in DB
+    ${entitlement}=    grant entitlement "${entitlement}"
+    ###Check entitlement is granted:
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR1}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR2}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR3}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR4}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "ENT_STR" and grantSource "grantSource-1", grantSourceId "grantSourceId-1" for user "${userId}" is "true" in DB
+    ensure that entitlement with entitlementType "ENT_STR" and grantSource "grantSource-2", grantSourceId "grantSourceId-2" for user "${userId}" is "false" in DB
+    ###Check if condition is updated if grantSourceId and grantSource with existing values are provided:
+    assign grantSourceId "grantSourceId-1" to entitlement "${entitlement}"
+    assign grantSource "grantSource-1" to entitlement "${entitlement}"
+    ${entitlement}=    remove all conditions from entitlement "${entitlement}"
+    add condition "${GRANT_STR2}" to entitlement "${entitlement}"
+    update entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR2}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR3}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR4}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "ENT_STR" and grantSource "grantSource-1", grantSourceId "grantSourceId-1" for user "${userId}" is "true" in DB
+    ensure that entitlement with entitlementType "ENT_STR" and grantSource "grantSource-2", grantSourceId "grantSourceId-2" for user "${userId}" is "false" in DB
+    ###Check if condition is updated if grantSourceId and grantSource are not provided:
+    ${entitlement}=    remove all conditions from entitlement "${entitlement}"
+    add condition "${GRANT_STR3}" to entitlement "${entitlement}"
+    update entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR2}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR3}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR4}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "ENT_STR" and grantSource "grantSource-1", grantSourceId "grantSourceId-1" for user "${userId}" is "true" in DB
+    ensure that entitlement with entitlementType "ENT_STR" and grantSource "grantSource-2", grantSourceId "grantSourceId-2" for user "${userId}" is "false" in DB
+    ###Check if condition is updated only, grantSourceId and grantSource provided values differ original values - are ignored:
+    assign grantSourceId "grantSourceId-2" to entitlement "${entitlement}"
+    assign grantSource "grantSource-2" to entitlement "${entitlement}"
+    ${entitlement}=    remove all conditions from entitlement "${entitlement}"
+    add condition "${GRANT_STR4}" to entitlement "${entitlement}"
+    update entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR2}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR3}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR4}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "ENT_STR" and grantSource "grantSource-1", grantSourceId "grantSourceId-1" for user "${userId}" is "true" in DB
+    ensure that entitlement with entitlementType "ENT_STR" and grantSource "grantSource-2", grantSourceId "grantSourceId-2" for user "${userId}" is "false" in DB
+    ensure there are "1" entitlements for user "${userId}"
+
+Test_NonMeteredEntitlements_Update_ConditionType_StringCondition_To_WithoutCondition
+    [Documentation]    Update entitlement without condition by adding string condition
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${userId} =     generate random id
+    check entitlement with entitlementType "ENT_STR" for user "${userId}" is "false"
+    ${entitlement}=    create entitlement with entitlementType "ENT_STR" for user "${userId}"
+    assign grantSourceId "grantSourceId" to entitlement "${entitlement}"
+    assign grantSource "grantSource" to entitlement "${entitlement}"
+    add condition "${GRANT_STR}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_STR" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "ENT_STR" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "true" in DB
+    assign grantSourceId "grantSourceId" to entitlement "${entitlement}"
+    assign grantSource "grantSource" to entitlement "${entitlement}"
+    ${entitlement}=    remove all conditions from entitlement "${entitlement}"
+    update entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_STR" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "ENT_STR" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "true" in DB
+    ensure there are "1" entitlements for user "${userId}"
+
+Test_NonMeteredEntitlements_Update_ConditionType_StringCondition_To_PathCondition
+    [Documentation]    Update entitlement without condition by adding string condition
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root"}
+    ${userId} =     generate random id
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_PATH}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "ENT_STR" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "ENT_STR" for user "${userId}"
+    assign grantSourceId "grantSourceId" to entitlement "${entitlement}"
+    assign grantSource "grantSource" to entitlement "${entitlement}"
+    add condition "${GRANT_STR}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_PATH}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "ENT_STR" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "true" in DB
+    assign grantSourceId "grantSourceId" to entitlement "${entitlement}"
+    assign grantSource "grantSource" to entitlement "${entitlement}"
+    ${entitlement}=    remove all conditions from entitlement "${entitlement}"
+    add condition "${GRANT_PATH}" to entitlement "${entitlement}"
+    update entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_STR" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_PATH}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "ENT_STR" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "true" in DB
+    ensure there are "1" entitlements for user "${userId}"
+
+Test_NonMeteredEntitlements_Update_ConditionType_StringCondition_To_TimeframeCondition
+    [Documentation]    Update entitlement without condition by adding string condition
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${userId} =     generate random id
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "ENT_STR" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "ENT_STR" for user "${userId}"
+    assign grantSourceId "grantSourceId" to entitlement "${entitlement}"
+    assign grantSource "grantSource" to entitlement "${entitlement}"
+    add condition "${GRANT_STR}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "ENT_STR" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "true" in DB
+    assign grantSourceId "grantSourceId" to entitlement "${entitlement}"
+    assign grantSource "grantSource" to entitlement "${entitlement}"
+    ${entitlement}=    remove all conditions from entitlement "${entitlement}"
+    add condition "${GRANT_TIME}" to entitlement "${entitlement}"
+    update entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_TIME}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "ENT_STR" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "true" in DB
+    ensure there are "1" entitlements for user "${userId}"
+
+Test_NonMeteredEntitlements_Update_ConditionType_StringCondition_To_GeoCondition
+    [Documentation]    Update entitlement without condition by adding string condition
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${userId} =     generate random id
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "ENT_STR" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "ENT_STR" for user "${userId}"
+    assign grantSourceId "grantSourceId" to entitlement "${entitlement}"
+    assign grantSource "grantSource" to entitlement "${entitlement}"
+    add condition "${GRANT_STR}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "ENT_STR" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "true" in DB
+    assign grantSourceId "grantSourceId" to entitlement "${entitlement}"
+    assign grantSource "grantSource" to entitlement "${entitlement}"
+    ${entitlement}=    remove all conditions from entitlement "${entitlement}"
+    add condition "${GRANT_GEO}" to entitlement "${entitlement}"
+    update entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_STR" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_GEO}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "ENT_STR" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "true" in DB
+    ensure there are "1" entitlements for user "${userId}"
+
+### PATH CONDITION:
+
+Test_NonMeteredEntitlements_Update_ConditionForConditionType_PathCondition
+    [Documentation]    Update entitlement with string condition type - updating conditions for condition type
+    ${GRANT_PATH1}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH1}    Set Variable    "path" condition with parameters {"file":"/root"}
+    ${GRANT_PATH2}    Set Variable    "path" condition with parameters {"path":"/rootA"}
+    ${CHECK_PATH2}    Set Variable    "path" condition with parameters {"file":"/rootA"}
+    ${GRANT_PATH3}    Set Variable    "path" condition with parameters {"path":"/rootB"}
+    ${CHECK_PATH3}    Set Variable    "path" condition with parameters {"file":"/rootB"}
+    ${GRANT_PATH4}    Set Variable    "path" condition with parameters {"path":"/rootC"}
+    ${CHECK_PATH4}    Set Variable    "path" condition with parameters {"file":"/rootC"}
+    ${userId} =     generate random id
+    ${entitlement}=    create entitlement with entitlementType "ENT_PATH" for user "${userId}"
+    assign grantSourceId "grantSourceId-1" to entitlement "${entitlement}"
+    assign grantSource "grantSource-1" to entitlement "${entitlement}"
+    add condition "${GRANT_PATH1}" to entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH2}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH3}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH4}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "ENT_PATH" and grantSource "grantSource-1", grantSourceId "grantSourceId-1" for user "${userId}" is "false" in DB
+    ensure that entitlement with entitlementType "ENT_PATH" and grantSource "grantSource-2", grantSourceId "grantSourceId-2" for user "${userId}" is "false" in DB
+    ${entitlement}=    grant entitlement "${entitlement}"
+    ###Check entitlement is granted:
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH1}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH2}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH3}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH4}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "ENT_PATH" and grantSource "grantSource-1", grantSourceId "grantSourceId-1" for user "${userId}" is "true" in DB
+    ensure that entitlement with entitlementType "ENT_PATH" and grantSource "grantSource-2", grantSourceId "grantSourceId-2" for user "${userId}" is "false" in DB
+    ###Check if condition is updated if grantSourceId and grantSource with existing values are provided:
+    assign grantSourceId "grantSourceId-1" to entitlement "${entitlement}"
+    assign grantSource "grantSource-1" to entitlement "${entitlement}"
+    ${entitlement}=    remove all conditions from entitlement "${entitlement}"
+    add condition "${GRANT_PATH2}" to entitlement "${entitlement}"
+    update entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH2}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH3}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH4}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "ENT_PATH" and grantSource "grantSource-1", grantSourceId "grantSourceId-1" for user "${userId}" is "true" in DB
+    ensure that entitlement with entitlementType "ENT_PATH" and grantSource "grantSource-2", grantSourceId "grantSourceId-2" for user "${userId}" is "false" in DB
+    ###Check if condition is updated if grantSourceId and grantSource are not provided:
+    ${entitlement}=    remove all conditions from entitlement "${entitlement}"
+    add condition "${GRANT_PATH3}" to entitlement "${entitlement}"
+    update entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH2}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH3}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH4}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "ENT_PATH" and grantSource "grantSource-1", grantSourceId "grantSourceId-1" for user "${userId}" is "true" in DB
+    ensure that entitlement with entitlementType "ENT_PATH" and grantSource "grantSource-2", grantSourceId "grantSourceId-2" for user "${userId}" is "false" in DB
+    ###Check if condition is updated only, grantSourceId and grantSource provided values differ original values - are ignored:
+    assign grantSourceId "grantSourceId-2" to entitlement "${entitlement}"
+    assign grantSource "grantSource-2" to entitlement "${entitlement}"
+    ${entitlement}=    remove all conditions from entitlement "${entitlement}"
+    add condition "${GRANT_PATH4}" to entitlement "${entitlement}"
+    update entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH2}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH3}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH4}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "ENT_PATH" and grantSource "grantSource-1", grantSourceId "grantSourceId-1" for user "${userId}" is "true" in DB
+    ensure that entitlement with entitlementType "ENT_PATH" and grantSource "grantSource-2", grantSourceId "grantSourceId-2" for user "${userId}" is "false" in DB
+    ensure there are "1" entitlements for user "${userId}"
+
+Test_NonMeteredEntitlements_Update_ConditionType_PathCondition_To_WithoutCondition
+    [Documentation]    Update entitlement without condition by adding string condition
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root"}
+    ${userId} =     generate random id
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "ENT_PATH" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "ENT_PATH" for user "${userId}"
+    assign grantSourceId "grantSourceId" to entitlement "${entitlement}"
+    assign grantSource "grantSource" to entitlement "${entitlement}"
+    add condition "${GRANT_PATH}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_PATH" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "ENT_PATH" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "true" in DB
+    assign grantSourceId "grantSourceId" to entitlement "${entitlement}"
+    assign grantSource "grantSource" to entitlement "${entitlement}"
+    ${entitlement}=    remove all conditions from entitlement "${entitlement}"
+    update entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_PATH" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "ENT_PATH" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "true" in DB
+    ensure there are "1" entitlements for user "${userId}"
+
+Test_NonMeteredEntitlements_Update_ConditionType_PathCondition_To_StringCondition
+    [Documentation]    Update entitlement without condition by adding string condition
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root"}
+    ${userId} =     generate random id
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "ENT_PATH" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "ENT_PATH" for user "${userId}"
+    assign grantSourceId "grantSourceId" to entitlement "${entitlement}"
+    assign grantSource "grantSource" to entitlement "${entitlement}"
+    add condition "${GRANT_PATH}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "ENT_PATH" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "true" in DB
+    assign grantSourceId "grantSourceId" to entitlement "${entitlement}"
+    assign grantSource "grantSource" to entitlement "${entitlement}"
+    ${entitlement}=    remove all conditions from entitlement "${entitlement}"
+    add condition "${GRANT_STR}" to entitlement "${entitlement}"
+    update entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_STR}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "ENT_PATH" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "true" in DB
+    ensure there are "1" entitlements for user "${userId}"
+
+Test_NonMeteredEntitlements_Update_ConditionType_PathCondition_To_TimeframeCondition
+    [Documentation]    Update entitlement without condition by adding string condition
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root"}
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${userId} =     generate random id
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "ENT_PATH" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "ENT_PATH" for user "${userId}"
+    assign grantSourceId "grantSourceId" to entitlement "${entitlement}"
+    assign grantSource "grantSource" to entitlement "${entitlement}"
+    add condition "${GRANT_PATH}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "ENT_PATH" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "true" in DB
+    assign grantSourceId "grantSourceId" to entitlement "${entitlement}"
+    assign grantSource "grantSource" to entitlement "${entitlement}"
+    ${entitlement}=    remove all conditions from entitlement "${entitlement}"
+    add condition "${GRANT_TIME}" to entitlement "${entitlement}"
+    update entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_TIME}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "ENT_PATH" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "true" in DB
+    ensure there are "1" entitlements for user "${userId}"
+
+Test_NonMeteredEntitlements_Update_ConditionType_PathCondition_To_GeoCondition
+    [Documentation]    Update entitlement without condition by adding string condition
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root"}
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${userId} =     generate random id
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "ENT_PATH" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "ENT_PATH" for user "${userId}"
+    assign grantSourceId "grantSourceId" to entitlement "${entitlement}"
+    assign grantSource "grantSource" to entitlement "${entitlement}"
+    add condition "${GRANT_PATH}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "ENT_PATH" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "true" in DB
+    assign grantSourceId "grantSourceId" to entitlement "${entitlement}"
+    assign grantSource "grantSource" to entitlement "${entitlement}"
+    ${entitlement}=    remove all conditions from entitlement "${entitlement}"
+    add condition "${GRANT_GEO}" to entitlement "${entitlement}"
+    update entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_GEO}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "ENT_PATH" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "true" in DB
+    ensure there are "1" entitlements for user "${userId}"
+
+### TIMEFRAME CONDITION:
+
+Test_NonMeteredEntitlements_Update_ConditionForConditionType_TimeframeCondition
+    [Documentation]    Update entitlement with string condition type - updating conditions for condition type
+    ${GRANT_TIME1}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME1}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${GRANT_TIME2}    Set Variable    "timeframe" condition with parameters {"startTime":"2011-01-01T00:00:00Z","endTime":"2011-01-01T00:00:02Z"}
+    ${CHECK_TIME2}    Set Variable    "timeframe" condition with parameters {"time":"2011-01-01T00:00:01Z"}
+    ${GRANT_TIME3}    Set Variable    "timeframe" condition with parameters {"startTime":"2012-01-01T00:00:00Z","endTime":"2012-01-01T00:00:02Z"}
+    ${CHECK_TIME3}    Set Variable    "timeframe" condition with parameters {"time":"2012-01-01T00:00:01Z"}
+    ${GRANT_TIME4}    Set Variable    "timeframe" condition with parameters {"startTime":"2013-01-01T00:00:00Z","endTime":"2013-01-01T00:00:02Z"}
+    ${CHECK_TIME4}    Set Variable    "timeframe" condition with parameters {"time":"2013-01-01T00:00:01Z"}
+    ${userId} =     generate random id
+    ${entitlement}=    create entitlement with entitlementType "ENT_TIME" for user "${userId}"
+    assign grantSourceId "grantSourceId-1" to entitlement "${entitlement}"
+    assign grantSource "grantSource-1" to entitlement "${entitlement}"
+    add condition "${GRANT_TIME1}" to entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME2}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME3}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME4}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "ENT_TIME" and grantSource "grantSource-1", grantSourceId "grantSourceId-1" for user "${userId}" is "false" in DB
+    ensure that entitlement with entitlementType "ENT_TIME" and grantSource "grantSource-2", grantSourceId "grantSourceId-2" for user "${userId}" is "false" in DB
+    ${entitlement}=    grant entitlement "${entitlement}"
+    ###Check entitlement is granted:
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME1}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME2}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME3}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME4}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "ENT_TIME" and grantSource "grantSource-1", grantSourceId "grantSourceId-1" for user "${userId}" is "true" in DB
+    ensure that entitlement with entitlementType "ENT_TIME" and grantSource "grantSource-2", grantSourceId "grantSourceId-2" for user "${userId}" is "false" in DB
+    ###Check if condition is updated if grantSourceId and grantSource with existing values are provided:
+    assign grantSourceId "grantSourceId-1" to entitlement "${entitlement}"
+    assign grantSource "grantSource-1" to entitlement "${entitlement}"
+    ${entitlement}=    remove all conditions from entitlement "${entitlement}"
+    add condition "${GRANT_TIME2}" to entitlement "${entitlement}"
+    update entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME2}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME3}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME4}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "ENT_TIME" and grantSource "grantSource-1", grantSourceId "grantSourceId-1" for user "${userId}" is "true" in DB
+    ensure that entitlement with entitlementType "ENT_TIME" and grantSource "grantSource-2", grantSourceId "grantSourceId-2" for user "${userId}" is "false" in DB
+    ###Check if condition is updated if grantSourceId and grantSource are not provided:
+    ${entitlement}=    remove all conditions from entitlement "${entitlement}"
+    add condition "${GRANT_TIME3}" to entitlement "${entitlement}"
+    update entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME2}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME3}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME4}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "ENT_TIME" and grantSource "grantSource-1", grantSourceId "grantSourceId-1" for user "${userId}" is "true" in DB
+    ensure that entitlement with entitlementType "ENT_TIME" and grantSource "grantSource-2", grantSourceId "grantSourceId-2" for user "${userId}" is "false" in DB
+    ###Check if condition is updated only, grantSourceId and grantSource provided values differ original values - are ignored:
+    assign grantSourceId "grantSourceId-2" to entitlement "${entitlement}"
+    assign grantSource "grantSource-2" to entitlement "${entitlement}"
+    ${entitlement}=    remove all conditions from entitlement "${entitlement}"
+    add condition "${GRANT_TIME4}" to entitlement "${entitlement}"
+    update entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME2}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME3}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME4}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "ENT_TIME" and grantSource "grantSource-1", grantSourceId "grantSourceId-1" for user "${userId}" is "true" in DB
+    ensure that entitlement with entitlementType "ENT_TIME" and grantSource "grantSource-2", grantSourceId "grantSourceId-2" for user "${userId}" is "false" in DB
+    ensure there are "1" entitlements for user "${userId}"
+
+	### Update to no end time
+Test_NonMeteredEntitlements_Update_ConditionForConditionType_TimeframeCondition_ToNoEndTime
+    [Documentation]    Update entitlement with timeframe condition start and end to timeframe condition with start only
+    ${GRANT_TIME1}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${GRANT_TIME2}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z"}    
+    ${CHECK_TIME1}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}    
+    ${CHECK_TIME2}    Set Variable    "timeframe" condition with parameters {"time":"2011-01-01T00:00:00Z"}
+    ${userId} =     generate random id    
+    ${entitlement}=    create entitlement with entitlementType "ENT_TIME" for user "${userId}"
+    assign grantSourceId "grantSourceId" to entitlement "${entitlement}"
+    assign grantSource "grantSource" to entitlement "${entitlement}"
+    add condition "${GRANT_TIME1}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME1}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME2}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "ENT_TIME" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "true" in DB
+    assign grantSourceId "grantSourceId" to entitlement "${entitlement}"
+    assign grantSource "grantSource" to entitlement "${entitlement}"
+    ${entitlement}=    remove all conditions from entitlement "${entitlement}"
+    add condition "${GRANT_TIME2}" to entitlement "${entitlement}"
+    update entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME1}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME2}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "ENT_TIME" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "true" in DB
+    ensure there are "1" entitlements for user "${userId}"
+    
+Test_NonMeteredEntitlements_Update_ConditionForConditionType_TimeframeCondition_ToNoStartTime
+    [Documentation]    Update entitlement with timeframe condition start and end to timeframe condition with end only
+    ${GRANT_TIME1}    Set Variable    "timeframe" condition with parameters {"startTime":"2011-01-01T00:00:00Z","endTime":"2011-01-01T00:00:02Z"}
+    ${GRANT_TIME2}    Set Variable    "timeframe" condition with parameters {"endTime":"2013-01-01T00:00:00Z"}    
+    ${CHECK_TIME1}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}    
+    ${CHECK_TIME2}    Set Variable    "timeframe" condition with parameters {"time":"2011-01-01T00:00:00Z"}
+    ${CHECK_TIME3}    Set Variable    "timeframe" condition with parameters {"time":"2015-01-01T00:00:00Z"}
+    ${userId} =     generate random id    
+    ${entitlement}=    create entitlement with entitlementType "ENT_TIME" for user "${userId}"
+    assign grantSourceId "grantSourceId" to entitlement "${entitlement}"
+    assign grantSource "grantSource" to entitlement "${entitlement}"
+    add condition "${GRANT_TIME1}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME2}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME3}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "ENT_TIME" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "true" in DB
+    assign grantSourceId "grantSourceId" to entitlement "${entitlement}"
+    assign grantSource "grantSource" to entitlement "${entitlement}"
+    ${entitlement}=    remove all conditions from entitlement "${entitlement}"
+    add condition "${GRANT_TIME2}" to entitlement "${entitlement}"
+    ${Error_Message}=    Set Variable    ValidationException: [0].properties.startTime=null: Required field was not found
+    Run Keyword And Expect Error    ${Error_Message}    update entitlement    ${entitlement}
+    #
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME2}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME3}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "ENT_TIME" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "true" in DB
+    ensure there are "1" entitlements for user "${userId}"
+	
+Test_NonMeteredEntitlements_Update_ConditionType_TimeframeCondition_To_WithoutCondition
+    [Documentation]    Update entitlement without condition by adding string condition
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${CHECK_TIME2}    Set Variable    "timeframe" condition with parameters {"time":"2009-01-01T00:00:01Z"}
+    ${CHECK_TIME3}    Set Variable    "timeframe" condition with parameters {"time":"20011-01-01T00:00:01Z"}
+    ${userId} =     generate random id
+    check entitlement with entitlementType "ENT_TIME" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "ENT_TIME" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "ENT_TIME" for user "${userId}"
+    assign grantSourceId "grantSourceId" to entitlement "${entitlement}"
+    assign grantSource "grantSource" to entitlement "${entitlement}"
+    add condition "${GRANT_TIME}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_TIME" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "ENT_TIME" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "true" in DB
+    assign grantSourceId "grantSourceId" to entitlement "${entitlement}"
+    assign grantSource "grantSource" to entitlement "${entitlement}"
+    ${entitlement}=    remove all conditions from entitlement "${entitlement}"
+    update entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_TIME" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME2}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME3}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "ENT_TIME" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "true" in DB
+    ensure there are "1" entitlements for user "${userId}"
+
+Test_NonMeteredEntitlements_Update_ConditionType_TimeframeCondition_To_StringCondition
+    [Documentation]    Update entitlement without condition by adding string condition
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${userId} =     generate random id
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "ENT_TIME" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "ENT_TIME" for user "${userId}"
+    assign grantSourceId "grantSourceId" to entitlement "${entitlement}"
+    assign grantSource "grantSource" to entitlement "${entitlement}"
+    add condition "${GRANT_TIME}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "ENT_TIME" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "true" in DB
+    assign grantSourceId "grantSourceId" to entitlement "${entitlement}"
+    assign grantSource "grantSource" to entitlement "${entitlement}"
+    ${entitlement}=    remove all conditions from entitlement "${entitlement}"
+    add condition "${GRANT_STR}" to entitlement "${entitlement}"
+    update entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_STR}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "ENT_TIME" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "true" in DB
+    ensure there are "1" entitlements for user "${userId}"
+
+Test_NonMeteredEntitlements_Update_ConditionType_TimeframeCondition_To_PathCondition
+    [Documentation]    Update entitlement without condition by adding string condition
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root"}
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${userId} =     generate random id
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_PATH}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "ENT_TIME" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "ENT_TIME" for user "${userId}"
+    assign grantSourceId "grantSourceId" to entitlement "${entitlement}"
+    assign grantSource "grantSource" to entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_TIME" for user "${userId}" is "false"
+    add condition "${GRANT_TIME}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_PATH}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "ENT_TIME" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "true" in DB
+    assign grantSourceId "grantSourceId" to entitlement "${entitlement}"
+    assign grantSource "grantSource" to entitlement "${entitlement}"
+    ${entitlement}=    remove all conditions from entitlement "${entitlement}"
+    add condition "${GRANT_PATH}" to entitlement "${entitlement}"
+    update entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_PATH}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "ENT_TIME" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "true" in DB
+    ensure there are "1" entitlements for user "${userId}"
+
+Test_NonMeteredEntitlements_Update_ConditionType_TimeframeCondition_To_GeoCondition
+    [Documentation]    Update entitlement without condition by adding string condition
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${userId} =     generate random id
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "ENT_TIME" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "ENT_TIME" for user "${userId}"
+    assign grantSourceId "grantSourceId" to entitlement "${entitlement}"
+    assign grantSource "grantSource" to entitlement "${entitlement}"
+    add condition "${GRANT_TIME}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "ENT_TIME" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "true" in DB
+    assign grantSourceId "grantSourceId" to entitlement "${entitlement}"
+    assign grantSource "grantSource" to entitlement "${entitlement}"
+    ${entitlement}=    remove all conditions from entitlement "${entitlement}"
+    add condition "${GRANT_GEO}" to entitlement "${entitlement}"
+    update entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_GEO}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "ENT_TIME" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "true" in DB
+    ensure there are "1" entitlements for user "${userId}"
+
+### GEOCONDITION:
+
+Test_NonMeteredEntitlements_Update_ConditionForConditionType_GeoCondition
+    [Documentation]    Update entitlement with string condition type - updating conditions for condition type
+    ${GRANT_GEO1}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO1}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${GRANT_GEO2}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria"}
+    ${CHECK_GEO2}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/City2"}
+    ${GRANT_GEO3}    Set Variable    "geo" condition with parameters {"geoPath":"Germany"}
+    ${CHECK_GEO3}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Region3/City3"}
+    ${GRANT_GEO4}    Set Variable    "geo" condition with parameters {"geoPath":"Russia/Omskaya oblast/Omsk"}
+    ${CHECK_GEO4}    Set Variable    "geo" condition with parameters {"geoPath":"Russia/Omskaya oblast/Omsk"}
+    ${userId} =     generate random id
+    ${entitlement}=    create entitlement with entitlementType "ENT_GEO" for user "${userId}"
+    assign grantSourceId "grantSourceId-1" to entitlement "${entitlement}"
+    assign grantSource "grantSource-1" to entitlement "${entitlement}"
+    add condition "${GRANT_GEO1}" to entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_GEO" and conditions "${CHECK_GEO1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_GEO" and conditions "${CHECK_GEO2}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_GEO" and conditions "${CHECK_GEO3}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_GEO" and conditions "${CHECK_GEO4}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "ENT_GEO" and grantSource "grantSource-1", grantSourceId "grantSourceId-1" for user "${userId}" is "false" in DB
+    ensure that entitlement with entitlementType "ENT_GEO" and grantSource "grantSource-2", grantSourceId "grantSourceId-2" for user "${userId}" is "false" in DB
+    ${entitlement}=    grant entitlement "${entitlement}"
+    ###Check entitlement is granted:
+    check entitlement with entitlementType "ENT_GEO" and conditions "${CHECK_GEO1}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_GEO" and conditions "${CHECK_GEO2}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_GEO" and conditions "${CHECK_GEO3}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_GEO" and conditions "${CHECK_GEO4}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "ENT_GEO" and grantSource "grantSource-1", grantSourceId "grantSourceId-1" for user "${userId}" is "true" in DB
+    ensure that entitlement with entitlementType "ENT_GEO" and grantSource "grantSource-2", grantSourceId "grantSourceId-2" for user "${userId}" is "false" in DB
+    ###Check if condition is updated if grantSourceId and grantSource with existing values are provided:
+    assign grantSourceId "grantSourceId-1" to entitlement "${entitlement}"
+    assign grantSource "grantSource-1" to entitlement "${entitlement}"
+    ${entitlement}=    remove all conditions from entitlement "${entitlement}"
+    add condition "${GRANT_GEO2}" to entitlement "${entitlement}"
+    update entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_GEO" and conditions "${CHECK_GEO1}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_GEO" and conditions "${CHECK_GEO2}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_GEO" and conditions "${CHECK_GEO3}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_GEO" and conditions "${CHECK_GEO4}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "ENT_GEO" and grantSource "grantSource-1", grantSourceId "grantSourceId-1" for user "${userId}" is "true" in DB
+    ensure that entitlement with entitlementType "ENT_GEO" and grantSource "grantSource-2", grantSourceId "grantSourceId-2" for user "${userId}" is "false" in DB
+    ###Check if condition is updated if grantSourceId and grantSource are not provided:
+    ${entitlement}=    remove all conditions from entitlement "${entitlement}"
+    add condition "${GRANT_GEO3}" to entitlement "${entitlement}"
+    update entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_GEO" and conditions "${CHECK_GEO1}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_GEO" and conditions "${CHECK_GEO2}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_GEO" and conditions "${CHECK_GEO3}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_GEO" and conditions "${CHECK_GEO4}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "ENT_GEO" and grantSource "grantSource-1", grantSourceId "grantSourceId-1" for user "${userId}" is "true" in DB
+    ensure that entitlement with entitlementType "ENT_GEO" and grantSource "grantSource-2", grantSourceId "grantSourceId-2" for user "${userId}" is "false" in DB
+    ###Check if condition is updated only, grantSourceId and grantSource provided values differ original values - are ignored:
+    assign grantSourceId "grantSourceId-2" to entitlement "${entitlement}"
+    assign grantSource "grantSource-2" to entitlement "${entitlement}"
+    ${entitlement}=    remove all conditions from entitlement "${entitlement}"
+    add condition "${GRANT_GEO4}" to entitlement "${entitlement}"
+    update entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_GEO" and conditions "${CHECK_GEO1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_GEO" and conditions "${CHECK_GEO2}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_GEO" and conditions "${CHECK_GEO3}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_GEO" and conditions "${CHECK_GEO4}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "ENT_GEO" and grantSource "grantSource-1", grantSourceId "grantSourceId-1" for user "${userId}" is "true" in DB
+    ensure that entitlement with entitlementType "ENT_GEO" and grantSource "grantSource-2", grantSourceId "grantSourceId-2" for user "${userId}" is "false" in DB
+    ensure there are "1" entitlements for user "${userId}"
+
+Test_NonMeteredEntitlements_Update_ConditionType_GeoCondition_To_WithoutCondition
+    [Documentation]    Update entitlement without condition by adding string condition
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${userId} =     generate random id
+    check entitlement with entitlementType "ENT_GEO" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_GEO" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "ENT_GEO" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "ENT_GEO" for user "${userId}"
+    assign grantSourceId "grantSourceId" to entitlement "${entitlement}"
+    assign grantSource "grantSource" to entitlement "${entitlement}"
+    add condition "${GRANT_GEO}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_GEO" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_GEO" and conditions "${CHECK_GEO}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "ENT_GEO" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "true" in DB
+    assign grantSourceId "grantSourceId" to entitlement "${entitlement}"
+    assign grantSource "grantSource" to entitlement "${entitlement}"
+    ${entitlement}=    remove all conditions from entitlement "${entitlement}"
+    update entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_GEO" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_GEO" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "ENT_GEO" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "true" in DB
+    ensure there are "1" entitlements for user "${userId}"
+
+Test_NonMeteredEntitlements_Update_ConditionType_GeoCondition_To_PathCondition
+    [Documentation]    Update entitlement without condition by adding string condition
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root"}
+    ${userId} =     generate random id
+    check entitlement with entitlementType "ENT_GEO" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_GEO" and conditions "${CHECK_PATH}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "ENT_GEO" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "ENT_GEO" for user "${userId}"
+    assign grantSourceId "grantSourceId" to entitlement "${entitlement}"
+    assign grantSource "grantSource" to entitlement "${entitlement}"
+    add condition "${GRANT_GEO}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_GEO" and conditions "${CHECK_GEO}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_GEO" and conditions "${CHECK_PATH}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "ENT_GEO" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "true" in DB
+    assign grantSourceId "grantSourceId" to entitlement "${entitlement}"
+    assign grantSource "grantSource" to entitlement "${entitlement}"
+    ${entitlement}=    remove all conditions from entitlement "${entitlement}"
+    add condition "${GRANT_PATH}" to entitlement "${entitlement}"
+    update entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_GEO" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_GEO" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_GEO" and conditions "${CHECK_PATH}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "ENT_GEO" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "true" in DB
+    ensure there are "1" entitlements for user "${userId}"
+
+Test_NonMeteredEntitlements_Update_ConditionType_GeoCondition_To_StringCondition
+    [Documentation]    Update entitlement without condition by adding string condition
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${userId} =     generate random id
+    check entitlement with entitlementType "ENT_GEO" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_GEO" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "ENT_GEO" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "ENT_GEO" for user "${userId}"
+    assign grantSourceId "grantSourceId" to entitlement "${entitlement}"
+    assign grantSource "grantSource" to entitlement "${entitlement}"
+    add condition "${GRANT_GEO}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_GEO" and conditions "${CHECK_GEO}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_GEO" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "ENT_GEO" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "true" in DB
+    assign grantSourceId "grantSourceId" to entitlement "${entitlement}"
+    assign grantSource "grantSource" to entitlement "${entitlement}"
+    ${entitlement}=    remove all conditions from entitlement "${entitlement}"
+    add condition "${GRANT_STR}" to entitlement "${entitlement}"
+    update entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_GEO" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_GEO" and conditions "${CHECK_STR}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "ENT_GEO" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "true" in DB
+    ensure there are "1" entitlements for user "${userId}"
+
+Test_NonMeteredEntitlements_Update_ConditionType_GeoCondition_To_TimeframeCondition
+    [Documentation]    Update entitlement without condition by adding string condition
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${userId} =     generate random id
+    check entitlement with entitlementType "ENT_GEO" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_GEO" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "ENT_GEO" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "false" in DB
+    ${entitlement}=    create entitlement with entitlementType "ENT_GEO" for user "${userId}"
+    assign grantSourceId "grantSourceId" to entitlement "${entitlement}"
+    assign grantSource "grantSource" to entitlement "${entitlement}"
+    add condition "${GRANT_GEO}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_GEO" and conditions "${CHECK_GEO}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_GEO" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "ENT_GEO" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "true" in DB
+    assign grantSourceId "grantSourceId" to entitlement "${entitlement}"
+    assign grantSource "grantSource" to entitlement "${entitlement}"
+    ${entitlement}=    remove all conditions from entitlement "${entitlement}"
+    add condition "${GRANT_TIME}" to entitlement "${entitlement}"
+    update entitlement "${entitlement}"
+    check entitlement with entitlementType "ENT_GEO" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_GEO" and conditions "${CHECK_TIME}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "ENT_GEO" and grantSource "grantSource", grantSourceId "grantSourceId" for user "${userId}" is "true" in DB
+    ensure there are "1" entitlements for user "${userId}"
+
+
+
+
+
+
+
+

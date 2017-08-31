@@ -1,0 +1,1293 @@
+<!doctype html>
+<!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ -->
+<!--[if lt IE 7 ]> <html class="no-js ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]>    <html class="no-js ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]>    <html class="no-js ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+
+  <!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame
+       Remove this if you use the .htaccess -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+  <title>EntitlementsResource</title>
+
+  <!-- Mobile viewport optimized: j.mp/bplateviewport -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- CSS: implied media="all" -->
+  <link rel="stylesheet" href="css/style.css?v=2">
+  <link rel="stylesheet" href="css/prettify.css">
+
+  <!-- All JavaScript at the bottom, except for Modernizr which enables HTML5 elements & feature detects -->
+  <script src="js/libs/modernizr-1.7.min.js"></script>
+
+</head>
+
+<body class="home">
+
+  <div class="container">
+    <header>
+      <div id="header" class="column first last span-20">
+        <div id="site-name" class="column span-18 append-1 prepend-1 first last"><a href="index.html">EntitlementsResource</a></div>
+        <div id="primary" class="column span-18 append-1 prepend-1 first last">
+          <ul class="navigation">
+            <li id="nav-rest"><a href="rest.html">REST</a></li>
+            <li id="nav-data"><a href="model.html">Data Model</a></li>
+          </ul>
+        </div>
+        <div>
+          <ul class="xbreadcrumbs" id="breadcrumbs">
+            <li>
+              <a href="index.html" class="home">Home</a> &gt;
+            </li>
+            <li>
+              <a href="rest.html">REST</a> &gt;
+              <ul>
+                <li><a href="model.html">Data Model</a></li>
+                <li><a href="rest.html">REST</a></li>
+              </ul>
+            </li>
+            <li class="current">
+              <a href="resource_EntitlementsResource.html">EntitlementsResource</a>
+              <ul>
+                <li><a href="resource_EntitlementsResource.html">EntitlementsResource</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </header>
+    <div id="main" class="column first last span-20">
+      <h1>EntitlementsResource</h1>
+
+      <p>REST resource for grants.</p>
+      <p>The following resources are applicable:</p>
+      <ul>
+        <li>
+        <a href="#path__grants.html">/grants</a>
+        </li>
+        <li>
+        <a href="#path__grants_-grantId-.html">/grants/{grantId}</a>
+        </li>
+        <li>
+        <a href="#path__grants_-grantId-_conditions.html">/grants/{grantId}/conditions</a>
+        </li>
+        <li>
+        <a href="#path__grants_-grantId-_conditions_-conditionType-.html">/grants/{grantId}/conditions/{conditionType}</a>
+        </li>
+        <li>
+        <a href="#path__grants_-grantId-_properties.html">/grants/{grantId}/properties</a>
+        </li>
+        <li>
+        <a href="#path__grants_-grantId-_properties_-key-.html">/grants/{grantId}/properties/{key}</a>
+        </li>
+        <li>
+        <a href="#path__grants_-grantId-_status.html">/grants/{grantId}/status</a>
+        </li>
+        <li>
+        <a href="#path__grants_userId_-userId-.html">/grants/userId/{userId}</a>
+        </li>
+        <li>
+        <a href="#path__grants_userId_-userId-_execute.html">/grants/userId/{userId}/execute</a>
+        </li>
+        <li>
+        <a href="#path__grants_userId_-userId-_executeMany.html">/grants/userId/{userId}/executeMany</a>
+        </li>
+      </ul>
+        <a name="path__grants.html"></a>
+      <h1>/grants</h1>
+      <a name="POST"></a>
+      <h2>POST</h2>
+      <p>
+            Creates a grant.
+          </p>
+    
+
+      <h3>Request Body</h3>
+      <table>
+        <tr>
+          <td align="right">element:</td>
+          <td><a href="el_ns0_grantData.html">grantData</a></td>
+        </tr>
+        <tr>
+          <td align="right">media types:</td>
+          <td>application/xml<br/>application/json</td>
+        </tr>
+      </table>
+      <p>Grant object including list of conditions</p>
+      <h3>Response Body</h3>
+      <table>
+        <tr>
+          <td align="right">element:</td>
+          <td><a href="el_ns0_grantData.html">grantData</a></td>
+        </tr>
+        <tr>
+          <td align="right">media types:</td>
+          <td>application/xml<br/>application/json</td>
+        </tr>
+      </table>
+      <p>Same as request, but <i>Id</i> is added and current time assigned to grantTime if it was omitted.</p>
+      <h3>Status Codes</h3>
+      <table>
+        <tr>
+          <th width="130">HTTP Status Code</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td>201 Created</td>
+          <td>SUCCESS - Created : Grant has been created</td>
+        </tr>
+        <tr>
+          <td>412 Precondition Failed</td>
+          <td>ERROR - Create : Invalid input data</td>
+        </tr>
+        <tr>
+          <td>404 Not Found</td>
+          <td>ERROR - Resource not found</td>
+        </tr>
+      </table>
+        <a name="path__grants_-grantId-.html"></a>
+      <h1>/grants/{grantId}</h1>
+      <a name="GET"></a>
+      <h2>GET</h2>
+      <p>
+            Get single grant by internal id.
+          </p>
+    
+
+      <h3>Parameters</h3>
+      <table>
+        <tr>
+          <th>name</th>
+          <th>description</th>
+          <th>type</th>
+          <th>default</th>
+        </tr>
+        <tr>
+          <td>grantId</td>
+          <td>
+            grant id
+          </td>
+          <td>path</td>
+          <td></td>
+        </tr>
+      </table>
+      <h3>Response Body</h3>
+      <table>
+        <tr>
+          <td align="right">element:</td>
+          <td><a href="el_ns0_grantData.html">grantData</a></td>
+        </tr>
+        <tr>
+          <td align="right">media types:</td>
+          <td>application/xml<br/>application/json</td>
+        </tr>
+      </table>
+      <p>grant</p>
+      <h3>Status Codes</h3>
+      <table>
+        <tr>
+          <th width="130">HTTP Status Code</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td>200 OK</td>
+          <td>SUCCESS - Get : Grant has been found.</td>
+        </tr>
+        <tr>
+          <td>404 Not Found</td>
+          <td>ERROR: Get : Grant does not exist.</td>
+        </tr>
+        <tr>
+          <td>404 Not Found</td>
+          <td>ERROR - Resource not found</td>
+        </tr>
+      </table>
+      <a name="DELETE"></a>
+      <h2>DELETE</h2>
+      <p>
+            Revoke single grant by internal id.
+          </p>
+    
+
+      <h3>Parameters</h3>
+      <table>
+        <tr>
+          <th>name</th>
+          <th>description</th>
+          <th>type</th>
+          <th>default</th>
+        </tr>
+        <tr>
+          <td>grantId</td>
+          <td>
+            grant id
+          </td>
+          <td>path</td>
+          <td></td>
+        </tr>
+      </table>
+      <h3>Status Codes</h3>
+      <table>
+        <tr>
+          <th width="130">HTTP Status Code</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td>200 OK</td>
+          <td>SUCCESS - Revoked : The grant has been revoked.</td>
+        </tr>
+        <tr>
+          <td>404 Not Found</td>
+          <td>ERROR - Revoke : Grant not found</td>
+        </tr>
+        <tr>
+          <td>404 Not Found</td>
+          <td>ERROR - Resource not found</td>
+        </tr>
+      </table>
+        <a name="path__grants_-grantId-_conditions.html"></a>
+      <h1>/grants/{grantId}/conditions</h1>
+      <a name="POST"></a>
+      <h2>POST</h2>
+      <p>
+            Set new conditions for existing grant.
+          </p>
+    
+
+      <h3>Parameters</h3>
+      <table>
+        <tr>
+          <th>name</th>
+          <th>description</th>
+          <th>type</th>
+          <th>default</th>
+        </tr>
+        <tr>
+          <td>grantId</td>
+          <td>
+            id of grant
+          </td>
+          <td>path</td>
+          <td></td>
+        </tr>
+      </table>
+      <h3>Request Body</h3>
+      <table>
+        <tr>
+          <td align="right">element:</td>
+          <td><a href="el_ns0_listOfCondition.html">listOfCondition</a></td>
+        </tr>
+        <tr>
+          <td align="right">media types:</td>
+          <td>application/xml<br/>application/json</td>
+        </tr>
+      </table>
+      <p>new list of conditions. It will overwrite the existing one.</p>
+      <h3>Response Body</h3>
+      <table>
+        <tr>
+          <td align="right">element:</td>
+          <td><a href="el_ns0_grantData.html">grantData</a></td>
+        </tr>
+        <tr>
+          <td align="right">media types:</td>
+          <td>application/xml<br/>application/json</td>
+        </tr>
+      </table>
+      <p>modified grant</p>
+      <h3>Status Codes</h3>
+      <table>
+        <tr>
+          <th width="130">HTTP Status Code</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td>200 OK</td>
+          <td>SUCCESS - Updated : Grant has been updated</td>
+        </tr>
+        <tr>
+          <td>404 Not Found</td>
+          <td>ERROR - Update : Grant does not exist</td>
+        </tr>
+        <tr>
+          <td>412 Precondition Failed</td>
+          <td>ERROR - Update : Invalid conditions</td>
+        </tr>
+        <tr>
+          <td>404 Not Found</td>
+          <td>ERROR - Resource not found</td>
+        </tr>
+      </table>
+      <a name="DELETE"></a>
+      <h2>DELETE</h2>
+      <p>
+            Remove conditions from existing grant.
+          </p>
+    
+
+      <h3>Parameters</h3>
+      <table>
+        <tr>
+          <th>name</th>
+          <th>description</th>
+          <th>type</th>
+          <th>default</th>
+        </tr>
+        <tr>
+          <td>grantId</td>
+          <td>
+            id of grant
+          </td>
+          <td>path</td>
+          <td></td>
+        </tr>
+      </table>
+      <h3>Response Body</h3>
+      <table>
+        <tr>
+          <td align="right">element:</td>
+          <td><a href="el_ns0_grantData.html">grantData</a></td>
+        </tr>
+        <tr>
+          <td align="right">media types:</td>
+          <td>application/xml<br/>application/json</td>
+        </tr>
+      </table>
+      <p>updated grant</p>
+      <h3>Status Codes</h3>
+      <table>
+        <tr>
+          <th width="130">HTTP Status Code</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td>200 OK</td>
+          <td>SUCCESS - Deleted : Conditions were successfully deleted</td>
+        </tr>
+        <tr>
+          <td>404 Not Found</td>
+          <td>ERROR - Delete : Grant does not exist</td>
+        </tr>
+        <tr>
+          <td>404 Not Found</td>
+          <td>ERROR - Resource not found</td>
+        </tr>
+      </table>
+        <a name="path__grants_-grantId-_conditions_-conditionType-.html"></a>
+      <h1>/grants/{grantId}/conditions/{conditionType}</h1>
+      <a name="DELETE"></a>
+      <h2>DELETE</h2>
+      <p>
+            Remove condition of given type from existing grant.
+          </p>
+    
+
+      <h3>Parameters</h3>
+      <table>
+        <tr>
+          <th>name</th>
+          <th>description</th>
+          <th>type</th>
+          <th>default</th>
+        </tr>
+        <tr>
+          <td>grantId</td>
+          <td>
+            id of grant
+          </td>
+          <td>path</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>conditionType</td>
+          <td>
+            optional type of condition to remove
+          </td>
+          <td>path</td>
+          <td></td>
+        </tr>
+      </table>
+      <h3>Response Body</h3>
+      <table>
+        <tr>
+          <td align="right">element:</td>
+          <td><a href="el_ns0_grantData.html">grantData</a></td>
+        </tr>
+        <tr>
+          <td align="right">media types:</td>
+          <td>application/xml<br/>application/json</td>
+        </tr>
+      </table>
+      <p>updated grant</p>
+      <h3>Status Codes</h3>
+      <table>
+        <tr>
+          <th width="130">HTTP Status Code</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td>200 OK</td>
+          <td>SUCCESS - Deleted : Conditions were successfully deleted</td>
+        </tr>
+        <tr>
+          <td>404 Not Found</td>
+          <td>ERROR - Delete : Grant does not exist</td>
+        </tr>
+        <tr>
+          <td>404 Not Found</td>
+          <td>ERROR - Resource not found</td>
+        </tr>
+      </table>
+        <a name="path__grants_-grantId-_properties.html"></a>
+      <h1>/grants/{grantId}/properties</h1>
+      <a name="GET"></a>
+      <h2>GET</h2>
+      <p>
+            Get grant properties.
+          </p>
+    
+
+      <h3>Parameters</h3>
+      <table>
+        <tr>
+          <th>name</th>
+          <th>description</th>
+          <th>type</th>
+          <th>default</th>
+        </tr>
+        <tr>
+          <td>grantId</td>
+          <td>
+            id of an existing grant
+          </td>
+          <td>path</td>
+          <td></td>
+        </tr>
+      </table>
+      <h3>Response Body</h3>
+      <table>
+        <tr>
+          <td align="right">element:</td>
+          <td>(custom)</td>
+        </tr>
+        <tr>
+          <td align="right">media types:</td>
+          <td>application/xml<br/>application/json</td>
+        </tr>
+      </table>
+      <p>list of grant properties</p>
+      <h3>Status Codes</h3>
+      <table>
+        <tr>
+          <th width="130">HTTP Status Code</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td>200 OK</td>
+          <td>SUCCESS - Gotten</td>
+        </tr>
+        <tr>
+          <td>404 Not Found</td>
+          <td>ERROR - Get : grant does not exist</td>
+        </tr>
+        <tr>
+          <td>404 Not Found</td>
+          <td>ERROR - Resource not found</td>
+        </tr>
+      </table>
+        <a name="path__grants_-grantId-_properties_-key-.html"></a>
+      <h1>/grants/{grantId}/properties/{key}</h1>
+      <p>
+        The following operations are supported on this resource:
+      </p>
+      <ul>
+        <li><a href="#GET">GET</a></li>
+        <li><a href="#DELETE">DELETE</a></li>
+        <li><a href="#PUT">PUT</a></li>
+        <li><a href="#POST">POST</a></li>
+      </ul>
+      <a name="GET"></a>
+      <h2>GET</h2>
+      <p>
+            Get single property of given grant.
+          </p>
+    
+
+      <h3>Parameters</h3>
+      <table>
+        <tr>
+          <th>name</th>
+          <th>description</th>
+          <th>type</th>
+          <th>default</th>
+        </tr>
+        <tr>
+          <td>grantId</td>
+          <td>
+            id of an existing grant
+          </td>
+          <td>path</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>key</td>
+          <td>
+            property name
+          </td>
+          <td>path</td>
+          <td></td>
+        </tr>
+      </table>
+      <h3>Response Body</h3>
+      <table>
+        <tr>
+          <td align="right">element:</td>
+          <td>(custom)</td>
+        </tr>
+        <tr>
+          <td align="right">media types:</td>
+          <td>application/xml<br/>application/json</td>
+        </tr>
+      </table>
+      <p>current value of property</p>
+      <h3>Status Codes</h3>
+      <table>
+        <tr>
+          <th width="130">HTTP Status Code</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td>200 OK</td>
+          <td>SUCCESS - Gotten</td>
+        </tr>
+        <tr>
+          <td>404 Not Found</td>
+          <td>ERROR - Get : grant does not exist</td>
+        </tr>
+        <tr>
+          <td>404 Not Found</td>
+          <td>ERROR - Resource not found</td>
+        </tr>
+      </table>
+      <a name="DELETE"></a>
+      <h2>DELETE</h2>
+      <p>
+            Delete single property of a grant.
+          </p>
+    
+
+      <h3>Parameters</h3>
+      <table>
+        <tr>
+          <th>name</th>
+          <th>description</th>
+          <th>type</th>
+          <th>default</th>
+        </tr>
+        <tr>
+          <td>grantId</td>
+          <td>
+            id of an existing grant
+          </td>
+          <td>path</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>key</td>
+          <td>
+            property name
+          </td>
+          <td>path</td>
+          <td></td>
+        </tr>
+      </table>
+      <h3>Response Body</h3>
+      <table>
+        <tr>
+          <td align="right">element:</td>
+          <td>(custom)</td>
+        </tr>
+        <tr>
+          <td align="right">media types:</td>
+          <td>application/xml<br/>application/json</td>
+        </tr>
+      </table>
+      <p>the most recent value of the property</p>
+      <h3>Status Codes</h3>
+      <table>
+        <tr>
+          <th width="130">HTTP Status Code</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td>200 OK</td>
+          <td>SUCCESS - Deleted</td>
+        </tr>
+        <tr>
+          <td>404 Not Found</td>
+          <td>ERROR - Delete : grant does not exist</td>
+        </tr>
+        <tr>
+          <td>404 Not Found</td>
+          <td>ERROR - Resource not found</td>
+        </tr>
+      </table>
+      <a name="PUT"></a>
+      <h2>PUT</h2>
+      <p>
+            Update custom grant property.
+<p>
+To increment value of given property by specified number set <i>relative</i> to true. Use negative numbers for decrement.
+Increment/decrement works for numeric properties only.
+</p>
+          </p>
+    
+
+      <h3>Parameters</h3>
+      <table>
+        <tr>
+          <th>name</th>
+          <th>description</th>
+          <th>type</th>
+          <th>default</th>
+        </tr>
+        <tr>
+          <td>grantId</td>
+          <td>
+            grant id
+          </td>
+          <td>path</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>key</td>
+          <td>
+            property name
+          </td>
+          <td>path</td>
+          <td></td>
+        </tr>
+      </table>
+      <h3>Request Body</h3>
+      <table>
+        <tr>
+          <td align="right">element:</td>
+          <td><a href="el_ns0_propertyData.html">propertyData</a></td>
+        </tr>
+        <tr>
+          <td align="right">media types:</td>
+          <td>application/xml<br/>application/json</td>
+        </tr>
+      </table>
+      <p>new value</p>
+      <h3>Response Body</h3>
+      <table>
+        <tr>
+          <td align="right">element:</td>
+          <td><a href="el_ns0_grantData.html">grantData</a></td>
+        </tr>
+        <tr>
+          <td align="right">media types:</td>
+          <td>application/xml<br/>application/json</td>
+        </tr>
+      </table>
+      <p>updated grant</p>
+      <h3>Status Codes</h3>
+      <table>
+        <tr>
+          <th width="130">HTTP Status Code</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td>200 OK</td>
+          <td>SUCCESS - Updated : The grant property has been updated</td>
+        </tr>
+        <tr>
+          <td>412 Precondition Failed</td>
+          <td>ERROR - Update : this value is not allowed or property does not exist</td>
+        </tr>
+        <tr>
+          <td>404 Not Found</td>
+          <td>ERROR - Update : Grant does not exist.</td>
+        </tr>
+        <tr>
+          <td>404 Not Found</td>
+          <td>ERROR - Resource not found</td>
+        </tr>
+      </table>
+      <a name="POST"></a>
+      <h2>POST</h2>
+      <p>
+            Set custom grant property.
+          </p>
+    
+
+      <h3>Parameters</h3>
+      <table>
+        <tr>
+          <th>name</th>
+          <th>description</th>
+          <th>type</th>
+          <th>default</th>
+        </tr>
+        <tr>
+          <td>grantId</td>
+          <td>
+            grant id
+          </td>
+          <td>path</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>key</td>
+          <td>
+            property name
+          </td>
+          <td>path</td>
+          <td></td>
+        </tr>
+      </table>
+      <h3>Request Body</h3>
+      <table>
+        <tr>
+          <td align="right">element:</td>
+            <td>value</td>
+        </tr>
+        <tr>
+          <td align="right">media types:</td>
+          <td>application/xml<br/>application/json</td>
+        </tr>
+      </table>
+      <p>new value</p>
+      <h3>Response Body</h3>
+      <table>
+        <tr>
+          <td align="right">element:</td>
+          <td><a href="el_ns0_grantData.html">grantData</a></td>
+        </tr>
+        <tr>
+          <td align="right">media types:</td>
+          <td>application/xml<br/>application/json</td>
+        </tr>
+      </table>
+      <p>updated grant</p>
+      <h3>Status Codes</h3>
+      <table>
+        <tr>
+          <th width="130">HTTP Status Code</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td>200 OK</td>
+          <td>SUCCESS - Updated : The grant property has been updated</td>
+        </tr>
+        <tr>
+          <td>412 Precondition Failed</td>
+          <td>ERROR - Update : this value is not allowed or property already exists</td>
+        </tr>
+        <tr>
+          <td>404 Not Found</td>
+          <td>ERROR - Update : Grant does not exist.</td>
+        </tr>
+        <tr>
+          <td>404 Not Found</td>
+          <td>ERROR - Resource not found</td>
+        </tr>
+      </table>
+        <a name="path__grants_-grantId-_status.html"></a>
+      <h1>/grants/{grantId}/status</h1>
+      <a name="GET"></a>
+      <h2>GET</h2>
+      <p>
+            Get grant status. Status affects if grant is processed or skipped by methods
+#executeMany(String, String, Boolean, com.hybris.services.entitlements.api.ListOfExecuteManyData) and
+#execute(String, String, String, Boolean, com.hybris.services.entitlements.api.ListOfCriterionData).
+          </p>
+    
+
+      <h3>Parameters</h3>
+      <table>
+        <tr>
+          <th>name</th>
+          <th>description</th>
+          <th>type</th>
+          <th>default</th>
+        </tr>
+        <tr>
+          <td>grantId</td>
+          <td>
+            grant id
+          </td>
+          <td>path</td>
+          <td></td>
+        </tr>
+      </table>
+      <h3>Response Body</h3>
+      <table>
+        <tr>
+          <td align="right">element:</td>
+          <td><a href="el_ns0_statusData.html">statusData</a></td>
+        </tr>
+        <tr>
+          <td align="right">media types:</td>
+          <td>application/xml<br/>application/json</td>
+        </tr>
+      </table>
+      <p>grant status</p>
+      <h3>Status Codes</h3>
+      <table>
+        <tr>
+          <th width="130">HTTP Status Code</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td>200 OK</td>
+          <td>SUCCESS - Status gotten.</td>
+        </tr>
+        <tr>
+          <td>404 Not Found</td>
+          <td>ERROR - Get status : Grant does not exist.</td>
+        </tr>
+        <tr>
+          <td>404 Not Found</td>
+          <td>ERROR - Resource not found</td>
+        </tr>
+      </table>
+      <a name="PUT"></a>
+      <h2>PUT</h2>
+      <p>
+            Update grant status. Status affects if grant is processed or skipped by methods
+#executeMany(String, String, Boolean, com.hybris.services.entitlements.api.ListOfExecuteManyData) and
+#execute(String, String, String, Boolean, com.hybris.services.entitlements.api.ListOfCriterionData).
+          </p>
+    
+
+      <h3>Parameters</h3>
+      <table>
+        <tr>
+          <th>name</th>
+          <th>description</th>
+          <th>type</th>
+          <th>default</th>
+        </tr>
+        <tr>
+          <td>grantId</td>
+          <td>
+            grant id
+          </td>
+          <td>path</td>
+          <td></td>
+        </tr>
+      </table>
+      <h3>Request Body</h3>
+      <table>
+        <tr>
+          <td align="right">element:</td>
+          <td><a href="el_ns0_statusData.html">statusData</a></td>
+        </tr>
+        <tr>
+          <td align="right">media types:</td>
+          <td>application/xml<br/>application/json</td>
+        </tr>
+      </table>
+      <p>new status</p>
+      <h3>Response Body</h3>
+      <table>
+        <tr>
+          <td align="right">element:</td>
+          <td><a href="el_ns0_grantData.html">grantData</a></td>
+        </tr>
+        <tr>
+          <td align="right">media types:</td>
+          <td>application/xml<br/>application/json</td>
+        </tr>
+      </table>
+      <p>updated grant</p>
+      <h3>Status Codes</h3>
+      <table>
+        <tr>
+          <th width="130">HTTP Status Code</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td>200 OK</td>
+          <td>SUCCESS - Updated : The grant status has been updated</td>
+        </tr>
+        <tr>
+          <td>404 Not Found</td>
+          <td>ERROR - Update : Grant does not exist.</td>
+        </tr>
+        <tr>
+          <td>404 Not Found</td>
+          <td>ERROR - Resource not found</td>
+        </tr>
+      </table>
+        <a name="path__grants_userId_-userId-.html"></a>
+      <h1>/grants/userId/{userId}</h1>
+      <a name="GET"></a>
+      <h2>GET</h2>
+      <p>
+            Get all user's grants of given entitlement type, grant source and grant source id.
+          </p>
+    
+
+      <h3>Parameters</h3>
+      <table>
+        <tr>
+          <th>name</th>
+          <th>description</th>
+          <th>type</th>
+          <th>default</th>
+        </tr>
+        <tr>
+          <td>userId</td>
+          <td>
+            user id
+          </td>
+          <td>path</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>entitlementType</td>
+          <td>
+            type of entitlement
+          </td>
+          <td>query</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>grantSource</td>
+          <td>
+            reason of granting.
+          </td>
+          <td>query</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>grantSourceId</td>
+          <td>
+            external granting event id.
+          </td>
+          <td>query</td>
+          <td></td>
+        </tr>
+      </table>
+      <h3>Response Body</h3>
+      <table>
+        <tr>
+          <td align="right">element:</td>
+          <td><a href="el_ns0_listOfGrants.html">listOfGrants</a></td>
+        </tr>
+        <tr>
+          <td align="right">media types:</td>
+          <td>application/xml<br/>application/json</td>
+        </tr>
+      </table>
+      <p>list of user's grants</p>
+      <h3>Status Codes</h3>
+      <table>
+        <tr>
+          <th width="130">HTTP Status Code</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td>200 OK</td>
+          <td>SUCCESS - Get : OK</td>
+        </tr>
+        <tr>
+          <td>412 Precondition Failed</td>
+          <td>ERROR - Get : Invalid combination of parameters</td>
+        </tr>
+        <tr>
+          <td>404 Not Found</td>
+          <td>ERROR - Resource not found</td>
+        </tr>
+      </table>
+      <a name="DELETE"></a>
+      <h2>DELETE</h2>
+      <p>
+            Revoke user's entitlements of given type, grant source and grant source id.
+          </p>
+    
+
+      <h3>Parameters</h3>
+      <table>
+        <tr>
+          <th>name</th>
+          <th>description</th>
+          <th>type</th>
+          <th>default</th>
+        </tr>
+        <tr>
+          <td>userId</td>
+          <td>
+            user id
+          </td>
+          <td>path</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>entitlementType</td>
+          <td>
+            type of entitlement
+          </td>
+          <td>query</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>grantSource</td>
+          <td>
+            reason of granting
+          </td>
+          <td>query</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>grantSourceId</td>
+          <td>
+            external granting event id
+          </td>
+          <td>query</td>
+          <td></td>
+        </tr>
+      </table>
+      <h3>Status Codes</h3>
+      <table>
+        <tr>
+          <th width="130">HTTP Status Code</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td>200 OK</td>
+          <td>SUCCESS - Revoked : Grants have been revoked.</td>
+        </tr>
+        <tr>
+          <td>404 Not Found</td>
+          <td>ERROR - Resource not found</td>
+        </tr>
+      </table>
+        <a name="path__grants_userId_-userId-_execute.html"></a>
+      <h1>/grants/userId/{userId}/execute</h1>
+      <a name="PUT"></a>
+      <h2>PUT</h2>
+      <p>
+            Checks if a user has a grant.
+          </p>
+    
+
+      <h3>Parameters</h3>
+      <table>
+        <tr>
+          <th>name</th>
+          <th>description</th>
+          <th>type</th>
+          <th>default</th>
+        </tr>
+        <tr>
+          <td>action</td>
+          <td>
+            which action to perform on the grant
+          </td>
+          <td>query</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>userId</td>
+          <td>
+            user id
+          </td>
+          <td>path</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>entitlementType</td>
+          <td>
+            type of entitlement
+          </td>
+          <td>query</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>details</td>
+          <td>
+            if grant details should be returned
+          </td>
+          <td>query</td>
+          <td>false</td>
+        </tr>
+      </table>
+      <h3>Request Body</h3>
+      <table>
+        <tr>
+          <td align="right">element:</td>
+          <td><a href="el_ns0_listOfCriterion.html">listOfCriterion</a></td>
+        </tr>
+        <tr>
+          <td align="right">media types:</td>
+          <td>application/xml<br/>application/json</td>
+        </tr>
+      </table>
+      <p>execution criteria. Depend on set of conditions you expect to have in grants.</p>
+      <h3>Response Body</h3>
+      <table>
+        <tr>
+          <td align="right">element:</td>
+          <td><a href="el_ns0_executeResult.html">executeResult</a></td>
+        </tr>
+        <tr>
+          <td align="right">media types:</td>
+          <td>application/xml<br/>application/json</td>
+        </tr>
+      </table>
+      <p>boolean result and optional list of affected grants. If the result is false,
+the list contains the most suitable candidates.</p>
+      <h3>Status Codes</h3>
+      <table>
+        <tr>
+          <th width="130">HTTP Status Code</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td>200 OK</td>
+          <td>SUCCESS - Executed : Execution done</td>
+        </tr>
+        <tr>
+          <td>412 Precondition Failed</td>
+          <td>ERROR - Execute : Invalid input data</td>
+        </tr>
+        <tr>
+          <td>404 Not Found</td>
+          <td>ERROR - Resource not found</td>
+        </tr>
+      </table>
+        <a name="path__grants_userId_-userId-_executeMany.html"></a>
+      <h1>/grants/userId/{userId}/executeMany</h1>
+      <a name="PUT"></a>
+      <h2>PUT</h2>
+      <p>
+            Checks if a user has a grant.
+          </p>
+    
+
+      <h3>Parameters</h3>
+      <table>
+        <tr>
+          <th>name</th>
+          <th>description</th>
+          <th>type</th>
+          <th>default</th>
+        </tr>
+        <tr>
+          <td>action</td>
+          <td>
+            which action to perform on the grant
+          </td>
+          <td>query</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>userId</td>
+          <td>
+            user id
+          </td>
+          <td>path</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>details</td>
+          <td>
+            if grant details should be returned
+          </td>
+          <td>query</td>
+          <td>false</td>
+        </tr>
+      </table>
+      <h3>Request Body</h3>
+      <table>
+        <tr>
+          <td align="right">element:</td>
+          <td><a href="el_ns0_listOfExecuteMany.html">listOfExecuteMany</a></td>
+        </tr>
+        <tr>
+          <td align="right">media types:</td>
+          <td>application/xml<br/>application/json</td>
+        </tr>
+      </table>
+      <p>entitlement types and execution criteria for each type.
+The criteria on set of conditions you expect to have in grants.</p>
+      <h3>Response Body</h3>
+      <table>
+        <tr>
+          <td align="right">element:</td>
+          <td><a href="el_ns0_executeManyResult.html">executeManyResult</a></td>
+        </tr>
+        <tr>
+          <td align="right">media types:</td>
+          <td>application/xml<br/>application/json</td>
+        </tr>
+      </table>
+      <p>boolean result and optional list of affected grants for each entitlement type.
+For the results which are false, the lists contain the most suitable candidates.</p>
+      <h3>Status Codes</h3>
+      <table>
+        <tr>
+          <th width="130">HTTP Status Code</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td>200 OK</td>
+          <td>SUCCESS - Executed : Execution done</td>
+        </tr>
+        <tr>
+          <td>412 Precondition Failed</td>
+          <td>ERROR - Execute : Invalid input data</td>
+        </tr>
+        <tr>
+          <td>404 Not Found</td>
+          <td>ERROR - Resource not found</td>
+        </tr>
+      </table>
+
+      <div class="clear" />
+    </div>
+    <footer>
+      <div id="footer">
+        Copyright &copy; <script type="text/javascript" language="javascript">d = new Date;document.write(d.getFullYear());</script> <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">hybris.com</span><br/>
+        Generated by <a href="http://enunciate.codehaus.org">Enunciate</a>.
+      </div>
+    </footer>
+  </div> <!--! end of #container -->
+
+  <!-- JavaScript at the bottom for fast page loading -->
+
+  <!-- Grab Google CDN's jQuery, with a protocol relative URL; fall back to local if necessary -->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.js"></script>
+  <script>window.jQuery || document.write("<script src='js/libs/jquery-1.5.1.min.js'>\x3C/script>")</script>
+
+  <!--manage the navigation menu-->
+  <script src="js/libs/xbreadcrumbs.js"></script>
+  <script>
+    $(function() {
+      $('#breadcrumbs').xBreadcrumbs();
+    });
+  </script>
+
+
+  <!-- prettify code blocks. see http://code.google.com/p/google-code-prettify/ -->
+  <script src="js/libs/prettify/prettify.js"></script>
+  <script>
+    $(function() {
+      prettyPrint();
+    });
+  </script>
+
+  <!--[if lt IE 7 ]>
+    <script src="js/libs/dd_belatedpng.js"></script>
+    <script>DD_belatedPNG.fix("img, .png_bg"); // Fix any <img> or .png_bg bg-images. Also, please read goo.gl/mZiyb </script>
+  <![endif]-->
+
+</body>
+</html>

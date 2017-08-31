@@ -1,0 +1,68 @@
+# -----------------------------------------------------------------------
+# [y] hybris Platform
+#
+# Copyright (c) 2017 SAP SE or an SAP affiliate company.  All rights reserved.
+# 
+# This software is the confidential and proprietary information of SAP
+# ("Confidential Information"). You shall not disclose such Confidential
+# Information and shall use it only in accordance with the terms of the
+# license agreement you entered into with SAP.
+# -----------------------------------------------------------------------
+*** Settings ***
+Resource    entitlements-test/settings_keywords.txt
+Resource    entitlements-test/builder_entitlements_keywords.txt
+Resource    entitlements-test/modify_entitlements_keywords.txt
+Resource    entitlements-test/exceptions_entitlements_keywords.txt
+Resource    entitlements-test/check_entitlements_keywords.txt
+Resource    entitlements-test/use_entitlements_keywords.txt
+Resource    entitlements-test/add_grant_property_entitlements_keywords.txt
+
+*** Test Cases ***
+#create another ent. granted for another user and check
+#IS ADDING VALUE POSSIBLE ONLY? WHAT ABOUT STRING VALUES?   ???????????
+#IS IT POSSIBLE FOR ANY ENTITLEMENT TYPE: WITH/WITHOUT CONDITIONS?
+
+Test_addGrantProperty_NotFoundException
+    [Documentation]    NotFoundException.
+    ${userId} =     generate random id
+    ${simpleGrant}=    grant entitlement with entitlementType "simple" for user "${userId}"
+    revoke entitlement with grantId "${simpleGrant.id}"
+    for grant "${simpleGrant.id}" to property "someGrantPropertyName" add "0" and expect exception "ObjectNotFoundException" with message "The object with id = [${simpleGrant.id}] doesn't exist."
+
+Test_addGrantProperty
+    [Documentation]    add usage test.
+    ${userId} =     generate random id
+    ${simpleGrant}=    grant entitlement with entitlementType "simple" for user "${userId}"
+    set property name "someGrantPropertyName" and value "0" for entitlement with id "${simpleGrant.id}"
+    for grant "${simpleGrant.id}" to property "someGrantPropertyName" add "0"
+    assert for grant "${simpleGrant.id}" to property "someGrantPropertyName" equals "0"
+
+Test_addGrantProperty_positive
+    [Documentation]    add usage test positive.
+    ${userId} =     generate random id
+    ${simpleGrant}=    grant entitlement with entitlementType "simple" for user "${userId}"
+    set property name "someGrantPropertyName" and value "0" for entitlement with id "${simpleGrant.id}"
+    for grant "${simpleGrant.id}" to property "someGrantPropertyName" add "1"
+    assert for grant "${simpleGrant.id}" to property "someGrantPropertyName" equals "1"
+    for grant "${simpleGrant.id}" to property "someGrantPropertyName" add "1"
+    assert for grant "${simpleGrant.id}" to property "someGrantPropertyName" equals "2"
+    #WHAT IS IT FOR THEN (A KIND OF DUPLICATE?):
+    #    set property name "propertyNew" and value "propertyNewValue" for entitlement with id "${entitlement.id}"
+    #    check property name "propertyNew" equals to value "propertyNewValue" for entitlement with id "${entitlement.id}"
+
+Test_addGrantProperty_negative
+    [Documentation]    add usage test negative.
+    ${userId} =     generate random id
+    ${simpleGrant}=    grant entitlement with entitlementType "simple" for user "${userId}"
+    set property name "someGrantPropertyName" and value "0" for entitlement with id "${simpleGrant.id}"
+    for grant "${simpleGrant.id}" to property "someGrantPropertyName" add "1"
+    assert for grant "${simpleGrant.id}" to property "someGrantPropertyName" equals "1"
+    for grant "${simpleGrant.id}" to property "someGrantPropertyName" add "-1"
+    assert for grant "${simpleGrant.id}" to property "someGrantPropertyName" equals "0"
+
+Test_remaining_quantity_is_created_along_with_metered_condition
+	[Documentation]     check if remainingQuantity is initialized during asset creation if the asset has metered condition
+    ${userId} =         generate random id
+    ${GRANT_METERED} =    Set Variable    "metered" condition with parameters {"maxQuantity": "3", "allowOverage" : "true"}
+    ${grant} =          grant entitlement with entitlementType "video" and conditions "${GRANT_METERED}" for user "${userId}"
+    assert for grant "${grant.id}" to property "remainingQuantity" equals "3"

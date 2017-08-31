@@ -1,0 +1,1074 @@
+# -----------------------------------------------------------------------
+# [y] hybris Platform
+#
+# Copyright (c) 2017 SAP SE or an SAP affiliate company.  All rights reserved.
+# 
+# This software is the confidential and proprietary information of SAP
+# ("Confidential Information"). You shall not disclose such Confidential
+# Information and shall use it only in accordance with the terms of the
+# license agreement you entered into with SAP.
+# -----------------------------------------------------------------------
+*** Settings ***
+Resource    entitlements-test/settings_keywords.txt
+Resource    entitlements-test/builder_entitlements_keywords.txt
+Resource    entitlements-test/modify_entitlements_keywords.txt
+Resource    entitlements-test/exceptions_entitlements_keywords.txt
+Resource    entitlements-test/check_entitlements_keywords.txt
+Resource    entitlements-test/use_entitlements_keywords.txt
+
+*** Test Cases ***
+
+### REVOKE BY USERID + ENTITLEMENT_TYPE + GRANT_SOURCE + GRANT_SOURCE_ID:
+Test_MeteredEntitlements_Revoke_PathConditionType
+    [Documentation]    Entitlement with filters
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "2", "allowOverage" : "true"}
+    ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${entitlementType}      Set Variable    ENT_METERED
+    ${grantSource}      Set Variable    grantSource_1
+    ${grantSourceId}      Set Variable    grantSourceId_1
+    ${userId} =     generate random id
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlement}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    revoke entitlement for user "${userId}" and entitlementType "${entitlementType}" and grantSource "${grantSource}" and grantSourceId "${grantSourceId}"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    ensure there are "0" entitlements for user "${userId}"
+
+Test_MeteredEntitlements_Revoke_x2
+    [Documentation]    Entitlement with filters
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "2", "allowOverage" : "true"}
+    ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${entitlementType}      Set Variable    ENT_METERED
+    ${grantSource1}      Set Variable    grantSource_1
+    ${grantSourceId1}      Set Variable    grantSourceId_1
+    ${grantSource2}      Set Variable    grantSource_2
+    ${grantSourceId2}      Set Variable    grantSourceId_2
+    ${userId} =     generate random id
+    #ENT1
+    ${entitlement1}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlement1}"
+    assign grantSourceId "${grantSourceId1}" to entitlement "${entitlement1}"
+    assign grantSource "${grantSource1}" to entitlement "${entitlement1}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId}" is "false" in DB
+    #ENT2
+    ${entitlement2}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlement2}"
+    assign grantSourceId "${grantSourceId2}" to entitlement "${entitlement2}"
+    assign grantSource "${grantSource2}" to entitlement "${entitlement2}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId}" is "false" in DB
+    #...ENT1
+    ${entitlement1}=    grant entitlement "${entitlement1}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId}" is "true" in DB
+    #...ENT2
+    ${entitlement2}=    grant entitlement "${entitlement2}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId}" is "true" in DB
+    ### REVOKE WITH CORRECT PARAMETERS:
+    #...REVOKE ENT1
+    revoke entitlement for user "${userId}" and entitlementType "${entitlementType}" and grantSource "${grantSource1}" and grantSourceId "${grantSourceId1}"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId}" is "false" in DB
+    #...ENT2 exists still:
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId}" is "true" in DB
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    #...REVOKE ENT2
+    revoke entitlement for user "${userId}" and entitlementType "${entitlementType}" and grantSource "${grantSource2}" and grantSourceId "${grantSourceId2}"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    ensure there are "0" entitlements for user "${userId}"
+
+### REVOKE BY USERID ONLY:
+
+Test_MeteredEntitlements_RevokeByUserId_1User
+    [Documentation]    Entitlement with filters
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "2", "allowOverage" : "true"}
+    ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${entitlementType}      Set Variable    ENT_METERED
+    ${grantSource}      Set Variable    grantSource_1
+    ${grantSourceId}      Set Variable    grantSourceId_1
+    ${userId} =     generate random id
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlement}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "true" in DB
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    revoke entitlements for user "${userId}"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    ensure there are "0" entitlements for user "${userId}"
+
+Test_MeteredEntitlements_RevokeByUserId_x2_1User
+    [Documentation]    Entitlement with filters
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "0", "allowOverage" : "true"}
+    ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${entitlementType1}      Set Variable    ENT_METERED_1
+    ${entitlementType2}      Set Variable    ENT_METERED_2
+    ${grantSource1}      Set Variable    grantSource_1
+    ${grantSourceId1}      Set Variable    grantSourceId_1
+    ${grantSource2}      Set Variable    grantSource_2
+    ${grantSourceId2}      Set Variable    grantSourceId_2
+    ${userId} =     generate random id
+    #...CHECK ENTITLEMENT(S) FOR USER(S)
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId}" is "false" in DB
+    #...GRANT ENT1
+    ${entitlement1}=    create entitlement with entitlementType "${entitlementType1}" for user "${userId}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlement1}"
+    assign grantSourceId "${grantSourceId1}" to entitlement "${entitlement1}"
+    assign grantSource "${grantSource1}" to entitlement "${entitlement1}"
+    ${entitlement1}=    grant entitlement "${entitlement1}"
+    #...GRANT ENT2
+    ${entitlement2}=    create entitlement with entitlementType "${entitlementType2}" for user "${userId}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlement2}"
+    assign grantSourceId "${grantSourceId2}" to entitlement "${entitlement2}"
+    assign grantSource "${grantSource2}" to entitlement "${entitlement2}"
+    ${entitlement2}=    grant entitlement "${entitlement2}"
+    #...CHECK ENTITLEMENT(S) FOR USER(S)
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId}" is "true" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId}" is "true" in DB
+    #...REVOKE ENTITLEMENTS FOR USER
+    revoke entitlements for user "${userId}"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    ensure there are "0" entitlements for user "${userId}"
+
+Test_MeteredEntitlements_RevokeByUserId_2Users
+    [Documentation]    Entitlement with filters
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "0", "allowOverage" : "true"}
+    ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${entitlementType1}      Set Variable    ENT_METERED_1
+    ${entitlementType2}      Set Variable    ENT_METERED_2
+    ${grantSource1}      Set Variable    grantSource_1
+    ${grantSourceId1}      Set Variable    grantSourceId_1
+    ${userId1} =     generate random id
+    ${grantSource2}      Set Variable    grantSource_2
+    ${grantSourceId2}      Set Variable    grantSourceId_2
+    ${userId2} =     generate random id
+    #...CHECK ENTITLEMENT(S) FOR USER(S)
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId1}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId1}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId2}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId2}" is "false" in DB
+    #...GRANT ENT1 FOR USER1
+    ${entitlement1}=    create entitlement with entitlementType "${entitlementType1}" for user "${userId1}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlement1}"
+    assign grantSourceId "${grantSourceId1}" to entitlement "${entitlement1}"
+    assign grantSource "${grantSource1}" to entitlement "${entitlement1}"
+    ${entitlement1}=    grant entitlement "${entitlement1}"
+    #...GRANT ENT2 FOR USER2
+    ${entitlement2}=    create entitlement with entitlementType "${entitlementType2}" for user "${userId2}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlement2}"
+    assign grantSourceId "${grantSourceId2}" to entitlement "${entitlement2}"
+    assign grantSource "${grantSource2}" to entitlement "${entitlement2}"
+    ${entitlement2}=    grant entitlement "${entitlement2}"
+    #...CHECK ENTITLEMENT(S) FOR USER(S)
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId1}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId1}" is "true" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId2}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId2}" is "true" in DB
+    #...REVOKE ENTITLEMENTS FOR USER1
+    revoke entitlements for user "${userId1}"
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId1}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId1}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId2}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId2}" is "true" in DB
+    #...REVOKE ENTITLEMENTS FOR USER2
+    revoke entitlements for user "${userId2}"
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId1}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId1}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId2}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId2}" is "false" in DB
+    ensure there are "0" entitlements for user "${userId1}"
+    ensure there are "0" entitlements for user "${userId2}"
+
+Test_MeteredEntitlements_RevokeByUserId_Multi
+    [Documentation]    Revoke grants using only user ID (US6310)
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "0", "allowOverage" : "true"}
+    ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${entitlementType1}      Set Variable    ENT_METERED_1
+    ${entitlementType2}      Set Variable    ENT_METERED_2
+    ${entitlementType3}      Set Variable    ENT_METERED_3
+    ${userId1} =       generate random id
+    ${userId2} =       generate random id
+    ${userId3} =       generate random id
+    grant entitlement with entitlementType "${entitlementType1}" and conditions "${GRANT_METERED}" for user "${userId1}"
+    grant entitlement with entitlementType "${entitlementType2}" and conditions "${GRANT_METERED}" for user "${userId1}"
+    grant entitlement with entitlementType "${entitlementType3}" and conditions "${GRANT_METERED}" for user "${userId1}"
+    grant entitlement with entitlementType "${entitlementType1}" and conditions "${GRANT_METERED}" for user "${userId2}"
+    grant entitlement with entitlementType "${entitlementType2}" and conditions "${GRANT_METERED}" for user "${userId2}"
+    grant entitlement with entitlementType "${entitlementType3}" and conditions "${GRANT_METERED}" for user "${userId2}"
+    grant entitlement with entitlementType "${entitlementType1}" and conditions "${GRANT_METERED}" for user "${userId3}"
+    grant entitlement with entitlementType "${entitlementType2}" and conditions "${GRANT_METERED}" for user "${userId3}"
+    grant entitlement with entitlementType "${entitlementType3}" and conditions "${GRANT_METERED}" for user "${userId3}"
+    ensure there are "3" entitlements for user "${userId1}"
+    ensure there are "3" entitlements for user "${userId2}"
+    ensure there are "3" entitlements for user "${userId3}"
+    #...REVOKE FOR USER 1
+    revoke entitlements for user "${userId1}"
+    ensure there are no entitlements for user "${userId1}"
+    ensure there are "0" entitlements for user "${userId1}"
+    ensure there are "3" entitlements for user "${userId2}"
+    ensure there are "3" entitlements for user "${userId3}"
+    #...REVOKE FOR USER 3
+    revoke entitlements for user "${userId3}"
+    ensure there are no entitlements for user "${userId1}"
+    ensure there are "0" entitlements for user "${userId1}"
+    ensure there are "3" entitlements for user "${userId2}"
+    ensure there are no entitlements for user "${userId3}"
+    ensure there are "0" entitlements for user "${userId3}"
+    #...REVOKE FOR USER 2
+    revoke entitlements for user "${userId2}"
+    ensure there are no entitlements for user "${userId1}"
+    ensure there are "0" entitlements for user "${userId1}"
+    ensure there are no entitlements for user "${userId2}"
+    ensure there are "0" entitlements for user "${userId2}"
+    ensure there are no entitlements for user "${userId3}"
+    ensure there are "0" entitlements for user "${userId3}"
+
+
+
+### REVOKE BY USERID + ENTITLEMENT_TYPE ONLY:
+
+Test_MeteredEntitlements_RevokeByUserIdAndEntitlementType_x2_2Users
+    [Documentation]    Entitlement with filters
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "2", "allowOverage" : "true"}
+    ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${entitlementType1}      Set Variable    ENT_METERED_1
+    ${grantSource1}      Set Variable    grantSource_1
+    ${grantSourceId1}      Set Variable    grantSourceId_1
+    ${entitlementType2}      Set Variable    ENT_METERED_2
+    ${grantSource2}      Set Variable    grantSource_2
+    ${grantSourceId2}      Set Variable    grantSourceId_2
+    ${entitlementType_Incorrect}      Set Variable    ENT_METERED_INCORRECT
+    ${userId1} =     generate random id
+    ${userId2} =     generate random id
+    #...CHECK ENTITLEMENT(S) FOR USER1
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId1}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId1}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId1}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId1}" is "false" in DB
+    #...CHECK ENTITLEMENT(S) FOR USER2
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId2}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId2}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId2}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId2}" is "false" in DB
+    #...GRANT ENT1 FOR USER1
+    ${entitlement11}=    create entitlement with entitlementType "${entitlementType1}" for user "${userId1}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlement11}"
+    assign grantSourceId "${grantSourceId1}" to entitlement "${entitlement11}"
+    assign grantSource "${grantSource1}" to entitlement "${entitlement11}"
+    ${entitlement11}=    grant entitlement "${entitlement11}"
+    #...GRANT ENT2 FOR USER1
+    ${entitlement12}=    create entitlement with entitlementType "${entitlementType2}" for user "${userId1}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlement12}"
+    assign grantSourceId "${grantSourceId2}" to entitlement "${entitlement12}"
+    assign grantSource "${grantSource2}" to entitlement "${entitlement12}"
+    ${entitlement12}=    grant entitlement "${entitlement12}"
+    #...GRANT ENT1 FOR USER2
+    ${entitlement21}=    create entitlement with entitlementType "${entitlementType1}" for user "${userId2}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlement21}"
+    assign grantSourceId "${grantSourceId1}" to entitlement "${entitlement21}"
+    assign grantSource "${grantSource1}" to entitlement "${entitlement21}"
+    ${entitlement21}=    grant entitlement "${entitlement21}"
+    #...GRANT ENT2 FOR USER2
+    ${entitlement22}=    create entitlement with entitlementType "${entitlementType2}" for user "${userId2}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlement22}"
+    assign grantSourceId "${grantSourceId2}" to entitlement "${entitlement22}"
+    assign grantSource "${grantSource2}" to entitlement "${entitlement22}"
+    ${entitlement22}=    grant entitlement "${entitlement22}"
+    ######
+    #...CHECK ENTITLEMENT(S) FOR USER1
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId1}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId1}" is "true" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId1}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId1}" is "true" in DB
+    ensure there are "2" entitlements for user "${userId1}"
+    #...CHECK ENTITLEMENT(S) FOR USER2
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId2}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId2}" is "true" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId2}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId2}" is "true" in DB
+    ensure there are "2" entitlements for user "${userId2}"
+    ######
+    #...REVOKE INCORRECT ENTITLEMENT_TYPE FOR USER1
+    check entitlement with entitlementType "${entitlementType_Incorrect}" and conditions "${CHECK_METERED}" for user "${userId1}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType_Incorrect}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId1}" is "false" in DB
+    revoke entitlements for user "${userId1}" and entitlementType "${entitlementType_Incorrect}"
+    #...CHECK ENTITLEMENT(S) FOR USER1
+    check entitlement with entitlementType "${entitlementType_Incorrect}" and conditions "${CHECK_METERED}" for user "${userId1}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType_Incorrect}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId1}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId1}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId1}" is "true" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId1}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId1}" is "true" in DB
+    ensure there are "2" entitlements for user "${userId1}"
+    ######
+    #...REVOKE ENTITLEMENT_TYPE2 FOR USER1
+    revoke entitlements for user "${userId1}" and entitlementType "${entitlementType2}"
+    #...CHECK ENTITLEMENT(S) FOR USER1
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId1}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId1}" is "true" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId1}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId1}" is "false" in DB
+    ensure there are "1" entitlements for user "${userId1}"
+    #...CHECK ENTITLEMENT(S) FOR USER2
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId2}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId2}" is "true" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId2}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId2}" is "true" in DB
+    ensure there are "2" entitlements for user "${userId2}"
+    ######
+    #...REVOKE ENTITLEMENT_TYPE1 FOR USER2
+    revoke entitlements for user "${userId2}" and entitlementType "${entitlementType1}"
+    #...CHECK ENTITLEMENT(S) FOR USER1
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId1}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId1}" is "true" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId1}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId1}" is "false" in DB
+    ensure there are "1" entitlements for user "${userId1}"
+    #...CHECK ENTITLEMENT(S) FOR USER2
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId2}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId2}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId2}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId2}" is "true" in DB
+    ensure there are "1" entitlements for user "${userId2}"
+    ######
+    #...REVOKE ENTITLEMENT_TYPE2 FOR USER2
+    revoke entitlements for user "${userId2}" and entitlementType "${entitlementType2}"
+    #...CHECK ENTITLEMENT(S) FOR USER1
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId1}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId1}" is "true" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId1}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId1}" is "false" in DB
+    ensure there are "1" entitlements for user "${userId1}"
+    #...CHECK ENTITLEMENT(S) FOR USER2
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId2}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId2}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId2}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId2}" is "false" in DB
+    ensure there are "0" entitlements for user "${userId2}"
+    ######
+    #...REVOKE ENTITLEMENT_TYPE1 FOR USER1
+    revoke entitlements for user "${userId1}" and entitlementType "${entitlementType1}"
+    #...CHECK ENTITLEMENT(S) FOR USER1
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId1}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId1}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId1}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId1}" is "false" in DB
+    ensure there are "0" entitlements for user "${userId1}"
+    ensure there are no entitlements for user "${userId1}"
+    #...CHECK ENTITLEMENT(S) FOR USER2
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId2}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId2}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId2}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId2}" is "false" in DB
+    ensure there are "0" entitlements for user "${userId2}"
+    ensure there are no entitlements for user "${userId2}"
+
+### REVOKE BY USERID + ENTITLEMENT_TYPE + GRANT_SOURCE ONLY:
+
+Test_MeteredEntitlements_RevokeByUserIdAndEntitlementTypeAndGrantSource_x2_2Users
+    [Documentation]    Entitlement with filters
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "2", "allowOverage" : "true"}
+    ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${entitlementType1}      Set Variable    ENT_METERED_1
+    ${grantSource1}      Set Variable    grantSource_1
+    ${grantSource_Incorrect}      Set Variable    grantSource_Incorrect
+    ${grantSourceId1}      Set Variable    grantSourceId_1
+    ${entitlementType2}      Set Variable    ENT_METERED_2
+    ${grantSource2}      Set Variable    grantSource_2
+    ${grantSourceId2}      Set Variable    grantSourceId_2
+    ${userId1} =     generate random id
+    ${userId2} =     generate random id
+    #...CHECK ENTITLEMENT(S) FOR USER1
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId1}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId1}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId1}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId1}" is "false" in DB
+    #...CHECK ENTITLEMENT(S) FOR USER2
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId2}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId2}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId2}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId2}" is "false" in DB
+    #...GRANT ENT1 FOR USER1
+    ${entitlement11}=    create entitlement with entitlementType "${entitlementType1}" for user "${userId1}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlement11}"
+    assign grantSourceId "${grantSourceId1}" to entitlement "${entitlement11}"
+    assign grantSource "${grantSource1}" to entitlement "${entitlement11}"
+    ${entitlement11}=    grant entitlement "${entitlement11}"
+    #...GRANT ENT2 FOR USER1
+    ${entitlement12}=    create entitlement with entitlementType "${entitlementType2}" for user "${userId1}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlement12}"
+    assign grantSourceId "${grantSourceId2}" to entitlement "${entitlement12}"
+    assign grantSource "${grantSource2}" to entitlement "${entitlement12}"
+    ${entitlement12}=    grant entitlement "${entitlement12}"
+    #...GRANT ENT1 FOR USER2
+    ${entitlement21}=    create entitlement with entitlementType "${entitlementType1}" for user "${userId2}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlement21}"
+    assign grantSourceId "${grantSourceId1}" to entitlement "${entitlement21}"
+    assign grantSource "${grantSource1}" to entitlement "${entitlement21}"
+    ${entitlement21}=    grant entitlement "${entitlement21}"
+    #...GRANT ENT2 FOR USER2
+    ${entitlement22}=    create entitlement with entitlementType "${entitlementType2}" for user "${userId2}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlement22}"
+    assign grantSourceId "${grantSourceId2}" to entitlement "${entitlement22}"
+    assign grantSource "${grantSource2}" to entitlement "${entitlement22}"
+    ${entitlement22}=    grant entitlement "${entitlement22}"
+    ######
+    #...CHECK ENTITLEMENT(S) FOR USER1
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId1}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId1}" is "true" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId1}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId1}" is "true" in DB
+    ensure there are "2" entitlements for user "${userId1}"
+    #...CHECK ENTITLEMENT(S) FOR USER2
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId2}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId2}" is "true" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId2}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId2}" is "true" in DB
+    ensure there are "2" entitlements for user "${userId2}"
+    ######
+    #...REVOKE INCORRECT GRANT_SOURCE FOR USER1
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId1}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource_Incorrect}", grantSourceId "${grantSourceId1}" for user "${userId1}" is "false" in DB
+    revoke entitlements for user "${userId1}" and entitlementType "${entitlementType1}" and grantSource "${grantSource_Incorrect}"
+    #...CHECK ENTITLEMENT(S) FOR USER1
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId1}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource_Incorrect}", grantSourceId "${grantSourceId1}" for user "${userId1}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId1}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId1}" is "true" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId1}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId1}" is "true" in DB
+    ensure there are "2" entitlements for user "${userId1}"
+    ######
+    #...REVOKE ENTITLEMENT_TYPE2 FOR USER1
+    revoke entitlements for user "${userId1}" and entitlementType "${entitlementType2}" and grantSource "${grantSource2}"
+    #...CHECK ENTITLEMENT(S) FOR USER1
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId1}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId1}" is "true" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId1}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId1}" is "false" in DB
+    ensure there are "1" entitlements for user "${userId1}"
+    #...CHECK ENTITLEMENT(S) FOR USER2
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId2}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId2}" is "true" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId2}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId2}" is "true" in DB
+    ensure there are "2" entitlements for user "${userId2}"
+    ######
+    #...REVOKE ENTITLEMENT_TYPE1 FOR USER2
+    revoke entitlements for user "${userId2}" and entitlementType "${entitlementType1}" and grantSource "${grantSource1}"
+    #...CHECK ENTITLEMENT(S) FOR USER1
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId1}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId1}" is "true" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId1}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId1}" is "false" in DB
+    ensure there are "1" entitlements for user "${userId1}"
+    #...CHECK ENTITLEMENT(S) FOR USER2
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId2}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId2}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId2}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId2}" is "true" in DB
+    ensure there are "1" entitlements for user "${userId2}"
+    ######
+    #...REVOKE ENTITLEMENT_TYPE2 FOR USER2
+    revoke entitlements for user "${userId2}" and entitlementType "${entitlementType2}" and grantSource "${grantSource2}"
+    #...CHECK ENTITLEMENT(S) FOR USER1
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId1}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId1}" is "true" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId1}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId1}" is "false" in DB
+    ensure there are "1" entitlements for user "${userId1}"
+    #...CHECK ENTITLEMENT(S) FOR USER2
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId2}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId2}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId2}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId2}" is "false" in DB
+    ensure there are "0" entitlements for user "${userId2}"
+    ######
+    #...REVOKE ENTITLEMENT_TYPE1 FOR USER1
+    revoke entitlements for user "${userId1}" and entitlementType "${entitlementType1}" and grantSource "${grantSource1}"
+    #...CHECK ENTITLEMENT(S) FOR USER1
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId1}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId1}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId1}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId1}" is "false" in DB
+    ensure there are "0" entitlements for user "${userId1}"
+    ensure there are no entitlements for user "${userId1}"
+    #...CHECK ENTITLEMENT(S) FOR USER2
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId2}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId2}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId2}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId2}" is "false" in DB
+    ensure there are "0" entitlements for user "${userId2}"
+    ensure there are no entitlements for user "${userId2}"
+
+### REVOKE BY USERID + ENTITLEMENT_TYPE + GRANT_SOURCE_ID ONLY:
+Test_MeteredEntitlements_RevokeByUserIdAndEntitlementTypeAndGrantSourceId_x2_2Users
+    [Documentation]    Entitlement with filters
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "2", "allowOverage" : "true"}
+    ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${entitlementType1}      Set Variable    ENT_METERED_1
+    ${grantSource1}      Set Variable    grantSource_1
+    ${grantSourceId_Incorrect}      Set Variable    grantSourceId_Incorrect
+    ${grantSourceId1}      Set Variable    grantSourceId_1
+    ${entitlementType2}      Set Variable    ENT_METERED_2
+    ${grantSource2}      Set Variable    grantSource_2
+    ${grantSourceId2}      Set Variable    grantSourceId_2
+    ${userId1} =     generate random id
+    ${userId2} =     generate random id
+    #...CHECK ENTITLEMENT(S) FOR USER1
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId1}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId1}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId1}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId1}" is "false" in DB
+    #...CHECK ENTITLEMENT(S) FOR USER2
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId2}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId2}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId2}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId2}" is "false" in DB
+    #...GRANT ENT1 FOR USER1
+    ${entitlement11}=    create entitlement with entitlementType "${entitlementType1}" for user "${userId1}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlement11}"
+    assign grantSourceId "${grantSourceId1}" to entitlement "${entitlement11}"
+    assign grantSource "${grantSource1}" to entitlement "${entitlement11}"
+    ${entitlement11}=    grant entitlement "${entitlement11}"
+    #...GRANT ENT2 FOR USER1
+    ${entitlement12}=    create entitlement with entitlementType "${entitlementType2}" for user "${userId1}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlement12}"
+    assign grantSourceId "${grantSourceId2}" to entitlement "${entitlement12}"
+    assign grantSource "${grantSource2}" to entitlement "${entitlement12}"
+    ${entitlement12}=    grant entitlement "${entitlement12}"
+    #...GRANT ENT1 FOR USER2
+    ${entitlement21}=    create entitlement with entitlementType "${entitlementType1}" for user "${userId2}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlement21}"
+    assign grantSourceId "${grantSourceId1}" to entitlement "${entitlement21}"
+    assign grantSource "${grantSource1}" to entitlement "${entitlement21}"
+    ${entitlement21}=    grant entitlement "${entitlement21}"
+    #...GRANT ENT2 FOR USER2
+    ${entitlement22}=    create entitlement with entitlementType "${entitlementType2}" for user "${userId2}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlement22}"
+    assign grantSourceId "${grantSourceId2}" to entitlement "${entitlement22}"
+    assign grantSource "${grantSource2}" to entitlement "${entitlement22}"
+    ${entitlement22}=    grant entitlement "${entitlement22}"
+    ######
+    #...CHECK ENTITLEMENT(S) FOR USER1
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId1}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId1}" is "true" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId1}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId1}" is "true" in DB
+    ensure there are "2" entitlements for user "${userId1}"
+    #...CHECK ENTITLEMENT(S) FOR USER2
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId2}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId2}" is "true" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId2}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId2}" is "true" in DB
+    ensure there are "2" entitlements for user "${userId2}"
+    ######
+    #...REVOKE INCORRECT GRANT_SOURCE_ID FOR USER1
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId1}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId_Incorrect}" for user "${userId1}" is "false" in DB
+    revoke entitlements for user "${userId1}" and entitlementType "${entitlementType1}" and grantSourceId "${grantSourceId_Incorrect}"
+    #...CHECK ENTITLEMENT(S) FOR USER1
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId1}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSourceId1}", grantSourceId "${grantSourceId_Incorrect}" for user "${userId1}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId1}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId1}" is "true" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId1}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId1}" is "true" in DB
+    ensure there are "2" entitlements for user "${userId1}"
+    ######
+    #...REVOKE ENTITLEMENT_TYPE2 FOR USER1
+    revoke entitlements for user "${userId1}" and entitlementType "${entitlementType2}" and grantSourceId "${grantSourceId2}"
+    #...CHECK ENTITLEMENT(S) FOR USER1
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId1}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId1}" is "true" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId1}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId1}" is "false" in DB
+    ensure there are "1" entitlements for user "${userId1}"
+    #...CHECK ENTITLEMENT(S) FOR USER2
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId2}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId2}" is "true" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId2}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId2}" is "true" in DB
+    ensure there are "2" entitlements for user "${userId2}"
+    ######
+    #...REVOKE ENTITLEMENT_TYPE1 FOR USER2
+    revoke entitlements for user "${userId2}" and entitlementType "${entitlementType1}" and grantSourceId "${grantSourceId1}"
+    #...CHECK ENTITLEMENT(S) FOR USER1
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId1}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId1}" is "true" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId1}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId1}" is "false" in DB
+    ensure there are "1" entitlements for user "${userId1}"
+    #...CHECK ENTITLEMENT(S) FOR USER2
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId2}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId2}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId2}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId2}" is "true" in DB
+    ensure there are "1" entitlements for user "${userId2}"
+    ######
+    #...REVOKE ENTITLEMENT_TYPE2 FOR USER2
+    revoke entitlements for user "${userId2}" and entitlementType "${entitlementType2}" and grantSourceId "${grantSourceId2}"
+    #...CHECK ENTITLEMENT(S) FOR USER1
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId1}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId1}" is "true" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId1}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId1}" is "false" in DB
+    ensure there are "1" entitlements for user "${userId1}"
+    #...CHECK ENTITLEMENT(S) FOR USER2
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId2}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId2}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId2}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId2}" is "false" in DB
+    ensure there are "0" entitlements for user "${userId2}"
+    ######
+    #...REVOKE ENTITLEMENT_TYPE1 FOR USER1
+    revoke entitlements for user "${userId1}" and entitlementType "${entitlementType1}" and grantSourceId "${grantSourceId1}"
+    #...CHECK ENTITLEMENT(S) FOR USER1
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId1}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId1}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId1}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId1}" is "false" in DB
+    ensure there are "0" entitlements for user "${userId1}"
+    ensure there are no entitlements for user "${userId1}"
+    #...CHECK ENTITLEMENT(S) FOR USER2
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId2}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId2}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId2}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId2}" is "false" in DB
+    ensure there are "0" entitlements for user "${userId2}"
+    ensure there are no entitlements for user "${userId2}"
+
+### REVOKE BY USERID + GRANT_SOURCE ONLY:
+Test_MeteredEntitlements_RevokeByUserIdAndGrantSource_x2_2Users
+    [Documentation]    Entitlement with filters
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "2", "allowOverage" : "true"}
+    ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${entitlementType1}      Set Variable    ENT_METERED_1
+    ${grantSource1}      Set Variable    grantSource_1
+    ${grantSource_Incorrect}      Set Variable    grantSource_Incorrect
+    ${grantSourceId1}      Set Variable    grantSourceId_1
+    ${entitlementType2}      Set Variable    ENT_METERED_2
+    ${grantSource2}      Set Variable    grantSource_2
+    ${grantSourceId2}      Set Variable    grantSourceId_2
+    ${userId1} =     generate random id
+    ${userId2} =     generate random id
+    #...CHECK ENTITLEMENT(S) FOR USER1
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId1}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId1}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId1}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId1}" is "false" in DB
+    #...CHECK ENTITLEMENT(S) FOR USER2
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId2}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId2}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId2}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId2}" is "false" in DB
+    #...GRANT ENT1 FOR USER1
+    ${entitlement11}=    create entitlement with entitlementType "${entitlementType1}" for user "${userId1}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlement11}"
+    assign grantSourceId "${grantSourceId1}" to entitlement "${entitlement11}"
+    assign grantSource "${grantSource1}" to entitlement "${entitlement11}"
+    ${entitlement11}=    grant entitlement "${entitlement11}"
+    #...GRANT ENT2 FOR USER1
+    ${entitlement12}=    create entitlement with entitlementType "${entitlementType2}" for user "${userId1}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlement12}"
+    assign grantSourceId "${grantSourceId2}" to entitlement "${entitlement12}"
+    assign grantSource "${grantSource2}" to entitlement "${entitlement12}"
+    ${entitlement12}=    grant entitlement "${entitlement12}"
+    #...GRANT ENT1 FOR USER2
+    ${entitlement21}=    create entitlement with entitlementType "${entitlementType1}" for user "${userId2}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlement21}"
+    assign grantSourceId "${grantSourceId1}" to entitlement "${entitlement21}"
+    assign grantSource "${grantSource1}" to entitlement "${entitlement21}"
+    ${entitlement21}=    grant entitlement "${entitlement21}"
+    #...GRANT ENT2 FOR USER2
+    ${entitlement22}=    create entitlement with entitlementType "${entitlementType2}" for user "${userId2}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlement22}"
+    assign grantSourceId "${grantSourceId2}" to entitlement "${entitlement22}"
+    assign grantSource "${grantSource2}" to entitlement "${entitlement22}"
+    ${entitlement22}=    grant entitlement "${entitlement22}"
+    ######
+    #...CHECK ENTITLEMENT(S) FOR USER1
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId1}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId1}" is "true" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId1}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId1}" is "true" in DB
+    ensure there are "2" entitlements for user "${userId1}"
+    #...CHECK ENTITLEMENT(S) FOR USER2
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId2}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId2}" is "true" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId2}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId2}" is "true" in DB
+    ensure there are "2" entitlements for user "${userId2}"
+    ######
+    #...REVOKE INCORRECT GRANT_SOURCE FOR USER1
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId1}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource_Incorrect}", grantSourceId "${grantSourceId1}" for user "${userId1}" is "false" in DB
+    revoke entitlements for user "${userId1}" and grantSource "${grantSource_Incorrect}"
+    #...CHECK ENTITLEMENT(S) FOR USER1
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId1}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource_Incorrect}", grantSourceId "${grantSourceId1}" for user "${userId1}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId1}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId1}" is "true" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId1}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId1}" is "true" in DB
+    ensure there are "2" entitlements for user "${userId1}"
+    ######
+    #...REVOKE ENTITLEMENT_TYPE2 FOR USER1
+    revoke entitlements for user "${userId1}" and grantSource "${grantSource2}"
+    #...CHECK ENTITLEMENT(S) FOR USER1
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId1}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId1}" is "true" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId1}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId1}" is "false" in DB
+    ensure there are "1" entitlements for user "${userId1}"
+    #...CHECK ENTITLEMENT(S) FOR USER2
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId2}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId2}" is "true" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId2}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId2}" is "true" in DB
+    ensure there are "2" entitlements for user "${userId2}"
+    ######
+    #...REVOKE ENTITLEMENT_TYPE1 FOR USER2
+    revoke entitlements for user "${userId2}" and grantSource "${grantSource1}"
+    #...CHECK ENTITLEMENT(S) FOR USER1
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId1}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId1}" is "true" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId1}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId1}" is "false" in DB
+    ensure there are "1" entitlements for user "${userId1}"
+    #...CHECK ENTITLEMENT(S) FOR USER2
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId2}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId2}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId2}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId2}" is "true" in DB
+    ensure there are "1" entitlements for user "${userId2}"
+    ######
+    #...REVOKE ENTITLEMENT_TYPE2 FOR USER2
+    revoke entitlements for user "${userId2}" and grantSource "${grantSource2}"
+    #...CHECK ENTITLEMENT(S) FOR USER1
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId1}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId1}" is "true" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId1}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId1}" is "false" in DB
+    ensure there are "1" entitlements for user "${userId1}"
+    #...CHECK ENTITLEMENT(S) FOR USER2
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId2}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId2}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId2}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId2}" is "false" in DB
+    ensure there are "0" entitlements for user "${userId2}"
+    ######
+    #...REVOKE ENTITLEMENT_TYPE1 FOR USER1
+    revoke entitlements for user "${userId1}" and grantSource "${grantSource1}"
+    #...CHECK ENTITLEMENT(S) FOR USER1
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId1}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId1}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId1}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId1}" is "false" in DB
+    ensure there are "0" entitlements for user "${userId1}"
+    ensure there are no entitlements for user "${userId1}"
+    #...CHECK ENTITLEMENT(S) FOR USER2
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId2}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId2}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId2}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId2}" is "false" in DB
+    ensure there are "0" entitlements for user "${userId2}"
+    ensure there are no entitlements for user "${userId2}"
+
+### REVOKE BY USERID + GRANT_SOURCE + GRANT_SOURCE_ID ONLY:
+Test_MeteredEntitlements_RevokeByUserIdAndGrantSourceAndGrantSourceId_x2_2Users
+    [Documentation]    Entitlement with filters
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "2", "allowOverage" : "true"}
+    ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${entitlementType1}      Set Variable    ENT_METERED_1
+    ${grantSource1}      Set Variable    grantSource_1
+    ${grantSource_Incorrect}      Set Variable    grantSource_Incorrect
+    ${grantSourceId_Incorrect}      Set Variable    grantSourceId_Incorrect
+    ${grantSourceId1}      Set Variable    grantSourceId_1
+    ${entitlementType2}      Set Variable    ENT_METERED_2
+    ${grantSource2}      Set Variable    grantSource_2
+    ${grantSourceId2}      Set Variable    grantSourceId_2
+    ${userId1} =     generate random id
+    ${userId2} =     generate random id
+    #...CHECK ENTITLEMENT(S) FOR USER1
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId1}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId1}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId1}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId1}" is "false" in DB
+    #...CHECK ENTITLEMENT(S) FOR USER2
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId2}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId2}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId2}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId2}" is "false" in DB
+    #...GRANT ENT1 FOR USER1
+    ${entitlement11}=    create entitlement with entitlementType "${entitlementType1}" for user "${userId1}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlement11}"
+    assign grantSourceId "${grantSourceId1}" to entitlement "${entitlement11}"
+    assign grantSource "${grantSource1}" to entitlement "${entitlement11}"
+    ${entitlement11}=    grant entitlement "${entitlement11}"
+    #...GRANT ENT2 FOR USER1
+    ${entitlement12}=    create entitlement with entitlementType "${entitlementType2}" for user "${userId1}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlement12}"
+    assign grantSourceId "${grantSourceId2}" to entitlement "${entitlement12}"
+    assign grantSource "${grantSource2}" to entitlement "${entitlement12}"
+    ${entitlement12}=    grant entitlement "${entitlement12}"
+    #...GRANT ENT1 FOR USER2
+    ${entitlement21}=    create entitlement with entitlementType "${entitlementType1}" for user "${userId2}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlement21}"
+    assign grantSourceId "${grantSourceId1}" to entitlement "${entitlement21}"
+    assign grantSource "${grantSource1}" to entitlement "${entitlement21}"
+    ${entitlement21}=    grant entitlement "${entitlement21}"
+    #...GRANT ENT2 FOR USER2
+    ${entitlement22}=    create entitlement with entitlementType "${entitlementType2}" for user "${userId2}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlement22}"
+    assign grantSourceId "${grantSourceId2}" to entitlement "${entitlement22}"
+    assign grantSource "${grantSource2}" to entitlement "${entitlement22}"
+    ${entitlement22}=    grant entitlement "${entitlement22}"
+    ######
+    #...CHECK ENTITLEMENT(S) FOR USER1
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId1}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId1}" is "true" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId1}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId1}" is "true" in DB
+    ensure there are "2" entitlements for user "${userId1}"
+    #...CHECK ENTITLEMENT(S) FOR USER2
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId2}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId2}" is "true" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId2}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId2}" is "true" in DB
+    ensure there are "2" entitlements for user "${userId2}"
+    ######
+    #...REVOKE INCORRECT GRANT_SOURCE AND GRANT_SOURCE_ID FOR USER1
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId1}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource_Incorrect}", grantSourceId "${grantSourceId_Incorrect}" for user "${userId1}" is "false" in DB
+    revoke entitlements for user "${userId1}" and grantSource "${grantSource_Incorrect}" and grantSourceId "${grantSourceId_Incorrect}"
+    #...CHECK ENTITLEMENT(S) FOR USER1
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId1}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource_Incorrect}", grantSourceId "${grantSourceId_Incorrect}" for user "${userId1}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId1}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId1}" is "true" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId1}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId1}" is "true" in DB
+    ensure there are "2" entitlements for user "${userId1}"
+    ######
+    #...REVOKE ENTITLEMENT_TYPE2 FOR USER1
+    revoke entitlements for user "${userId1}" and grantSource "${grantSource2}" and grantSourceId "${grantSourceId2}"
+    #...CHECK ENTITLEMENT(S) FOR USER1
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId1}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId1}" is "true" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId1}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId1}" is "false" in DB
+    ensure there are "1" entitlements for user "${userId1}"
+    #...CHECK ENTITLEMENT(S) FOR USER2
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId2}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId2}" is "true" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId2}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId2}" is "true" in DB
+    ensure there are "2" entitlements for user "${userId2}"
+    ######
+    #...REVOKE ENTITLEMENT_TYPE1 FOR USER2
+    revoke entitlements for user "${userId2}" and grantSource "${grantSource1}" and grantSourceId "${grantSourceId1}"
+    #...CHECK ENTITLEMENT(S) FOR USER1
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId1}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId1}" is "true" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId1}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId1}" is "false" in DB
+    ensure there are "1" entitlements for user "${userId1}"
+    #...CHECK ENTITLEMENT(S) FOR USER2
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId2}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId2}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId2}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId2}" is "true" in DB
+    ensure there are "1" entitlements for user "${userId2}"
+    ######
+    #...REVOKE ENTITLEMENT_TYPE2 FOR USER2
+    revoke entitlements for user "${userId2}" and grantSource "${grantSource2}" and grantSourceId "${grantSourceId2}"
+    #...CHECK ENTITLEMENT(S) FOR USER1
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId1}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId1}" is "true" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId1}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId1}" is "false" in DB
+    ensure there are "1" entitlements for user "${userId1}"
+    #...CHECK ENTITLEMENT(S) FOR USER2
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId2}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId2}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId2}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId2}" is "false" in DB
+    ensure there are "0" entitlements for user "${userId2}"
+    ######
+    #...REVOKE ENTITLEMENT_TYPE1 FOR USER1
+    revoke entitlements for user "${userId1}" and grantSource "${grantSource1}" and grantSourceId "${grantSourceId1}"
+    #...CHECK ENTITLEMENT(S) FOR USER1
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId1}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId1}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId1}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId1}" is "false" in DB
+    ensure there are "0" entitlements for user "${userId1}"
+    ensure there are no entitlements for user "${userId1}"
+    #...CHECK ENTITLEMENT(S) FOR USER2
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId2}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId2}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId2}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId2}" is "false" in DB
+    ensure there are "0" entitlements for user "${userId2}"
+    ensure there are no entitlements for user "${userId2}"
+
+### REVOKE BY USERID + GRANT_SOURCE_ID ONLY:
+Test_MeteredEntitlements_RevokeByUserIdAndGrantSourceId_x2_2Users
+    [Documentation]    Entitlement with filters
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "2", "allowOverage" : "true"}
+    ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${entitlementType1}      Set Variable    ENT_METERED_1
+    ${grantSource1}      Set Variable    grantSource_1
+    ${grantSourceId_Incorrect}      Set Variable    grantSourceId_Incorrect
+    ${grantSourceId1}      Set Variable    grantSourceId_1
+    ${entitlementType2}      Set Variable    ENT_METERED_2
+    ${grantSource2}      Set Variable    grantSource_2
+    ${grantSourceId2}      Set Variable    grantSourceId_2
+    ${userId1} =     generate random id
+    ${userId2} =     generate random id
+    #...CHECK ENTITLEMENT(S) FOR USER1
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId1}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId1}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId1}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId1}" is "false" in DB
+    #...CHECK ENTITLEMENT(S) FOR USER2
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId2}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId2}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId2}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId2}" is "false" in DB
+    #...GRANT ENT1 FOR USER1
+    ${entitlement11}=    create entitlement with entitlementType "${entitlementType1}" for user "${userId1}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlement11}"
+    assign grantSourceId "${grantSourceId1}" to entitlement "${entitlement11}"
+    assign grantSource "${grantSource1}" to entitlement "${entitlement11}"
+    ${entitlement11}=    grant entitlement "${entitlement11}"
+    #...GRANT ENT2 FOR USER1
+    ${entitlement12}=    create entitlement with entitlementType "${entitlementType2}" for user "${userId1}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlement12}"
+    assign grantSourceId "${grantSourceId2}" to entitlement "${entitlement12}"
+    assign grantSource "${grantSource2}" to entitlement "${entitlement12}"
+    ${entitlement12}=    grant entitlement "${entitlement12}"
+    #...GRANT ENT1 FOR USER2
+    ${entitlement21}=    create entitlement with entitlementType "${entitlementType1}" for user "${userId2}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlement21}"
+    assign grantSourceId "${grantSourceId1}" to entitlement "${entitlement21}"
+    assign grantSource "${grantSource1}" to entitlement "${entitlement21}"
+    ${entitlement21}=    grant entitlement "${entitlement21}"
+    #...GRANT ENT2 FOR USER2
+    ${entitlement22}=    create entitlement with entitlementType "${entitlementType2}" for user "${userId2}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlement22}"
+    assign grantSourceId "${grantSourceId2}" to entitlement "${entitlement22}"
+    assign grantSource "${grantSource2}" to entitlement "${entitlement22}"
+    ${entitlement22}=    grant entitlement "${entitlement22}"
+    ######
+    #...CHECK ENTITLEMENT(S) FOR USER1
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId1}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId1}" is "true" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId1}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId1}" is "true" in DB
+    ensure there are "2" entitlements for user "${userId1}"
+    #...CHECK ENTITLEMENT(S) FOR USER2
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId2}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId2}" is "true" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId2}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId2}" is "true" in DB
+    ensure there are "2" entitlements for user "${userId2}"
+    ######
+    #...REVOKE INCORRECT GRANT_SOURCE_ID FOR USER1
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId1}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId_Incorrect}" for user "${userId1}" is "false" in DB
+    revoke entitlements for user "${userId1}" and grantSourceId "${grantSourceId_Incorrect}"
+    #...CHECK ENTITLEMENT(S) FOR USER1
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId1}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSourceId1}", grantSourceId "${grantSourceId_Incorrect}" for user "${userId1}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId1}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId1}" is "true" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId1}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId1}" is "true" in DB
+    ensure there are "2" entitlements for user "${userId1}"
+    ######
+    #...REVOKE ENTITLEMENT_TYPE2 FOR USER1
+    revoke entitlements for user "${userId1}" and grantSourceId "${grantSourceId2}"
+    #...CHECK ENTITLEMENT(S) FOR USER1
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId1}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId1}" is "true" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId1}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId1}" is "false" in DB
+    ensure there are "1" entitlements for user "${userId1}"
+    #...CHECK ENTITLEMENT(S) FOR USER2
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId2}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId2}" is "true" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId2}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId2}" is "true" in DB
+    ensure there are "2" entitlements for user "${userId2}"
+    ######
+    #...REVOKE ENTITLEMENT_TYPE1 FOR USER2
+    revoke entitlements for user "${userId2}" and grantSourceId "${grantSourceId1}"
+    #...CHECK ENTITLEMENT(S) FOR USER1
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId1}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId1}" is "true" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId1}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId1}" is "false" in DB
+    ensure there are "1" entitlements for user "${userId1}"
+    #...CHECK ENTITLEMENT(S) FOR USER2
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId2}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId2}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId2}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId2}" is "true" in DB
+    ensure there are "1" entitlements for user "${userId2}"
+    ######
+    #...REVOKE ENTITLEMENT_TYPE2 FOR USER2
+    revoke entitlements for user "${userId2}" and grantSourceId "${grantSourceId2}"
+    #...CHECK ENTITLEMENT(S) FOR USER1
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId1}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId1}" is "true" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId1}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId1}" is "false" in DB
+    ensure there are "1" entitlements for user "${userId1}"
+    #...CHECK ENTITLEMENT(S) FOR USER2
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_METERED}" for user "${userId2}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId2}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_METERED}" for user "${userId2}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId2}" is "false" in DB
+    ensure there are "0" entitlements for user "${userId2}"
+    ######
+    #...REVOKE ENTITLEMENT_TYPE1 FOR USER1
+    revoke entitlements for user "${userId1}" and grantSourceId "${grantSourceId1}"
+    #...CHECK ENTITLEMENT(S) FOR USER1
+    check entitlement with entitlementType "${entitlementType1}" for user "${userId1}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId1}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType2}" for user "${userId1}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId1}" is "false" in DB
+    ensure there are "0" entitlements for user "${userId1}"
+    ensure there are no entitlements for user "${userId1}"
+    #...CHECK ENTITLEMENT(S) FOR USER2
+    check entitlement with entitlementType "${entitlementType1}" for user "${userId2}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType1}" and grantSource "${grantSource1}", grantSourceId "${grantSourceId1}" for user "${userId2}" is "false" in DB
+    check entitlement with entitlementType "${entitlementType2}" for user "${userId2}" is "false"
+    ensure that entitlement with entitlementType "${entitlementType2}" and grantSource "${grantSource2}", grantSourceId "${grantSourceId2}" for user "${userId2}" is "false" in DB
+    ensure there are "0" entitlements for user "${userId2}"
+    ensure there are no entitlements for user "${userId2}"

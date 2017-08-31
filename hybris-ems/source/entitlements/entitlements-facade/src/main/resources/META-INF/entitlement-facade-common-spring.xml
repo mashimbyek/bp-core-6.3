@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ [y] hybris Platform
+
+ Copyright (c) 2017 SAP SE or an SAP affiliate company.  All rights reserved.
+
+ This software is the confidential and proprietary information of SAP
+ ("Confidential Information"). You shall not disclose such Confidential
+ Information and shall use it only in accordance with the terms of the
+ license agreement you entered into with SAP.
+-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns:context="http://www.springframework.org/schema/context"
+xmlns:tx="http://www.springframework.org/schema/tx"
+xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+    	http://www.springframework.org/schema/tx
+    	http://www.springframework.org/schema/tx/spring-tx.xsd
+    	http://www.springframework.org/schema/context
+    	http://www.springframework.org/schema/context/spring-context.xsd">
+
+<context:annotation-config/>
+
+<context:component-scan base-package="com.hybris.services.entitlements" />
+
+<tx:annotation-driven/>
+
+<alias name="defaultEntitlementFacade" alias="entitlementFacade"/>
+<alias name="defaultEntitlementFacadeConverter" alias="entitlementFacadeConverter"/>
+
+<bean id="defaultEntitlementFacadeConverter" class="com.hybris.services.entitlements.conversion.DefaultEntitlementFacadeConverter">
+	<property name="grantModelToDataConverter" ref="grantModelToDataConverter"/>
+	<property name="criterionDataToModelConverter" ref="criterionDataToModelConverter"/>
+	<property name="conditionDataToModelConverter" ref="conditionDataToModelConverter"/>
+	<property name="grantDataToModelConverter" ref="grantDataToModelConverter"/>
+	<property name="stringToIntConverter" ref="integerValidator"/>
+</bean>
+<bean id="propertyDataValidator" class="com.hybris.services.entitlements.validation.PropertyDataValidator">
+    <property name="conversionStrategy" ref="integerValidator" />
+</bean>
+<bean id="defaultEntitlementFacade" class="com.hybris.services.entitlements.facade.DefaultEntitlementFacade" >
+	<property name="grantService" ref="grantService"/>
+	<property name="validator" ref="facadeValidator"/>
+	<property name="converter" ref="entitlementFacadeConverter"/>
+	<property name="maxUpdateAttempts" value="${entitlement.update.attempts}"/>
+	<property name="updateAttemptTimeOffset" value="${entitlement.update.offset}"/>
+</bean>
+
+<bean id="facadeValidator" class="com.hybris.services.entitlements.facade.EntitlementFacadeValidator">
+	<property name="grantValidator" ref="grantPropertyValidator"/>
+	<property name="validator" ref="validationExecutor"/>
+	<property name="conditionDataListValidator" ref="conditionDataListValidator"/>
+	<property name="comparatorValidator" ref="comparatorValidator"/>
+</bean>
+
+<bean id="validationExecutor" class="com.hybris.services.entitlements.validation.ValidationExecutor"/>
+
+<bean id="grantPropertyValidator" class="com.hybris.services.entitlements.validation.GrantPropertyValidator">
+	<property name="conditionTypeFactory" ref="defaultConditionTypeFactory"/>
+</bean>
+
+<bean id="criterionDataValidator" class="com.hybris.services.entitlements.validation.CriterionDataValidator"/>
+
+<bean id="comparatorValidator" class="com.hybris.services.entitlements.sorting.ComparatorValidator">
+	<property name="grantComparatorFactory" ref="defaultGrantComparatorFactory"/>
+</bean>
+
+<bean id="conditionDataValidator" class="com.hybris.services.entitlements.validation.ConditionDataValidator"/>
+
+<bean id="actionTypeValidator" class="com.hybris.services.entitlements.validation.ActionTypeValidator"/>
+<bean id="checkActionTypeValidator" class="com.hybris.services.entitlements.validation.CheckActionTypeValidator"/>
+
+</beans>
+

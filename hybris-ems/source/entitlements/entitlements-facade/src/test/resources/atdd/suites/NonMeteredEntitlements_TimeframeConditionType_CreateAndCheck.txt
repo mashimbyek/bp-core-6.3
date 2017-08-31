@@ -1,0 +1,377 @@
+# -----------------------------------------------------------------------
+# [y] hybris Platform
+#
+# Copyright (c) 2017 SAP SE or an SAP affiliate company.  All rights reserved.
+# 
+# This software is the confidential and proprietary information of SAP
+# ("Confidential Information"). You shall not disclose such Confidential
+# Information and shall use it only in accordance with the terms of the
+# license agreement you entered into with SAP.
+# -----------------------------------------------------------------------
+*** Settings ***
+Resource    entitlements-test/settings_keywords.txt
+Resource    entitlements-test/builder_entitlements_keywords.txt
+Resource    entitlements-test/modify_entitlements_keywords.txt
+Resource    entitlements-test/exceptions_entitlements_keywords.txt
+Resource    entitlements-test/check_entitlements_keywords.txt
+Resource    entitlements-test/use_entitlements_keywords.txt
+
+*** Test Cases ***
+Test_NonMeteredEntitlements_TimeframeConditionType_CreateAndCheck_CheckWithTimeframeConditionMeetsTimeframe_True
+    [Documentation]    Timeframe condition should be compared with passed parameter
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_TIME" and conditions "${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME}" for user "${userId}" is "true"
+
+Test_NonMeteredEntitlements_TimeframeConditionType_CreateAndCheck_CreateWithoutStart_False
+    [Documentation]    Timeframe condition shouldn't be created without startTime
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"endTime":"2010-01-01T00:00:02Z"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_TIME" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_TIME" and conditions "${GRANT_TIME}" for user "${userId}" and expect exception "ValidationException" with message "conditions[0].properties.startTime=null: Required field was not found"
+    check entitlement with entitlementType "ENT_TIME" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_TimeframeConditionType_CreateAndCheck_CreateWithoutStartAndEnd_False
+    [Documentation]    Timeframe condition shouldn't be created without startTime and endTime
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_TIME" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_TIME" and conditions "${GRANT_TIME}" for user "${userId}" and expect exception "ValidationException" with message "conditions[0].properties.startTime=null: Required field was not found"
+    check entitlement with entitlementType "ENT_TIME" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_TimeframeConditionType_CreateAndCheck_CreateWithoutEndTime_StartTimeInPast_No1
+    [Documentation]    Timeframe condition should be created with starting in past, without ending and check without condition
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-11-11T00:00:00Z"}
+    ${CHECK_TIME1}    Set Variable    "timeframe" condition with parameters {"time":"2010-11-10T23:59:59Z"}
+    ${CHECK_TIME2}    Set Variable    "timeframe" condition with parameters {"time":"2010-11-11T00:00:00Z"}
+    ${CHECK_TIME3}    Set Variable    "timeframe" condition with parameters {"time":"2010-11-11T00:00:01Z"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME2}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME3}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_TIME" and conditions "${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME2}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME3}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_TIME" for user "${userId}" is "true"
+    
+Test_NonMeteredEntitlements_TimeframeConditionType_CreateAndCheck_CreateWithoutEndTime_StartTimeInPast_No2
+    [Documentation]    Timeframe condition should be created with starting in past, without ending and check without condition
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-11-11T00:00:00Z"}
+    ${CHECK_TIME1}    Set Variable    "timeframe" condition with parameters {"time":"2011-11-10T23:59:59Z"}
+    ${CHECK_TIME2}    Set Variable    "timeframe" condition with parameters {"time":"2999-11-11T00:00:00Z"}
+    ${CHECK_TIME3}    Set Variable    "timeframe" condition with parameters {"time":"9999-11-11T00:00:01Z"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME2}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME3}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_TIME" and conditions "${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME1}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME2}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME3}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_TIME" for user "${userId}" is "true"    
+    
+Test_NonMeteredEntitlements_TimeframeConditionType_CreateAndCheck_CreateWithoutEndTime_StartTimeInPast_No3
+    [Documentation]    Timeframe condition should be created with starting in past, without ending and check without condition
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-11-11T00:00:00Z"}
+    ${CHECK_TIME1}    Set Variable    "timeframe" condition with parameters {"time":"2009-11-11T10:20:30Z"}
+    ${CHECK_TIME2}    Set Variable    "timeframe" condition with parameters {"time":"2011-11-11T10:20:30Z"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME2}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_TIME" and conditions "${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME2}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_TIME" for user "${userId}" is "true"
+
+Test_NonMeteredEntitlements_TimeframeConditionType_CreateAndCheck_CheckWithoutEndTime_StartTimeInFuture
+    [Documentation]    Timeframe condition should be created with starting in future, without ending and check without condition
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"now+30"}
+    ${CHECK_TIME1}    Set Variable    "timeframe" condition with parameters {"time":"now+40"}
+    ${CHECK_TIME2}    Set Variable    "timeframe" condition with parameters {"time":"now-40"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME2}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_TIME" and conditions "${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME1}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME2}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_TimeframeConditionType_CreateAndCheck_CheckWithTimeframeConditionInPast_False
+    [Documentation]    Timeframe condition
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2009-02-01T00:00:01Z"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_TIME" and conditions "${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_TimeframeConditionType_CreateAndCheck_CreateWithoutEndTime_StartTimeInFuture_No1
+    [Documentation]    Timeframe condition should be created with starting in future, without ending and check without condition
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"now+30"}
+    ${CHECK_TIME1}    Set Variable    "timeframe" condition with parameters {"time":"now+40"}
+    ${CHECK_TIME2}    Set Variable    "timeframe" condition with parameters {"time":"now-40"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME2}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_TIME" and conditions "${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME1}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME2}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" for user "${userId}" is "false"
+    
+Test_NonMeteredEntitlements_TimeframeConditionType_CreateAndCheck_CreateWithoutEndTime_StartTimeInFuture_No2
+    [Documentation]    Timeframe condition should be created with starting in future, without ending and check without condition
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"now+30"}
+    ${CHECK_TIME1}    Set Variable    "timeframe" condition with parameters {"time":"now+10"}
+    ${CHECK_TIME2}    Set Variable    "timeframe" condition with parameters {"time":"now+999"}    
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME2}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_TIME" and conditions "${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME2}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_TIME" for user "${userId}" is "false"
+	
+Test_NonMeteredEntitlements_TimeframeConditionType_CreateAndCheck_CheckWithTimeframeConditionInFuture_False
+    [Documentation]    Timeframe condition
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2011-01-01T00:00:01Z"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_TIME" and conditions "${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME}" for user "${userId}" is "false"	
+
+Test_NonMeteredEntitlements_TimeframeConditionType_CreateAndCheck_CheckWithTimeframeCondition_Complex_No1
+    [Documentation]    Timeframe condition
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime": "2010-02-03T10:20:30Z","endTime": "2011-03-04T11:22:33Z"}
+    #doesn't meet timeframe:
+    ${CHECK_TIME1}    Set Variable    "timeframe" condition with parameters {"time":"2009-02-03T10:20:30Z"}
+    ${CHECK_TIME2}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-03T10:20:30Z"}
+    ${CHECK_TIME3}    Set Variable    "timeframe" condition with parameters {"time":"2010-02-02T10:20:30Z"}
+    ${CHECK_TIME4}    Set Variable    "timeframe" condition with parameters {"time":"2010-02-03T09:20:30Z"}
+    ${CHECK_TIME5}    Set Variable    "timeframe" condition with parameters {"time":"2010-02-03T10:19:30Z"}
+    ${CHECK_TIME6}    Set Variable    "timeframe" condition with parameters {"time":"2010-02-03T10:20:29Z"}
+    #meets timeframe:
+    ${CHECK_TIME7}    Set Variable    "timeframe" condition with parameters {"time":"2010-02-03T10:20:30Z"}
+    ${CHECK_TIME8}    Set Variable    "timeframe" condition with parameters {"time":"2010-02-03T10:20:31Z"}
+    ${CHECK_TIME9}    Set Variable    "timeframe" condition with parameters {"time":"2010-02-03T10:21:29Z"}
+    ${CHECK_TIME10}    Set Variable    "timeframe" condition with parameters {"time":"2010-02-03T11:19:29Z"}
+    ${CHECK_TIME11}    Set Variable    "timeframe" condition with parameters {"time":"2010-03-02T09:19:29Z"}
+    ${CHECK_TIME12}    Set Variable    "timeframe" condition with parameters {"time":"2011-01-02T09:19:29Z"}
+    ${CHECK_TIME13}    Set Variable    "timeframe" condition with parameters {"time":"2011-02-05T12:23:34Z"}
+    ${CHECK_TIME14}    Set Variable    "timeframe" condition with parameters {"time":"2011-03-03T12:23:34Z"}
+    ${CHECK_TIME15}    Set Variable    "timeframe" condition with parameters {"time":"2011-03-04T10:23:34Z"}
+    ${CHECK_TIME16}    Set Variable    "timeframe" condition with parameters {"time":"2011-03-04T11:21:34Z"}
+    ${CHECK_TIME17}    Set Variable    "timeframe" condition with parameters {"time":"2011-03-04T11:22:32Z"}
+    ${CHECK_TIME18}    Set Variable    "timeframe" condition with parameters {"time":"2011-03-04T11:22:33Z"}
+    #doesn't meet timeframe:
+    ${CHECK_TIME19}    Set Variable    "timeframe" condition with parameters {"time":"2011-03-04T11:22:34Z"}
+    ${CHECK_TIME20}    Set Variable    "timeframe" condition with parameters {"time":"2011-03-04T11:23:33Z"}
+    ${CHECK_TIME21}    Set Variable    "timeframe" condition with parameters {"time":"2011-03-04T12:22:33Z"}
+    ${CHECK_TIME22}    Set Variable    "timeframe" condition with parameters {"time":"2011-03-05T11:22:33Z"}
+    ${CHECK_TIME23}    Set Variable    "timeframe" condition with parameters {"time":"2011-04-04T11:22:33Z"}
+    ${CHECK_TIME24}    Set Variable    "timeframe" condition with parameters {"time":"2012-03-04T11:22:33Z"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME2}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME3}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME4}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME5}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME6}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME7}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME8}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME9}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME10}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME11}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME12}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME13}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME14}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME15}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME16}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME17}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME18}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME19}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME21}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME20}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME22}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME23}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME24}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_TIME" and conditions "${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME2}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME3}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME4}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME5}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME6}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME7}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME8}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME9}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME10}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME11}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME12}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME13}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME14}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME15}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME16}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME17}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME18}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME19}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME21}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME20}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME22}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME23}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME24}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_TimeframeConditionType_CreateAndCheck_CheckWithTimeframeCondition_Complex_No2
+    [Documentation]    Timeframe condition
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:00Z"}
+    ${CHECK_TIME1}    Set Variable    "timeframe" condition with parameters {"time":"2009-12-31T23:59:59Z"}
+    ${CHECK_TIME2}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:00Z"}
+    ${CHECK_TIME3}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME2}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME3}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_TIME" and conditions "${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME2}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME3}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_TimeframeConditionType_CreateAndCheck_CheckWithoutCondition_TimeframeInPast_No1_False
+    [Documentation]    Timeframe condition
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T01:01:01Z","endTime":"2013-01-01T01:01:01Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2011-01-01T01:01:01Z"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_TIME" and conditions "${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_TIME" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_TimeframeConditionType_CreateAndCheck_CheckWithoutCondition_TimeframeInPast_No2_False
+    [Documentation]    Timeframe condition
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"now-300","endTime":"now-100"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"now-200"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_TIME" and conditions "${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_TIME" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_TimeframeConditionType_CreateAndCheck_CheckWithoutCondition_TimeframeInFuture_No1_False
+    [Documentation]    Timeframe condition
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"3010-01-01T01:01:01Z","endTime":"3013-01-01T01:01:01Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"3011-01-01T01:01:01Z"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_TIME" and conditions "${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_TIME" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_TimeframeConditionType_CreateAndCheck_CheckWithoutCondition_TimeframeInFuture_No2_False
+    [Documentation]    Timeframe condition
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"now+100","endTime":"now+300"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"now+200"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_TIME" and conditions "${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_TIME" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_TimeframeConditionType_CreateAndCheck_CheckWithoutCondition_TimeframeIsCurrent_True
+    [Documentation]    Timeframe condition
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"now-30","endTime":"now+30"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"now+0"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_TIME" and conditions "${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_TIME" for user "${userId}" is "true"
+
+Test_NonMeteredEntitlements_TimeframeConditionType_CreateAndCheck_CheckWithStringCondition_False
+    [Documentation]    Timeframe condition
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"now-30","endTime":"now+30"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"now+0"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_TIME" and conditions "${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_TimeframeConditionType_CreateAndCheck_CheckWithPathCondition_False
+    [Documentation]    Timeframe condition
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"now-30","endTime":"now+30"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"now+0"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_PATH}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_TIME" and conditions "${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_PATH}" for user "${userId}" is "false"
+
+###Geo condition:
+Test_NonMeteredEntitlements_TimeframeConditionType_CreateAndCheck_CheckWithGeoCondition
+    [Documentation]    Timeframe condition
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"3010-01-01T01:01:01Z","endTime":"3013-01-01T01:01:01Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"3011-01-01T01:01:01Z"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_TIME" and conditions "${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+
+###Metered condition:
+Test_NonMeteredEntitlements_TimeframeConditionType_CreateAndCheck_CheckWithMeteredCondition
+    [Documentation]    Timeframe condition
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"3010-01-01T01:01:01Z","endTime":"3013-01-01T01:01:01Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"3011-01-01T01:01:01Z"}
+    ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_TIME" and conditions "${GRANT_TIME}" for user "${userId}"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_TIME}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_TIME" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+
+### 2Users_2Entitlements
+Test_NonMeteredEntitlements_TimeframeConditionType_CreateAndCheck_2Users_2Entitlements
+    [Documentation]    Timeframe condition
+    ${userId1} =     generate random id
+    ${userId2} =     generate random id
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"3010-01-01T01:01:01Z","endTime":"3013-01-01T01:01:01Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"3011-01-01T01:01:01Z"}
+    ${entitlementType1}      Set Variable    ENT_TIME_1
+    ${entitlementType2}      Set Variable    ENT_TIME_2
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_TIME}" for user "${userId1}" is "false"
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_TIME}" for user "${userId2}" is "false"
+    grant entitlement with entitlementType "${entitlementType1}" and conditions "${GRANT_TIME}" for user "${userId1}"
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_TIME}" for user "${userId1}" is "true"
+    ensure there are "1" entitlements for user "${userId1}"
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_TIME}" for user "${userId2}" is "false"
+    ensure there are "0" entitlements for user "${userId2}"
+    grant entitlement with entitlementType "${entitlementType1}" and conditions "${GRANT_TIME}" for user "${userId2}"
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_TIME}" for user "${userId1}" is "true"
+    ensure there are "1" entitlements for user "${userId1}"
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_TIME}" for user "${userId2}" is "true"
+    ensure there are "1" entitlements for user "${userId2}"
+    grant entitlement with entitlementType "${entitlementType2}" and conditions "${GRANT_TIME}" for user "${userId1}"
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_TIME}" for user "${userId1}" is "true"
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_TIME}" for user "${userId1}" is "true"
+    ensure there are "2" entitlements for user "${userId1}"
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_TIME}" for user "${userId2}" is "true"
+    ensure there are "1" entitlements for user "${userId2}"
+    grant entitlement with entitlementType "${entitlementType2}" and conditions "${GRANT_TIME}" for user "${userId2}"
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_TIME}" for user "${userId1}" is "true"
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_TIME}" for user "${userId1}" is "true"
+    ensure there are "2" entitlements for user "${userId1}"
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_TIME}" for user "${userId2}" is "true"
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_TIME}" for user "${userId2}" is "true"
+    ensure there are "2" entitlements for user "${userId2}"
+

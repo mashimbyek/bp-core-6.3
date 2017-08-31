@@ -1,0 +1,225 @@
+# -----------------------------------------------------------------------
+# [y] hybris Platform
+#
+# Copyright (c) 2017 SAP SE or an SAP affiliate company.  All rights reserved.
+# 
+# This software is the confidential and proprietary information of SAP
+# ("Confidential Information"). You shall not disclose such Confidential
+# Information and shall use it only in accordance with the terms of the
+# license agreement you entered into with SAP.
+# -----------------------------------------------------------------------
+*** Settings ***
+Resource    entitlements-test/settings_keywords.txt
+Resource    entitlements-test/builder_entitlements_keywords.txt
+Resource    entitlements-test/modify_entitlements_keywords.txt
+Resource    entitlements-test/exceptions_entitlements_keywords.txt
+Resource    entitlements-test/check_entitlements_keywords.txt
+Resource    entitlements-test/use_entitlements_keywords.txt
+
+*** Test Cases ***
+Test_NonMeteredEntitlements_StringConditionType_CreateAndCheck_CheckWithStringCondition__False
+    [Documentation]    String condition should be compared with passed parameter
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc "}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_STR" and conditions "${GRANT_STR}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+	
+Test_NonMeteredEntitlements_StringConditionType_CreateAndCheck_CheckWithStringCondition_No1_True
+    [Documentation]    String condition should be compared with passed parameter
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_STR" and conditions "${GRANT_STR}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR}" for user "${userId}" is "true"
+
+Test_NonMeteredEntitlements_StringConditionType_CreateAndCheck_CheckWithStringCondition_No2_False
+    [Documentation]    String condition should be compared with passed parameter
+    ${GRANT_STR1}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR1}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR2}    Set Variable    "string" condition with parameters {"string":"ab"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR2}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_STR" and conditions "${GRANT_STR1}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR1}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR2}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_StringConditionType_CreateAndCheck_CheckWithStringCondition_No3_False
+    [Documentation]    String condition should be compared with passed parameter
+    ${GRANT_STR1}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR1}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR2}    Set Variable    "string" condition with parameters {"string":"abcd"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR2}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_STR" and conditions "${GRANT_STR1}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR1}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR2}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_StringConditionType_CreateAndCheck_CheckWithStringCondition_No4_False
+    [Documentation]    String condition should be compared with passed parameter
+    ${GRANT_STR1}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR1}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR2}    Set Variable    "string" condition with parameters {"string":"acb"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR2}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_STR" and conditions "${GRANT_STR1}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR1}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR2}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_StringConditionType_CreateAndCheck_CheckWithStringCondition_No5_False
+    [Documentation]    String condition should be compared with passed parameter
+    ${GRANT_STR1}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR1}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR2}    Set Variable    "string" condition with parameters {"string":"def"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR2}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_STR" and conditions "${GRANT_STR1}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR1}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR2}" for user "${userId}" is "false"
+	
+Test_NonMeteredEntitlements_StringConditionType_CreateAndCheck_CheckWithStringCondition_No6_False
+    [Documentation]    String condition should be compared with passed parameter - space is not trimmed during check
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc "}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_STR" and conditions "${GRANT_STR}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR}" for user "${userId}" is "false"	
+
+Test_NonMeteredEntitlements_StringConditionType_CreateAndCheck_CheckWithoutCondition_False
+    [Documentation]    String condition should be compared with passed parameter
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_STR" and conditions "${GRANT_STR}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_StringConditionType_CreateAndCheck_CheckWithPathCondition_False
+    [Documentation]    String condition should be compared with passed parameter
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"root/subdirectory"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_PATH}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_STR" and conditions "${GRANT_STR}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_PATH}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_StringConditionType_CreateAndCheck_CheckWithStringCondition_SpecialChars_No1_True
+    [Documentation]    String condition should be compared with passed parameter
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"!@#$%^&*"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"!@#$%^&*"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_STR" and conditions "${GRANT_STR}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR}" for user "${userId}" is "true"
+
+Test_NonMeteredEntitlements_StringConditionType_CreateAndCheck_CheckWithStringCondition_SpecialChars_No2_True
+    [Documentation]    String condition should be compared with passed parameter
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"ŮÜčÇ??"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"ŮÜčÇ??"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_STR" and conditions "${GRANT_STR}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR}" for user "${userId}" is "true"
+
+###Timeframe condition:
+Test_NonMeteredEntitlements_StringConditionType_CreateAndCheck_CheckWithTimeframeCondition
+    [Documentation]    String condition should be compared with passed parameter
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2011-01-01T01:01:01Z"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_STR" and conditions "${GRANT_STR}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR}|${CHECK_TIME}" for user "${userId}" is "true"
+
+###Geo condition:
+Test_NonMeteredEntitlements_StringConditionType_CreateAndCheck_CheckWithGeoCondition
+    [Documentation]    String condition should be compared with passed parameter
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"abc"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_STR" and conditions "${GRANT_STR}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+
+###Metered condition:
+Test_NonMeteredEntitlements_StringConditionType_CreateAndCheck_CheckWithMeteredCondition
+    [Documentation]    String condition should be compared with passed parameter
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_STR" and conditions "${GRANT_STR}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+
+### 2Users_2Entitlements
+Test_NonMeteredEntitlements_StringConditionType_CreateAndCheck_2Users_2Entitlements
+    [Documentation]    Simple entitlement (no conditions)
+    ${userId1} =     generate random id
+    ${userId2} =     generate random id
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${entitlementType1}      Set Variable    ENT_STR_1
+    ${entitlementType2}      Set Variable    ENT_STR_2
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_STR}" for user "${userId1}" is "false"
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_STR}" for user "${userId2}" is "false"
+    grant entitlement with entitlementType "${entitlementType1}" and conditions "${GRANT_STR}" for user "${userId1}"
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_STR}" for user "${userId1}" is "true"
+    ensure there are "1" entitlements for user "${userId1}"
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_STR}" for user "${userId2}" is "false"
+    ensure there are "0" entitlements for user "${userId2}"
+    grant entitlement with entitlementType "${entitlementType1}" and conditions "${GRANT_STR}" for user "${userId2}"
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_STR}" for user "${userId1}" is "true"
+    ensure there are "1" entitlements for user "${userId1}"
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_STR}" for user "${userId2}" is "true"
+    ensure there are "1" entitlements for user "${userId2}"
+    grant entitlement with entitlementType "${entitlementType2}" and conditions "${GRANT_STR}" for user "${userId1}"
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_STR}" for user "${userId1}" is "true"
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_STR}" for user "${userId1}" is "true"
+    ensure there are "2" entitlements for user "${userId1}"
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_STR}" for user "${userId2}" is "true"
+    ensure there are "1" entitlements for user "${userId2}"
+    grant entitlement with entitlementType "${entitlementType2}" and conditions "${GRANT_STR}" for user "${userId2}"
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_STR}" for user "${userId1}" is "true"
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_STR}" for user "${userId1}" is "true"
+    ensure there are "2" entitlements for user "${userId1}"
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_STR}" for user "${userId2}" is "true"
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_STR}" for user "${userId2}" is "true"
+    ensure there are "2" entitlements for user "${userId2}"
+
+Test_NonMeteredEntitlements_StringConditionType_CreateAndCheck_MulitpleEntitlements_True
+    [Documentation]    Tests if it is possible to create multiple grants for entitlements with same 
+    ...                userId, entitlementType, grantSource & grantSourceId 
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${userId} =        generate random id
+    ensure there are "0" entitlements for user "${userId}"
+    grant entitlement with entitlementType "ENT_STR" and conditions "${GRANT_STR}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR}" for user "${userId}" is "true"
+    ensure there are "1" entitlements for user "${userId}"
+    grant entitlement with entitlementType "ENT_STR" and conditions "${GRANT_STR}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR}" for user "${userId}" is "true"
+    ensure there are "2" entitlements for user "${userId}"
+    grant entitlement with entitlementType "ENT_STR" and conditions "${GRANT_STR}" for user "${userId}"
+    check entitlement with entitlementType "ENT_STR" and conditions "${CHECK_STR}" for user "${userId}" is "true"
+    ensure there are "3" entitlements for user "${userId}"

@@ -1,0 +1,289 @@
+# -----------------------------------------------------------------------
+# [y] hybris Platform
+#
+# Copyright (c) 2017 SAP SE or an SAP affiliate company.  All rights reserved.
+# 
+# This software is the confidential and proprietary information of SAP
+# ("Confidential Information"). You shall not disclose such Confidential
+# Information and shall use it only in accordance with the terms of the
+# license agreement you entered into with SAP.
+# -----------------------------------------------------------------------
+*** Settings ***
+Resource    entitlements-test/settings_keywords.txt
+Resource    entitlements-test/builder_entitlements_keywords.txt
+Resource    entitlements-test/modify_entitlements_keywords.txt
+Resource    entitlements-test/exceptions_entitlements_keywords.txt
+Resource    entitlements-test/check_entitlements_keywords.txt
+Resource    entitlements-test/use_entitlements_keywords.txt
+
+***Variables***
+
+
+*** Test Cases ***
+# THE DEFAULT STRATEGY IS THE GRANT TIME STRATEGY: THE MOST EARLY IS FIRST
+
+### NON METERED:
+### SIMPLE:
+
+Test_DefaultGrantComparatorStrategy_WithoutCondition_GrantTime_Defined
+    [Documentation]    Checks grant comparator strategy - the default strategy is a grant time strategy - the order is determined by grant time timestamp
+    ${userId} =         generate random id
+    ${entitlementSimple1}=    create entitlement with entitlementType "ENT_SIMPLE" for user "${userId}"
+    assign grant time "2020-01-02T0:0:0Z" to entitlement "${entitlementSimple1}"
+    assign grantSourceId "grantSourceId1" to entitlement "${entitlementSimple1}"
+    grant entitlement "${entitlementSimple1}"
+    #
+    ${entitlementSimple2}=    create entitlement with entitlementType "ENT_SIMPLE" for user "${userId}"
+    assign grant time "2025-01-03T0:0:0Z" to entitlement "${entitlementSimple2}"
+    assign grantSourceId "grantSourceId2" to entitlement "${entitlementSimple2}"
+    grant entitlement "${entitlementSimple2}"
+    #
+    ${entitlementSimple3}=    create entitlement with entitlementType "ENT_SIMPLE" for user "${userId}"
+    assign grant time "2010-01-01T0:0:0Z" to entitlement "${entitlementSimple3}"
+    assign grantSourceId "grantSourceId3" to entitlement "${entitlementSimple3}"
+    grant entitlement "${entitlementSimple3}"
+    #
+    use entitlement with entitlementType "ENT_SIMPLE" for user "${userId}" and verify that grantSourceId is "grantSourceId3"
+    use entitlement with entitlementType "ENT_SIMPLE" for user "${userId}" and verify that grantSourceId is "grantSourceId3"
+    use entitlement with entitlementType "ENT_SIMPLE" for user "${userId}" and verify that grantSourceId is "grantSourceId3"
+
+Test_DefaultGrantComparatorStrategy_Metered_WithoutCondition_GrantTime_CurrentTimestamp
+    [Documentation]    Checks grant comparator strategy - the default strategy is a grant time strategy - the order is determined by grant time timestamp
+    ...                By default the current timestamp is grant timestamp.
+    ${userId} =         generate random id
+    ${entitlementSimple1}=    create entitlement with entitlementType "ENT_SIMPLE" for user "${userId}"
+    assign grantSourceId "grantSourceId1" to entitlement "${entitlementSimple1}"
+    grant entitlement "${entitlementSimple1}"
+    #
+    ${entitlementSimple2}=    create entitlement with entitlementType "ENT_SIMPLE" for user "${userId}"
+    assign grantSourceId "grantSourceId2" to entitlement "${entitlementSimple2}"
+    grant entitlement "${entitlementSimple2}"
+    #
+    ${entitlementSimple3}=    create entitlement with entitlementType "ENT_SIMPLE" for user "${userId}"
+    assign grantSourceId "grantSourceId3" to entitlement "${entitlementSimple3}"
+    grant entitlement "${entitlementSimple3}"
+    #
+    use entitlement with entitlementType "ENT_SIMPLE" for user "${userId}" and verify that grantSourceId is "grantSourceId1"
+    use entitlement with entitlementType "ENT_SIMPLE" for user "${userId}" and verify that grantSourceId is "grantSourceId1"
+    use entitlement with entitlementType "ENT_SIMPLE" for user "${userId}" and verify that grantSourceId is "grantSourceId1"
+
+### STRING:
+
+Test_DefaultGrantComparatorStrategy_StringConditionType_GrantTime_Defined
+    [Documentation]    Checks grant comparator strategy - the default strategy is a grant time strategy - the order is determined by grant time timestamp
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${USE_STR_TRUE}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${userId} =         generate random id
+    ${entitlementStr1}=    create entitlement with entitlementType "ENT_STR" for user "${userId}"
+    add condition "${GRANT_STR}" to entitlement "${entitlementStr1}"
+    assign grant time "2020-01-02T0:0:0Z" to entitlement "${entitlementStr1}"
+    assign grantSourceId "grantSourceId1" to entitlement "${entitlementStr1}"
+    grant entitlement "${entitlementStr1}"
+    #
+    ${entitlementStr2}=    create entitlement with entitlementType "ENT_STR" for user "${userId}"
+    add condition "${GRANT_STR}" to entitlement "${entitlementStr2}"
+    assign grant time "2025-01-03T0:0:0Z" to entitlement "${entitlementStr2}"
+    assign grantSourceId "grantSourceId2" to entitlement "${entitlementStr2}"
+    grant entitlement "${entitlementStr2}"
+    #
+    ${entitlementStr3}=    create entitlement with entitlementType "ENT_STR" for user "${userId}"
+    add condition "${GRANT_STR}" to entitlement "${entitlementStr3}"
+    assign grant time "2010-01-01T0:0:0Z" to entitlement "${entitlementStr3}"
+    assign grantSourceId "grantSourceId3" to entitlement "${entitlementStr3}"
+    grant entitlement "${entitlementStr3}"
+    #
+    use entitlement with entitlementType "ENT_STR" and conditions "${USE_STR_TRUE}" for user "${userId}" and verify that grantSourceId is "grantSourceId3"
+    use entitlement with entitlementType "ENT_STR" and conditions "${USE_STR_TRUE}" for user "${userId}" and verify that grantSourceId is "grantSourceId3"
+    use entitlement with entitlementType "ENT_STR" and conditions "${USE_STR_TRUE}" for user "${userId}" and verify that grantSourceId is "grantSourceId3"
+
+Test_DefaultGrantComparatorStrategy_StringConditionType_GrantTime_CurrentTimestamp
+    [Documentation]    Checks grant comparator strategy - the default strategy is a grant time strategy - the order is determined by grant time timestamp.
+    ...                By default the current timestamp is grant timestamp.
+    ${userId} =         generate random id
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${USE_STR_TRUE}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${entitlementStr1}=    create entitlement with entitlementType "ENT_STR" for user "${userId}"
+    add condition "${GRANT_STR}" to entitlement "${entitlementStr1}"
+    assign grantSourceId "grantSourceId1" to entitlement "${entitlementStr1}"
+    grant entitlement "${entitlementStr1}"
+    #
+    ${entitlementStr2}=    create entitlement with entitlementType "ENT_STR" for user "${userId}"
+    add condition "${GRANT_STR}" to entitlement "${entitlementStr2}"
+    assign grantSourceId "grantSourceId2" to entitlement "${entitlementStr2}"
+    grant entitlement "${entitlementStr2}"
+    #
+    ${entitlementStr3}=    create entitlement with entitlementType "ENT_STR" for user "${userId}"
+    add condition "${GRANT_STR}" to entitlement "${entitlementStr3}"
+    assign grantSourceId "grantSourceId3" to entitlement "${entitlementStr3}"
+    grant entitlement "${entitlementStr3}"
+    #
+    use entitlement with entitlementType "ENT_STR" and conditions "${USE_STR_TRUE}" for user "${userId}" and verify that grantSourceId is "grantSourceId1"
+    use entitlement with entitlementType "ENT_STR" and conditions "${USE_STR_TRUE}" for user "${userId}" and verify that grantSourceId is "grantSourceId1"
+    use entitlement with entitlementType "ENT_STR" and conditions "${USE_STR_TRUE}" for user "${userId}" and verify that grantSourceId is "grantSourceId1"
+
+### METERED:
+
+Test_DefaultGrantComparatorStrategy_Metered_GrantTime_Defined
+    [Documentation]    Checks grant comparator strategy - the default strategy is a grant time strategy - the order is determined by grant time timestamp
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "1", "allowOverage" : "false"}
+    ${USE_METERED_1} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${userId} =         generate random id
+    ${entitlementMetered1}=    create entitlement with entitlementType "ENT_METERED" for user "${userId}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlementMetered1}"
+    assign grant time "2020-01-02T0:0:0Z" to entitlement "${entitlementMetered1}"
+    assign grantSourceId "grantSourceId1" to entitlement "${entitlementMetered1}"
+    grant entitlement "${entitlementMetered1}"
+    #
+    ${entitlementMetered2}=    create entitlement with entitlementType "ENT_METERED" for user "${userId}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlementMetered2}"
+    assign grant time "2025-01-03T0:0:0Z" to entitlement "${entitlementMetered2}"
+    assign grantSourceId "grantSourceId2" to entitlement "${entitlementMetered2}"
+    grant entitlement "${entitlementMetered2}"
+    #
+    ${entitlementMetered3}=    create entitlement with entitlementType "ENT_METERED" for user "${userId}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlementMetered3}"
+    assign grant time "2010-01-01T0:0:0Z" to entitlement "${entitlementMetered3}"
+    assign grantSourceId "grantSourceId3" to entitlement "${entitlementMetered3}"
+    grant entitlement "${entitlementMetered3}"
+    #
+    use entitlement with entitlementType "ENT_METERED" and conditions "${USE_METERED_1}" for user "${userId}" and verify that grantSourceId is "grantSourceId3"
+    use entitlement with entitlementType "ENT_METERED" and conditions "${USE_METERED_1}" for user "${userId}" and verify that grantSourceId is "grantSourceId1"
+    use entitlement with entitlementType "ENT_METERED" and conditions "${USE_METERED_1}" for user "${userId}" and verify that grantSourceId is "grantSourceId2"
+
+Test_DefaultGrantComparatorStrategy_Metered_GrantTime_CurrentTimestamp
+    [Documentation]    Checks grant comparator strategy - the default strategy is a grant time strategy - the order is determined by grant time timestamp.
+    ...                By default the current timestamp is grant timestamp.
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "1", "allowOverage" : "false"}
+    ${USE_METERED_1} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${userId} =         generate random id
+    ${entitlementMetered1}=    create entitlement with entitlementType "ENT_METERED" for user "${userId}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlementMetered1}"
+    assign grantSourceId "grantSourceId1" to entitlement "${entitlementMetered1}"
+    grant entitlement "${entitlementMetered1}"
+    #
+    ${entitlementMetered2}=    create entitlement with entitlementType "ENT_METERED" for user "${userId}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlementMetered2}"
+    assign grantSourceId "grantSourceId2" to entitlement "${entitlementMetered2}"
+    grant entitlement "${entitlementMetered2}"
+    #
+    ${entitlementMetered3}=    create entitlement with entitlementType "ENT_METERED" for user "${userId}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlementMetered3}"
+    assign grantSourceId "grantSourceId3" to entitlement "${entitlementMetered3}"
+    grant entitlement "${entitlementMetered3}"
+    #
+    use entitlement with entitlementType "ENT_METERED" and conditions "${USE_METERED_1}" for user "${userId}" and verify that grantSourceId is "grantSourceId1"
+    use entitlement with entitlementType "ENT_METERED" and conditions "${USE_METERED_1}" for user "${userId}" and verify that grantSourceId is "grantSourceId2"
+    use entitlement with entitlementType "ENT_METERED" and conditions "${USE_METERED_1}" for user "${userId}" and verify that grantSourceId is "grantSourceId3"
+
+### MIXED:
+
+Test_DefaultGrantComparatorStrategy_Mixed_GrantTime_Defined
+    [Documentation]    Checks grant comparator strategy - the default strategy is a grant time strategy - the order is determined by grant time timestamp
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "1", "allowOverage" : "false"}
+    ${USE_METERED_1} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${USE_STR_TRUE}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${userId} =         generate random id
+    ${entitlementMixed1}=    create entitlement with entitlementType "ENT_MIXED" for user "${userId}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlementMixed1}"
+    add condition "${GRANT_STR}" to entitlement "${entitlementMixed1}"
+    assign grant time "2020-01-02T0:0:0Z" to entitlement "${entitlementMixed1}"
+    assign grantSourceId "grantSourceId1" to entitlement "${entitlementMixed1}"
+    grant entitlement "${entitlementMixed1}"
+    #
+    ${entitlementMixed2}=    create entitlement with entitlementType "ENT_MIXED" for user "${userId}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlementMixed2}"
+    add condition "${GRANT_STR}" to entitlement "${entitlementMixed2}"
+    assign grant time "2025-01-03T0:0:0Z" to entitlement "${entitlementMixed2}"
+    assign grantSourceId "grantSourceId2" to entitlement "${entitlementMixed2}"
+    grant entitlement "${entitlementMixed2}"
+    #
+    ${entitlementMixed3}=    create entitlement with entitlementType "ENT_MIXED" for user "${userId}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlementMixed3}"
+    add condition "${GRANT_STR}" to entitlement "${entitlementMixed3}"
+    assign grant time "2010-01-01T0:0:0Z" to entitlement "${entitlementMixed3}"
+    assign grantSourceId "grantSourceId3" to entitlement "${entitlementMixed3}"
+    grant entitlement "${entitlementMixed3}"
+    #
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_TRUE}" for user "${userId}" and verify that grantSourceId is "grantSourceId3"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_TRUE}" for user "${userId}" and verify that grantSourceId is "grantSourceId1"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_TRUE}" for user "${userId}" and verify that grantSourceId is "grantSourceId2"
+
+Test_DefaultGrantComparatorStrategy_Mixed_GrantTime_CurrentTimestamp
+    [Documentation]    Checks grant comparator strategy - the default strategy is a grant time strategy - the order is determined by grant time timestamp.
+    ...                By default the current timestamp is grant timestamp.
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "1", "allowOverage" : "false"}
+    ${USE_METERED_1} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${USE_STR_TRUE}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${userId} =         generate random id
+    ${entitlementMixed1}=    create entitlement with entitlementType "ENT_MIXED" for user "${userId}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlementMixed1}"
+    add condition "${GRANT_STR}" to entitlement "${entitlementMixed1}"
+    assign grantSourceId "grantSourceId1" to entitlement "${entitlementMixed1}"
+    grant entitlement "${entitlementMixed1}"
+    #
+    ${entitlementMixed2}=    create entitlement with entitlementType "ENT_MIXED" for user "${userId}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlementMixed2}"
+    add condition "${GRANT_STR}" to entitlement "${entitlementMixed2}"
+    assign grantSourceId "grantSourceId2" to entitlement "${entitlementMixed2}"
+    grant entitlement "${entitlementMixed2}"
+    #
+    ${entitlementMixed3}=    create entitlement with entitlementType "ENT_MIXED" for user "${userId}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlementMixed3}"
+    add condition "${GRANT_STR}" to entitlement "${entitlementMixed3}"
+    assign grantSourceId "grantSourceId3" to entitlement "${entitlementMixed3}"
+    grant entitlement "${entitlementMixed3}"
+    #
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_TRUE}" for user "${userId}" and verify that grantSourceId is "grantSourceId1"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_TRUE}" for user "${userId}" and verify that grantSourceId is "grantSourceId2"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_TRUE}" for user "${userId}" and verify that grantSourceId is "grantSourceId3"
+
+### COMPLETE:
+
+Test_DefaultGrantComparatorStrategy_Complete
+    [Documentation]    If 'details' flag is true, and metered grant have run out,
+    ...                execute should return applicable grants only.
+    ...                In other words, you won't see grants, that 'use' can not be applied to.
+    ${GRANT_METERED_1} =         Set Variable        "metered" condition with parameters {"maxQuantity": "10"}
+    ${GRANT_METERED_2} =         Set Variable        "metered" condition with parameters {"maxQuantity": "20"}
+    ${USE_METERED_1} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${USE_METERED_10} =         Set Variable        "metered" condition with parameters {"quantity": "10"}
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${USE_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${userId} =         generate random id
+    ${meteredGrant1} =          create entitlement with entitlementType "APPLICABLE" for user "${userId}"
+    add condition "${GRANT_METERED_1}" to entitlement "${meteredGrant1}"
+    assign grant time "2010-01-01T0:0:0Z" to entitlement "${meteredGrant1}"
+    assign grantSourceId "metered1GrantSourceId" to entitlement "${meteredGrant1}"
+    grant entitlement "${meteredGrant1}"
+    use entitlement with entitlementType "APPLICABLE" and conditions "${USE_METERED_1}" for user "${userId}" and verify that grantSourceId is "metered1GrantSourceId"
+    #
+    ${meteredGrant2} =          create entitlement with entitlementType "APPLICABLE" for user "${userId}"
+    add condition "${GRANT_METERED_2}" to entitlement "${meteredGrant2}"
+    assign grant time "2010-01-02T0:0:0Z" to entitlement "${meteredGrant2}"
+    assign grantSourceId "metered2GrantSourceId" to entitlement "${meteredGrant2}"
+    grant entitlement "${meteredGrant2}"
+    #-> meteredGrant1 quantity that left is 10 and meteredGrant2 has 20 so both are valid for quantity to use =1,
+    ### but because of grantTime strategy for usage tracking, meteredGrant1 is the entitlement that will be used
+    use entitlement with entitlementType "APPLICABLE" and conditions "${USE_METERED_1}" for user "${userId}" and verify that grantSourceId is "metered1GrantSourceId"
+    #-> meteredGrant1 quantity that left is 9 and meteredGrant2 has 20 so is the only valid one for quantity to use =10
+    use entitlement with entitlementType "APPLICABLE" and conditions "${USE_METERED_10}" for user "${userId}" and verify that grantSourceId is "metered2GrantSourceId"
+    #
+    ${noConditionGrant} =       create entitlement with entitlementType "APPLICABLE" for user "${userId}"
+    assign grantSourceId "noConditionGrantSourceId" to entitlement "${noConditionGrant}"
+    grant entitlement "${noConditionGrant}"
+    #
+    use entitlement with entitlementType "APPLICABLE" for user "${userId}" and verify that grantSourceId is "noConditionGrantSourceId"
+    use entitlement with entitlementType "APPLICABLE" if retrieve details set to "true" for user "${userId}" is "true" and has "1" grants
+    #
+    ${strGrant} =          create entitlement with entitlementType "APPLICABLE" for user "${userId}"
+    add condition "${GRANT_STR}" to entitlement "${strGrant}"
+    assign grantSourceId "strGrantSourceId" to entitlement "${strGrant}"
+    grant entitlement "${strGrant}"
+    #-> strGrant is the only str condition grant:
+    use entitlement with entitlementType "APPLICABLE" and conditions "${USE_STR}" for user "${userId}" and verify that grantSourceId is "strGrantSourceId"
+    use entitlement with entitlementType "APPLICABLE" and conditions "${USE_METERED_1}" for user "${userId}" and verify that grantSourceId is "metered1GrantSourceId"
+    use entitlement with entitlementType "APPLICABLE" and conditions "${USE_METERED_1}" if retrieve details set to "true" for user "${userId}" is "true" and has "1" grants
+    use entitlement with entitlementType "APPLICABLE" and conditions "${USE_METERED_10}" if retrieve details set to "true" for user "${userId}" is "true" and has "1" grants

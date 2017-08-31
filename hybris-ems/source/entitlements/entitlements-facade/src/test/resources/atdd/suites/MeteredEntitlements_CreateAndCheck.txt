@@ -1,0 +1,274 @@
+# -----------------------------------------------------------------------
+# [y] hybris Platform
+#
+# Copyright (c) 2017 SAP SE or an SAP affiliate company.  All rights reserved.
+# 
+# This software is the confidential and proprietary information of SAP
+# ("Confidential Information"). You shall not disclose such Confidential
+# Information and shall use it only in accordance with the terms of the
+# license agreement you entered into with SAP.
+# -----------------------------------------------------------------------
+*** Settings ***
+Resource    entitlements-test/settings_keywords.txt
+Resource    entitlements-test/builder_entitlements_keywords.txt
+Resource    entitlements-test/modify_entitlements_keywords.txt
+Resource    entitlements-test/exceptions_entitlements_keywords.txt
+Resource    entitlements-test/check_entitlements_keywords.txt
+Resource    entitlements-test/use_entitlements_keywords.txt
+
+*** Test Cases ***
+
+Test_MeteredEntitlements_CreateAndCheck_AllowOverage_True_No1
+    [Documentation]    Checks overage can be allowed (true) for metered condition
+    ...                maxQuantity=0, allowOverage=true, quantity=1 or 2
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "0", "allowOverage" : "true"}
+    ${CHECK_METERED_1} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${CHECK_METERED_2} =         Set Variable        "metered" condition with parameters {"quantity": "2"}
+    check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED_1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED_2}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_METERED" and conditions "${GRANT_METERED}" for user "${userId}"
+    check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED_1}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED_2}" for user "${userId}" is "true"
+
+Test_MeteredEntitlements_CreateAndCheck_AllowOverage_True_No2
+    [Documentation]    Checks overage can be allowed (true) for metered condition
+    ...                maxQuantity=1, allowOverage=true, quantity=1 or 2
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "1", "allowOverage" : "true"}
+    ${CHECK_METERED_1} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${CHECK_METERED_2} =         Set Variable        "metered" condition with parameters {"quantity": "2"}
+    check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED_1}" for user "${userId}" is "false"
+    #check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED_2}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_METERED" and conditions "${GRANT_METERED}" for user "${userId}"
+    check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED_1}" for user "${userId}" is "true"
+    #check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED_2}" for user "${userId}" is "true"
+
+Test_MeteredEntitlements_CreateAndCheck_AllowOverage_True_No3
+    [Documentation]    Checks overage can be allowed (true) for metered condition
+    ...                maxQuantity=1, allowOverage=true, quantity=0 or 2
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "1", "allowOverage" : "true"}
+    ${CHECK_METERED_0} =         Set Variable        "metered" condition with parameters {"quantity": "0"}
+    ${CHECK_METERED_2} =         Set Variable        "metered" condition with parameters {"quantity": "2"}
+    #check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED_0}" for user "${userId}" is "false"
+    #check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED_2}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_METERED" and conditions "${GRANT_METERED}" for user "${userId}"
+    #check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED_0}" for user "${userId}" is "true"
+    #check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED_2}" for user "${userId}" is "true"
+
+Test_MeteredEntitlements_CreateAndCheck_AllowOverage_False_No1
+    [Documentation]    Checks overage can not be allowed (false) for metered condition
+    ...                maxQuantity=0, allowOverage=false, quantity=0 or 1
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "0", "allowOverage" : "false"}
+    ${CHECK_METERED_0} =         Set Variable        "metered" condition with parameters {"quantity": "0"}
+    ${CHECK_METERED_1} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    #check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED_0}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED_1}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_METERED" and conditions "${GRANT_METERED}" for user "${userId}"
+    #check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED_0}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED_1}" for user "${userId}" is "false"
+
+Test_MeteredEntitlements_CreateAndCheck_AllowOverage_False_No2
+    [Documentation]    Checks overage can not be allowed (false) for metered condition
+    ...                maxQuantity=1, allowOverage=false, quantity=1 or 2
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "1", "allowOverage" : "false"}
+    ${CHECK_METERED_1} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${CHECK_METERED_2} =         Set Variable        "metered" condition with parameters {"quantity": "2"}
+    check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED_1}" for user "${userId}" is "false"
+    #check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED_2}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_METERED" and conditions "${GRANT_METERED}" for user "${userId}"
+    check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED_1}" for user "${userId}" is "true"
+    #check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED_2}" for user "${userId}" is "false"
+
+ Test_MeteredEntitlements_CreateAndCheck_AllowOverage_DefaultFalse_No1
+     [Documentation]    Checks overage can not be allowed (false) for metered condition
+     ...                maxQuantity=1, allowOverage is NOT defined (=false by default), quantity=1 or 2
+     ${userId} =         generate random id
+     ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "1"}
+     ${CHECK_METERED_1} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+     ${CHECK_METERED_2} =         Set Variable        "metered" condition with parameters {"quantity": "2"}
+     check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED_1}" for user "${userId}" is "false"
+     #check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED_2}" for user "${userId}" is "false"
+     grant entitlement with entitlementType "ENT_METERED" and conditions "${GRANT_METERED}" for user "${userId}"
+     check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED_1}" for user "${userId}" is "true"
+     #check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED_2}" for user "${userId}" is "false"
+
+ Test_MeteredEntitlements_CreateAndCheck_AllowOverage_DefaultFalse_No2
+     [Documentation]    Checks overage can not be allowed (false) for metered condition
+     ...                maxQuantity=0, allowOverage is NOT defined (=false by default), quantity=1
+     ${userId} =         generate random id
+     ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "0"}
+     ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+     check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+     grant entitlement with entitlementType "ENT_METERED" and conditions "${GRANT_METERED}" for user "${userId}"
+     check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+
+ Test_MeteredEntitlements_CreateAndCheck_CheckWithoutCondition
+     [Documentation]    Checks if returns false in case of checking with no conditions
+     ${userId} =         generate random id
+     ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "10"}
+     ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+     check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+     check entitlement with entitlementType "ENT_METERED" for user "${userId}" is "false"
+     grant entitlement with entitlementType "ENT_METERED" and conditions "${GRANT_METERED}" for user "${userId}"
+     check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+     check entitlement with entitlementType "ENT_METERED" for user "${userId}" is "false"
+
+ Test_MeteredEntitlements_CreateAndCheck_CheckWithStringCondition
+      [Documentation]    Checks if returns false in case of checking with no conditions
+      ${userId} =         generate random id
+      ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "10"}
+      ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+      ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+      check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+      check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+      grant entitlement with entitlementType "ENT_METERED" and conditions "${GRANT_METERED}" for user "${userId}"
+      check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+      check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+
+ Test_MeteredEntitlements_CreateAndCheck_CheckWithPathCondition
+      [Documentation]    Checks if returns false in case of checking with no conditions
+      ${userId} =         generate random id
+      ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "10"}
+      ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+      ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root/subdirectory"}
+      check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+      check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_PATH}" for user "${userId}" is "false"
+      grant entitlement with entitlementType "ENT_METERED" and conditions "${GRANT_METERED}" for user "${userId}"
+      check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+      check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_PATH}" for user "${userId}" is "false"
+
+ Test_MeteredEntitlements_CreateAndCheck_CheckWithTimeframeCondition
+      [Documentation]    Checks if returns false in case of checking with no conditions
+      ${userId} =         generate random id
+      ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "10"}
+      ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+      ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+      check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+      check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+      check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED}|${CHECK_TIME}" for user "${userId}" is "false"
+      grant entitlement with entitlementType "ENT_METERED" and conditions "${GRANT_METERED}" for user "${userId}"
+      check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+      check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+      check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED}|${CHECK_TIME}" for user "${userId}" is "true"
+
+ Test_MeteredEntitlements_CreateAndCheck_CheckWithGeoCondition
+      [Documentation]    Checks if returns false in case of checking with no conditions
+      ${userId} =         generate random id
+      ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "10"}
+      ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+      ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+      check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+      check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+      grant entitlement with entitlementType "ENT_METERED" and conditions "${GRANT_METERED}" for user "${userId}"
+      check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+      check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+      
+Test_MeteredEntitlements_CreateAndCheck_MulitpleEntitlements_True
+    [Documentation]    Tests if it is possible to create multiple grants for entitlements with same 
+    ...                userId, entitlementType, grantSource & grantSourceId 
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "1", "allowOverage" : "false"}
+    ${CHECK_METERED_1} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${CHECK_METERED_2} =         Set Variable        "metered" condition with parameters {"quantity": "2"}
+    ${CHECK_METERED_3} =         Set Variable        "metered" condition with parameters {"quantity": "3"}        
+    ${userId} =        generate random id
+    ensure there are "0" entitlements for user "${userId}"
+    grant entitlement with entitlementType "ENT_METERED" and conditions "${GRANT_METERED}" for user "${userId}"
+    check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED_1}" for user "${userId}" is "true"
+    ensure there are "1" entitlements for user "${userId}"
+    grant entitlement with entitlementType "ENT_METERED" and conditions "${GRANT_METERED}" for user "${userId}"
+    check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED_1}" for user "${userId}" is "true"
+    ensure there are "2" entitlements for user "${userId}"
+    grant entitlement with entitlementType "ENT_METERED" and conditions "${GRANT_METERED}" for user "${userId}"
+    check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED_1}" for user "${userId}" is "true"
+    ensure there are "3" entitlements for user "${userId}"
+    check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED_2}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED_3}" for user "${userId}" is "false"                
+
+#MORE THAN 1 METERED ENTITLEMENT -> not supported yet (10/2/2014)
+
+#Test_MeteredEntitlements_CreateAndCheck_Entitlements_x2_Users_x1_No1
+#    [Documentation]    Checks overage can be allowed (true) for metered condition
+#    ...                2 metered entitlements, 1 user
+#    ${userId} =         generate random id
+#    ${GRANT_METERED_1} =         Set Variable        "metered" condition with parameters {"maxQuantity": "0", "allowOverage" : "true"}
+#    ${GRANT_METERED_2} =         Set Variable        "metered" condition with parameters {"maxQuantity": "0", "allowOverage" : "true"}
+#    ${CHECK_METERED_1} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+#    ${CHECK_METERED_2} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+#    check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED_1}" for user "${userId}" is "false"
+#    check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED_2}" for user "${userId}" is "false"
+#    check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED_1}|${CHECK_METERED_2}" for user "${userId}" is "false"
+#    grant entitlement with entitlementType "ENT_METERED" and conditions "${GRANT_METERED_1}|${GRANT_METERED_2}" for user "${userId}"
+#    check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED_1}" for user "${userId}" is "false"
+#    check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED_2}" for user "${userId}" is "false"
+#    check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED_1}|${CHECK_METERED_2}" for user "${userId}" is "true"
+
+#Test_MeteredEntitlements_CreateAndCheck_Entitlements_x2_Users_x1_No2
+#    [Documentation]    Checks overage can be allowed (true) for metered condition
+#    ...                2 metered entitlements, 1 user
+#    ${userId} =         generate random id
+#    ${GRANT_METERED_1} =         Set Variable        "metered" condition with parameters {"maxQuantity": "0", "allowOverage" : "false"}
+#    ${GRANT_METERED_2} =         Set Variable        "metered" condition with parameters {"maxQuantity": "0", "allowOverage" : "false"}
+#    ${CHECK_METERED_1} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+#    ${CHECK_METERED_2} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+#    check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED_1}" for user "${userId}" is "false"
+#    check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED_2}" for user "${userId}" is "false"
+#    check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED_1}|${CHECK_METERED_2}" for user "${userId}" is "false"
+#    grant entitlement with entitlementType "ENT_METERED" and conditions "${GRANT_METERED_1}|${GRANT_METERED_2}" for user "${userId}"
+#    check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED_1}" for user "${userId}" is "false"
+#    check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED_2}" for user "${userId}" is "false"
+#    check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED_1}|${CHECK_METERED_2}" for user "${userId}" is "false"
+
+#Test_MeteredEntitlements_CreateAndCheck_Entitlements_x2_Users_x1_No3
+#    [Documentation]    Checks overage can be allowed (true) for metered condition
+#    ...                2 metered entitlements, 1 user
+#    ${userId} =         generate random id
+#    ${GRANT_METERED_1} =         Set Variable        "metered" condition with parameters {"maxQuantity": "0", "allowOverage" : "true"}
+#    ${GRANT_METERED_2} =         Set Variable        "metered" condition with parameters {"maxQuantity": "0", "allowOverage" : "false"}
+#    ${CHECK_METERED_1} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+#    ${CHECK_METERED_2} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+#    check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED_1}" for user "${userId}" is "false"
+#    check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED_2}" for user "${userId}" is "false"
+#    check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED_1}|${CHECK_METERED_2}" for user "${userId}" is "false"
+#    grant entitlement with entitlementType "ENT_METERED" and conditions "${GRANT_METERED_1}|${GRANT_METERED_2}" for user "${userId}"
+#    check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED_1}" for user "${userId}" is "false"
+#    check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED_2}" for user "${userId}" is "false"
+#    check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED_1}|${CHECK_METERED_2}" for user "${userId}" is "false"
+
+#Test_MeteredEntitlements_CreateAndCheck_Entitlements_x2_Users_x1_No4
+#    [Documentation]    Checks overage can be allowed (true) for metered condition
+#    ...                2 metered entitlements, 1 user
+#    ${userId} =         generate random id
+#    ${GRANT_METERED_1} =         Set Variable        "metered" condition with parameters {"maxQuantity": "0", "allowOverage" : "false"}
+#    ${GRANT_METERED_2} =         Set Variable        "metered" condition with parameters {"maxQuantity": "0", "allowOverage" : "true"}
+#    ${CHECK_METERED_1} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+#    ${CHECK_METERED_2} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+#    check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED_1}" for user "${userId}" is "false"
+#    check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED_2}" for user "${userId}" is "false"
+#    check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED_1}|${CHECK_METERED_2}" for user "${userId}" is "false"
+#    grant entitlement with entitlementType "ENT_METERED" and conditions "${GRANT_METERED_1}|${GRANT_METERED_2}" for user "${userId}"
+#    check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED_1}" for user "${userId}" is "false"
+#    check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED_2}" for user "${userId}" is "false"
+#    check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED_1}|${CHECK_METERED_2}" for user "${userId}" is "false"
+
+#Test_MeteredEntitlements_CreateAndCheck_Entitlements_x2_Users_x1_No5
+#    [Documentation]    Checks overage can be allowed (true) for metered condition
+#    ...                2 metered entitlements, 1 user
+#    ${userId} =         generate random id
+#    ${GRANT_METERED_1} =         Set Variable        "metered" condition with parameters {"maxQuantity": "1", "allowOverage" : "false"}
+#    ${GRANT_METERED_2} =         Set Variable        "metered" condition with parameters {"maxQuantity": "0", "allowOverage" : "true"}
+#    ${CHECK_METERED_1} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+#    ${CHECK_METERED_2} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+#    check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED_1}" for user "${userId}" is "false"
+#    check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED_2}" for user "${userId}" is "false"
+#    check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED_1}|${CHECK_METERED_2}" for user "${userId}" is "false"
+#    grant entitlement with entitlementType "ENT_METERED" and conditions "${GRANT_METERED_1}|${GRANT_METERED_2}" for user "${userId}"
+#    check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED_1}" for user "${userId}" is "false"
+#    check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED_2}" for user "${userId}" is "false"
+#    check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED_1}|${CHECK_METERED_2}" for user "${userId}" is "true"
+
+########## CREATE:
+# check in case of more than 1 user

@@ -1,0 +1,974 @@
+# -----------------------------------------------------------------------
+# [y] hybris Platform
+#
+# Copyright (c) 2017 SAP SE or an SAP affiliate company.  All rights reserved.
+# 
+# This software is the confidential and proprietary information of SAP
+# ("Confidential Information"). You shall not disclose such Confidential
+# Information and shall use it only in accordance with the terms of the
+# license agreement you entered into with SAP.
+# -----------------------------------------------------------------------
+*** Settings ***
+Resource    entitlements-test/settings_keywords.txt
+Resource    entitlements-test/builder_entitlements_keywords.txt
+Resource    entitlements-test/modify_entitlements_keywords.txt
+Resource    entitlements-test/exceptions_entitlements_keywords.txt
+Resource    entitlements-test/check_entitlements_keywords.txt
+Resource    entitlements-test/use_entitlements_keywords.txt
+
+*** Test Cases ***
+
+### City
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CreateCity_CheckCity_True
+    [Documentation]    Passed geolocation should be compared with the geocondition
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "true"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CreateCity_CheckCityRegionCountry_CityTrimForCheck
+    [Documentation]    Passed geolocation should be compared with the geocondition - extra space character added
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"US and A/California 1/San Francisco"}
+    ${CHECK_GEO1}    Set Variable    "geo" condition with parameters {"geoPath":"US and A/California 1/ San Francisco"}
+    ${CHECK_GEO2}    Set Variable    "geo" condition with parameters {"geoPath":"US and A/California 1/San Francisco "}
+    ${CHECK_GEO3}    Set Variable    "geo" condition with parameters {"geoPath":"US and A/California 1/ San Francisco "}
+    ${CHECK_GEO4}    Set Variable    "geo" condition with parameters {"geoPath":"US and A/California 1/SanFrancisco"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO2}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO3}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO4}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO1}" for user "${userId}" is "true"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO2}" for user "${userId}" is "true"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO3}" for user "${userId}" is "true"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO4}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CreateCity_CheckCityRegionCountry_RegionTrimForCheck
+    [Documentation]    Passed geolocation should be compared with the geocondition - extra space character added
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"US and A/California 1/San Francisco"}
+    ${CHECK_GEO1}    Set Variable    "geo" condition with parameters {"geoPath":"US and A/ California 1/San Francisco"}
+    ${CHECK_GEO2}    Set Variable    "geo" condition with parameters {"geoPath":"US and A/California 1 /San Francisco"}
+    ${CHECK_GEO3}    Set Variable    "geo" condition with parameters {"geoPath":"US and A/ California 1 /San Francisco"}
+    ${CHECK_GEO4}    Set Variable    "geo" condition with parameters {"geoPath":"US and A/California1/San Francisco"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO2}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO3}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO4}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO1}" for user "${userId}" is "true"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO2}" for user "${userId}" is "true"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO3}" for user "${userId}" is "true"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO4}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CreateCity_CheckCityRegionCountry_CountryTrimForCheck
+    [Documentation]    Passed geolocation should be compared with the geocondition - extra space character added
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"US and A/California 1/San Francisco"}
+    ${CHECK_GEO1}    Set Variable    "geo" condition with parameters {"geoPath":" US and A/California 1/San Francisco"}
+    ${CHECK_GEO2}    Set Variable    "geo" condition with parameters {"geoPath":"US and A /California 1/San Francisco"}
+    ${CHECK_GEO3}    Set Variable    "geo" condition with parameters {"geoPath":" US and A /California 1/San Francisco"}
+    ${CHECK_GEO4}    Set Variable    "geo" condition with parameters {"geoPath":"USandA/California 1/San Francisco"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO2}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO3}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO4}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO1}" for user "${userId}" is "true"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO2}" for user "${userId}" is "true"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO3}" for user "${userId}" is "true"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO4}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CreateMultiCity_CheckCityRegionCountry_TrimForCheck
+    [Documentation]    Passed geolocation should be compared with the geocondition
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Russia A/Omskaya B/Omsk C, Germany A/Bavaria B/Munich C"}
+    ${CHECK_GEO11}    Set Variable    "geo" condition with parameters {"geoPath":"Russia A/Omskaya B/Omsk C"}
+    ${CHECK_GEO12}    Set Variable    "geo" condition with parameters {"geoPath":" Russia A / Omskaya B / Omsk C "}
+    ${CHECK_GEO13}    Set Variable    "geo" condition with parameters {"geoPath":"RussiaA/OmskayaB/OmskC"}
+    ${CHECK_GEO21}    Set Variable    "geo" condition with parameters {"geoPath":"Germany A/Bavaria B/Munich C"}
+    ${CHECK_GEO22}    Set Variable    "geo" condition with parameters {"geoPath":" Germany A / Bavaria B / Munich C "}
+    ${CHECK_GEO23}    Set Variable    "geo" condition with parameters {"geoPath":"GermanyA/BavariaB/MunichC"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO11}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO12}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO13}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO21}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO22}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO23}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO11}" for user "${userId}" is "true"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO12}" for user "${userId}" is "true"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO13}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO21}" for user "${userId}" is "true"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO22}" for user "${userId}" is "true"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO23}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CreateCity_CheckCityRegionCountry_CityTrimForGrant
+    [Documentation]    Passed geolocation should be compared with the geocondition - extra space character added
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"US and A/California 1/ San Francisco "}
+    ${CHECK_GEO1}    Set Variable    "geo" condition with parameters {"geoPath":"US and A/California 1/ San Francisco "}
+    ${CHECK_GEO2}    Set Variable    "geo" condition with parameters {"geoPath":"US and A/California 1/San Francisco"}
+    ${CHECK_GEO3}    Set Variable    "geo" condition with parameters {"geoPath":"US and A/California 1/SanFrancisco"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO2}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO3}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO1}" for user "${userId}" is "true"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO2}" for user "${userId}" is "true"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO3}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CreateCity_CheckCityRegionCountry_RegionTrimForGrant
+    [Documentation]    Passed geolocation should be compared with the geocondition - extra space character added
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"US and A/ California 1 /San Francisco"}
+    ${CHECK_GEO1}    Set Variable    "geo" condition with parameters {"geoPath":"US and A/ California 1 /San Francisco"}
+    ${CHECK_GEO2}    Set Variable    "geo" condition with parameters {"geoPath":"US and A/California 1/San Francisco"}
+    ${CHECK_GEO3}    Set Variable    "geo" condition with parameters {"geoPath":"US and A/California1/San Francisco"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO2}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO3}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO1}" for user "${userId}" is "true"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO2}" for user "${userId}" is "true"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO3}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CreateCity_CheckCityRegionCountry_CountryTrimForGrant
+    [Documentation]    Passed geolocation should be compared with the geocondition - extra space character added
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":" US and A /California 1/San Francisco"}
+    ${CHECK_GEO1}    Set Variable    "geo" condition with parameters {"geoPath":" US and A /California 1/San Francisco"}
+    ${CHECK_GEO2}    Set Variable    "geo" condition with parameters {"geoPath":"US and A/California 1/San Francisco"}
+    ${CHECK_GEO3}    Set Variable    "geo" condition with parameters {"geoPath":"USandA/California 1/San Francisco"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO2}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO3}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO1}" for user "${userId}" is "true"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO2}" for user "${userId}" is "true"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO3}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CreateMultiCity_CheckCityRegionCountry_TrimForGrant
+    [Documentation]    Passed geolocation should be compared with the geocondition
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":" Russia A / Omskaya B / Omsk C , Germany A / Bavaria B / Munich C "}
+    ${CHECK_GEO11}    Set Variable    "geo" condition with parameters {"geoPath":" Russia A / Omskaya B / Omsk C "}
+    ${CHECK_GEO12}    Set Variable    "geo" condition with parameters {"geoPath":"Russia A/Omskaya B/Omsk C"}
+    ${CHECK_GEO13}    Set Variable    "geo" condition with parameters {"geoPath":"RussiaA/OmskayaB/OmskC"}
+    ${CHECK_GEO21}    Set Variable    "geo" condition with parameters {"geoPath":" Germany A / Bavaria B / Munich C "}
+    ${CHECK_GEO22}    Set Variable    "geo" condition with parameters {"geoPath":"Germany A/Bavaria B/Munich C"}
+    ${CHECK_GEO23}    Set Variable    "geo" condition with parameters {"geoPath":"GermanyA/BavariaB/MunichC"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO11}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO12}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO13}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO21}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO22}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO23}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO11}" for user "${userId}" is "true"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO12}" for user "${userId}" is "true"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO13}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO21}" for user "${userId}" is "true"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO22}" for user "${userId}" is "true"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO23}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CreateMultiCity_CheckCity_True
+    [Documentation]    Passed geolocation should be compared with the geocondition
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Russia/Omskaya oblast/Omsk, Germany/Bavaria/Munich"}
+    ${CHECK_GEO1}    Set Variable    "geo" condition with parameters {"geoPath":"Russia/Omskaya oblast/Omsk"}
+    ${CHECK_GEO2}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO2}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO1}" for user "${userId}" is "true"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO2}" for user "${userId}" is "true"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CreateCity_CheckWrongCity_False_No1
+    [Documentation]    Passed geolocation should be compared with the geocondition
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Augsburg"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CreateCity_CheckWrongCity_False_No2
+    [Documentation]    Passed geolocation should be compared with the geocondition
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munic"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CreateCity_CheckWrongCity_False_No3
+    [Documentation]    Passed geolocation should be compared with the geocondition
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Muniche"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CreateMultiCity_CheckWrongCity_False
+    [Documentation]    Passed geolocation should be compared with the geocondition
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Russia/Omskaya oblast/Omsk, Germany/Bavaria/Munich"}
+    ${CHECK_GEO1}    Set Variable    "geo" condition with parameters {"geoPath":"Russia/Omskaya oblast/Novosibirsk"}
+    ${CHECK_GEO2}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Augsburg"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO2}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO2}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CreateCity_CheckWrongCityAndRegion_False
+    [Documentation]    Passed geolocation should be compared with the geocondition
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Hesse/Frankfurt"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CreateMultiCity_CheckWrongCityAndRegion_False
+    [Documentation]    Passed geolocation should be compared with the geocondition
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Russia/Omskaya oblast/Omsk, Germany/Bavaria/Munich"}
+    ${CHECK_GEO1}    Set Variable    "geo" condition with parameters {"geoPath":"Russia/Omskaya/Novosibirsk"}
+    ${CHECK_GEO2}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Hesse/Frankfurt"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO2}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO2}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CreateCity_CheckWrongCityRegionAndCountry_False
+    [Documentation]    Passed geolocation should be compared with the geocondition
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"USA/California/San Francisco"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CreateMultiCity_CheckWrongCityRegionAndCountry_False
+    [Documentation]    Passed geolocation should be compared with the geocondition
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Russia/Omskaya oblast/Omsk, Germany/Bavaria/Munich"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"USA/California/San Francisco"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CreateCity_CheckCityInWrongRegion_False
+    [Documentation]    Passed geolocation should be compared with the geocondition
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Hesse/Frankfurt"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Brandenburg/Frankfurt"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CreateMultiCity_CheckCityInWrongRegion_False
+    [Documentation]    Passed geolocation should be compared with the geocondition
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Hesse/Frankfurt, Russia/Omskaya oblast/Omsk"}
+    ${CHECK_GEO1}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Brandenburg/Frankfurt"}
+    ${CHECK_GEO2}    Set Variable    "geo" condition with parameters {"geoPath":"Russia/Omskaya/Omsk"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO2}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO2}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CreateCity_CheckRegionOnly_False
+    [Documentation]    Passed geolocation should be compared with the geocondition
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CreateMultiCity_CheckRegionOnly_False
+    [Documentation]    Passed geolocation should be compared with the geocondition
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Russia/Omskaya oblast/Omsk, Germany/Bavaria/Munich"}
+    ${CHECK_GEO1}    Set Variable    "geo" condition with parameters {"geoPath":"Russia/Omskaya oblast"}
+    ${CHECK_GEO2}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO2}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO2}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CreateCity_CheckWrongRegionOnly_False
+    [Documentation]    Passed geolocation should be compared with the geocondition
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Hesse"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CreateMutliCity_CheckWrongRegionOnly_False
+    [Documentation]    Passed geolocation should be compared with the geocondition
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Russia/Omskaya oblast/Omsk, Germany/Bavaria/Munich"}
+    ${CHECK_GEO1}    Set Variable    "geo" condition with parameters {"geoPath":"Russia/Omsk"}
+    ${CHECK_GEO2}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Hesse"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO2}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO2}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CreateCity_CheckWrongCountryAndRegionOnly_False
+    [Documentation]    Passed geolocation should be compared with the geocondition
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"USA/California"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CreateMultiCity_CheckWrongCountryAndRegionOnly_False
+    [Documentation]    Passed geolocation should be compared with the geocondition
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Russia/Omskaya oblast/Omsk, Germany/Bavaria/Munich"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"USA/California"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CreateCity_CheckCountryOnly_False
+    [Documentation]    Passed geolocation should be compared with the geocondition
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CreateMultiCity_CheckCountryOnly_False
+    [Documentation]    Passed geolocation should be compared with the geocondition
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Russia/Omskaya oblast/Omsk, Germany/Bavaria/Munich"}
+    ${CHECK_GEO1}    Set Variable    "geo" condition with parameters {"geoPath":"Russia"}
+    ${CHECK_GEO2}    Set Variable    "geo" condition with parameters {"geoPath":"Germany"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO2}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO2}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CreateCity_CheckWrongCountry_False
+    [Documentation]    Passed geolocation should be compared with the geocondition
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"USA"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CreateMutliCity_CheckWrongCountry_False
+    [Documentation]    Passed geolocation should be compared with the geocondition
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Russia/Omskaya oblast/Omsk, Germany/Bavaria/Munich"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"USA"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+
+### Region
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CreateRegion_CheckRegion_True
+    [Documentation]    Passed geolocation should be compared with the geocondition
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "true"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CreateMultiRegion_CheckRegion_True
+    [Documentation]    Passed geolocation should be compared with the geocondition
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria, Russia/Omskaya oblast"}
+    ${CHECK_GEO1}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria"}
+    ${CHECK_GEO2}    Set Variable    "geo" condition with parameters {"geoPath":"Russia/Omskaya oblast"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO2}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO1}" for user "${userId}" is "true"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO2}" for user "${userId}" is "true"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CreateRegion_CheckCity_True
+    [Documentation]    Passed geolocation should be compared with the geocondition
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria"}
+    ${CHECK_GEO1}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO2}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Dachau"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO2}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO1}" for user "${userId}" is "true"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO2}" for user "${userId}" is "true"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CreateMultiRegion_CheckCity_True
+    [Documentation]    Passed geolocation should be compared with the geocondition
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria, Russia/Omskaya oblast"}
+    ${CHECK_GEO1}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO2}    Set Variable    "geo" condition with parameters {"geoPath":"Russia/Omskaya oblast/Omsk"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO2}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO1}" for user "${userId}" is "true"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO2}" for user "${userId}" is "true"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CreateRegion_CheckWrongRegion_False_No1
+    [Documentation]    Passed geolocation should be compared with the geocondition
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Hesse"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CreateRegion_CheckWrongRegion_False_No2
+    [Documentation]    Passed geolocation should be compared with the geocondition
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavari"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CreateRegion_CheckWrongRegion_False_No3
+    [Documentation]    Passed geolocation should be compared with the geocondition - extra space character added
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavariaa"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CreateMultiRegion_CheckWrongRegion_False
+    [Documentation]    Passed geolocation should be compared with the geocondition
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria, Russia/Omskaya oblast"}
+    ${CHECK_GEO1}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Omskaya oblast"}
+    ${CHECK_GEO2}    Set Variable    "geo" condition with parameters {"geoPath":"Russia/Bavaria"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO2}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO2}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CreateRegion_CheckCityinWrongRegion_False
+    [Documentation]    Passed geolocation should be compared with the geocondition
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Hesse/Frankfurt"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CreateMutliRegion_CheckCityInWrongRegion_False
+    [Documentation]    Passed geolocation should be compared with the geocondition
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria, Russia/Omskaya oblast"}
+    ${CHECK_GEO1}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Hesse/Frankfurt"}
+    ${CHECK_GEO2}    Set Variable    "geo" condition with parameters {"geoPath":"Russia/Omskaya/Omsk"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO2}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO2}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CreateRegion_CheckWrongRegionAndCountry_False
+    [Documentation]    Passed geolocation should be compared with the geocondition
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria"}
+    ${CHECK_GEO1}    Set Variable    "geo" condition with parameters {"geoPath":"USA/California"}
+    ${CHECK_GEO2}    Set Variable    "geo" condition with parameters {"geoPath":"Bavaria/Germany"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO2}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO2}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CreateMultiRegion_CheckWrongRegionAndCountry_False
+    [Documentation]    Passed geolocation should be compared with the geocondition
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria, Russia/Omskaya oblast"}
+    ${CHECK_GEO1}    Set Variable    "geo" condition with parameters {"geoPath":"USA/California"}
+    ${CHECK_GEO2}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Omskaya oblast"}
+    ${CHECK_GEO3}    Set Variable    "geo" condition with parameters {"geoPath":"Bavaria/Russia"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO2}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO3}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO2}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO3}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CreateRegion_CheckCityInWrongRegionAndCountry_False
+    [Documentation]    Passed geolocation should be compared with the geocondition
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"USA/California/San Francisco"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CreateMultiRegion_CheckCityInWrongRegionAndCountry_False
+    [Documentation]    Passed geolocation should be compared with the geocondition
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria, Russia/Omskaya oblast"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"USA/California/San Francisco"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CreateRegion_CheckCountryOnly_False
+    [Documentation]    Passed geolocation should be compared with the geocondition
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CreateMultiRegion_CheckCountryOnly_False
+    [Documentation]    Passed geolocation should be compared with the geocondition
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria, Russia/Omskaya oblast"}
+    ${CHECK_GEO1}    Set Variable    "geo" condition with parameters {"geoPath":"Germany"}
+    ${CHECK_GEO2}    Set Variable    "geo" condition with parameters {"geoPath":"Russia"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO2}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO2}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CreateRegion_CheckWrongCountryOnly_False
+    [Documentation]    Passed geolocation should be compared with the geocondition
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"USA"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CreateMultiRegion_CheckWrongCountryOnly_False
+    [Documentation]    Passed geolocation should be compared with the geocondition
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria, Russia/Omskaya oblast"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"USA"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+
+### Country
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CreateCountry_CheckCity_true
+    [Documentation]    Passed geolocation should be compared with the geocondition
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "true"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CreateMultiCountry_CheckCity_true
+    [Documentation]    Passed geolocation should be compared with the geocondition
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Russia, Germany"}
+    ${CHECK_GEO1}    Set Variable    "geo" condition with parameters {"geoPath":"Russia/Omskaya oblast/Omsk"}
+    ${CHECK_GEO2}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO2}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO1}" for user "${userId}" is "true"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO2}" for user "${userId}" is "true"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CreateCountry_CheckRegion_true
+    [Documentation]    Passed geolocation should be compared with the geocondition
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "true"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CreateMultiCountry_CheckRegion_true
+    [Documentation]    Passed geolocation should be compared with the geocondition
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Russia, Germany"}
+    ${CHECK_GEO1}    Set Variable    "geo" condition with parameters {"geoPath":"Russia/Omskaya oblast"}
+    ${CHECK_GEO2}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO2}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO1}" for user "${userId}" is "true"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO2}" for user "${userId}" is "true"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CreateCountry_CheckCountry_true
+    [Documentation]    Passed geolocation should be compared with the geocondition
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "true"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CreateMultiCountry_CheckCountry_true
+    [Documentation]    Passed geolocation should be compared with the geocondition
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Russia, Germany"}
+    ${CHECK_GEO1}    Set Variable    "geo" condition with parameters {"geoPath":"Russia"}
+    ${CHECK_GEO2}    Set Variable    "geo" condition with parameters {"geoPath":"Germany"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO2}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO1}" for user "${userId}" is "true"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO2}" for user "${userId}" is "true"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CreateCountry_CheckWrongCityRegionAndCountry_false
+    [Documentation]    Passed geolocation should be compared with the geocondition
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"USA/California/San Francisco"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CreateMultiCountry_CheckWrongCityRegionAndCountry_false
+    [Documentation]    Passed geolocation should be compared with the geocondition
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Russia, Germany"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"USA/California/San Francisco"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CreateCountry_CheckWrongRegionAndCountry_false
+    [Documentation]    Passed geolocation should be compared with the geocondition
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"USA/California"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CreateMultiCountry_CheckWrongRegionAndCountry_false
+    [Documentation]    Passed geolocation should be compared with the geocondition
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Russia, Germany"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"USA/California"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CreateCountry_CheckWrongCountry_false_No1
+    [Documentation]    Passed geolocation should be compared with the geocondition
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"USA"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CreateCountry_CheckWrongCountry_false_No2
+    [Documentation]    Passed geolocation should be compared with the geocondition
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"German"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CreateCountry_CheckWrongCountry_false_No3
+    [Documentation]    Passed geolocation should be compared with the geocondition
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germanya"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CreateMultiCountry_CheckWrongCountry_false
+    [Documentation]    Passed geolocation should be compared with the geocondition
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Russia, Germany"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"USA"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CheckWithStringCondition
+    [Documentation]
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"root/subdirectory"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2011-01-01T01:01:01Z"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "true"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CheckWithPathCondition
+    [Documentation]
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"root/subdirectory"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2011-01-01T01:01:01Z"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_PATH}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "true"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_PATH}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CheckWithTimeframeCondition
+    [Documentation]
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"root/subdirectory"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2011-01-01T01:01:01Z"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}|${CHECK_TIME}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "true"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}|${CHECK_TIME}" for user "${userId}" is "true"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CheckWithMeteredCondition
+    [Documentation]
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}|${CHECK_METERED}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "true"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}|${CHECK_METERED}" for user "${userId}" is "false"
+
+### 2Users_2Entitlements
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_2Users_2Entitlements
+    [Documentation]    Simple entitlement (no conditions)
+    ${userId1} =     generate random id
+    ${userId2} =     generate random id
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${entitlementType1}      Set Variable    ENT_GEO_1
+    ${entitlementType2}      Set Variable    ENT_GEO_2
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_GEO}" for user "${userId1}" is "false"
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_GEO}" for user "${userId2}" is "false"
+    grant entitlement with entitlementType "${entitlementType1}" and conditions "${GRANT_GEO}" for user "${userId1}"
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_GEO}" for user "${userId1}" is "true"
+    ensure there are "1" entitlements for user "${userId1}"
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_GEO}" for user "${userId2}" is "false"
+    ensure there are "0" entitlements for user "${userId2}"
+    grant entitlement with entitlementType "${entitlementType1}" and conditions "${GRANT_GEO}" for user "${userId2}"
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_GEO}" for user "${userId1}" is "true"
+    ensure there are "1" entitlements for user "${userId1}"
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_GEO}" for user "${userId2}" is "true"
+    ensure there are "1" entitlements for user "${userId2}"
+    grant entitlement with entitlementType "${entitlementType2}" and conditions "${GRANT_GEO}" for user "${userId1}"
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_GEO}" for user "${userId1}" is "true"
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_GEO}" for user "${userId1}" is "true"
+    ensure there are "2" entitlements for user "${userId1}"
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_GEO}" for user "${userId2}" is "true"
+    ensure there are "1" entitlements for user "${userId2}"
+    grant entitlement with entitlementType "${entitlementType2}" and conditions "${GRANT_GEO}" for user "${userId2}"
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_GEO}" for user "${userId1}" is "true"
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_GEO}" for user "${userId1}" is "true"
+    ensure there are "2" entitlements for user "${userId1}"
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_GEO}" for user "${userId2}" is "true"
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_GEO}" for user "${userId2}" is "true"
+    ensure there are "2" entitlements for user "${userId2}"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_Country_Separators_True
+    [Documentation]    Passed geolocation should be compared with the geocondition  - no separator ends the condition string
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"USA"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"USA"}
+    ${userId} =        generate random id
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "true"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_Country_Separators_False
+    [Documentation]    Passed geolocation should be compared with the geocondition  - the separator end the condition string
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"USA/"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"USA/"}
+    ${userId} =        generate random id
+    run keyword and expect error
+    ...        IllegalArgumentException: *Please specify geoPath as 'Germany/Bavaria/Munich, Germany/Bremen, USA'
+    ...        grant entitlement with params and conditions    geo    ${userId}    ${GRANT_GEO}
+    run keyword and expect error
+    ...        IllegalArgumentException: *Please specify geoPath as 'Germany/Bavaria/Munich, Germany/Bremen, USA'
+    ...        execute entitlement with condition    check   geo    ${userId}    ${CHECK_GEO}    false
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CountryAndRegion_Separators_True
+    [Documentation]    Passed geolocation should be compared with the geocondition  - no separator ends the condition string
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"USA/California"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"USA/California"}
+    ${userId} =        generate random id
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "true"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CountryAndRegion_Separators_False
+    [Documentation]    Passed geolocation should be compared with the geocondition  - the separator end the condition string
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"USA/California/"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"USA/California/"}
+    ${userId} =        generate random id
+    run keyword and expect error
+    ...        IllegalArgumentException: *Please specify geoPath as 'Germany/Bavaria/Munich, Germany/Bremen, USA'
+    ...        grant entitlement with params and conditions    geo    ${userId}    ${GRANT_GEO}
+    run keyword and expect error
+    ...        IllegalArgumentException: *Please specify geoPath as 'Germany/Bavaria/Munich, Germany/Bremen, USA'
+    ...        execute entitlement with condition    check   geo    ${userId}    ${CHECK_GEO}    false
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CountryAndRegionAndCity_Separators_True
+    [Documentation]    Passed geolocation should be compared with the geocondition  - no separator ends the condition string
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"USA/California/San Francisco"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"USA/California/San Francisco"}
+    ${userId} =        generate random id
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO}" for user "${userId}" is "true"
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CountryAndRegionAndCity_Separators_False
+    [Documentation]    Passed geolocation should be compared with the geocondition  - the separator end the condition string
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"USA/California/San Francisco/"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"USA/California/San Francisco/"}
+    ${userId} =        generate random id
+    run keyword and expect error
+    ...        IllegalArgumentException: *Please specify geoPath as 'Germany/Bavaria/Munich, Germany/Bremen, USA'
+    ...        grant entitlement with params and conditions    geo    ${userId}    ${GRANT_GEO}
+    run keyword and expect error
+    ...        IllegalArgumentException: *Please specify geoPath as 'Germany/Bavaria/Munich, Germany/Bremen, USA'
+    ...        execute entitlement with condition    check   geo    ${userId}    ${CHECK_GEO}    false
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CountryAndCity_False
+    [Documentation]    Passed geolocation should be compared with the geocondition - condition params trim from right enabled only
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"USA//San Francisco"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"USA//San Francisco"}
+    ${userId} =        generate random id
+    run keyword and expect error
+    ...        IllegalArgumentException: *Please specify geoPath as 'Germany/Bavaria/Munich, Germany/Bremen, USA'
+    ...        grant entitlement with params and conditions    geo    ${userId}    ${GRANT_GEO}
+    run keyword and expect error
+    ...        IllegalArgumentException: *Please specify geoPath as 'Germany/Bavaria/Munich, Germany/Bremen, USA'
+    ...        execute entitlement with condition    check   geo    ${userId}    ${CHECK_GEO}    false
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_City_False
+    [Documentation]    Passed geolocation should be compared with the geocondition - condition params trim from right enabled only
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"//San Francisco"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"//San Francisco"}
+    ${userId} =        generate random id
+    run keyword and expect error
+    ...        IllegalArgumentException: *Please specify geoPath as 'Germany/Bavaria/Munich, Germany/Bremen, USA'
+    ...        grant entitlement with params and conditions    geo    ${userId}    ${GRANT_GEO}
+    run keyword and expect error
+    ...        IllegalArgumentException: *Please specify geoPath as 'Germany/Bavaria/Munich, Germany/Bremen, USA'
+    ...        execute entitlement with condition    check   geo    ${userId}    ${CHECK_GEO}    false
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_Region_False
+    [Documentation]    Passed geolocation should be compared with the geocondition - condition params trim from right enabled only
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"/California/"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"/California/"}
+    ${userId} =        generate random id
+    run keyword and expect error
+    ...        IllegalArgumentException: *Please specify geoPath as 'Germany/Bavaria/Munich, Germany/Bremen, USA'
+    ...        grant entitlement with params and conditions    geo    ${userId}    ${GRANT_GEO}
+    run keyword and expect error
+    ...        IllegalArgumentException: *Please specify geoPath as 'Germany/Bavaria/Munich, Germany/Bremen, USA'
+    ...        execute entitlement with condition    check   geo    ${userId}    ${CHECK_GEO}    false
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_CountryAndRegionAndCity
+    [Documentation]    Passed geolocation should be compared with the geocondition
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"USA/California/San Francisco"}
+    ${CHECK_GEO1}    Set Variable    "geo" condition with parameters {"geoPath":"USA/California/San Francisco"}
+    ${CHECK_GEO2}    Set Variable    "geo" condition with parameters {"geoPath":"USA/California"}
+    ${CHECK_GEO3}    Set Variable    "geo" condition with parameters {"geoPath":"USA"}
+    ${CHECK_GEO4}    Set Variable    "geo" condition with parameters {"geoPath":"USA/California/San Francisco/BLABLA"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO1}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO1}" for user "${userId}" is "true"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO2}" for user "${userId}" is "false"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO3}" for user "${userId}" is "false"
+    run keyword and expect error
+    ...        IllegalArgumentException: *Please specify geoPath as 'Germany/Bavaria/Munich, Germany/Bremen, USA'
+    ...        execute entitlement with condition    check   geo    ${userId}    ${CHECK_GEO4}    false
+
+Test_NonMeteredEntitlements_GeoConditionType_CreateAndCheck_Country_NoSeparators
+    [Documentation]    Passed geolocation should be compared with the geocondition
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"USA"}
+    ${CHECK_GEO1}    Set Variable    "geo" condition with parameters {"geoPath":"USA"}
+    ${CHECK_GEO2}    Set Variable    "geo" condition with parameters {"geoPath":"USA/"}
+    ${CHECK_GEO3}    Set Variable    "geo" condition with parameters {"geoPath":"USA//"}
+    ${CHECK_GEO4}    Set Variable    "geo" condition with parameters {"geoPath":"USA/California"}
+    ${CHECK_GEO5}    Set Variable    "geo" condition with parameters {"geoPath":"USA/California/"}
+    ${CHECK_GEO6}    Set Variable    "geo" condition with parameters {"geoPath":"USA/California/San Francisco"}
+    ${CHECK_GEO7}    Set Variable    "geo" condition with parameters {"geoPath":"USandA/California/San Francisco"}
+    ${CHECK_GEO8}    Set Variable    "geo" condition with parameters {"geoPath":"//San Francisco"}
+    ${CHECK_GEO9}    Set Variable    "geo" condition with parameters {"geoPath":"/California/"}
+    ${CHECK_GEO10}    Set Variable    "geo" condition with parameters {"geoPath":"USA//San Francisco"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO1}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "geo" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO1}" for user "${userId}" is "true"
+    run keyword and expect error
+    ...        IllegalArgumentException: *Please specify geoPath as 'Germany/Bavaria/Munich, Germany/Bremen, USA'
+    ...        execute entitlement with condition    check   geo    ${userId}    ${CHECK_GEO2}    true
+    run keyword and expect error
+    ...        IllegalArgumentException: *Please specify geoPath as 'Germany/Bavaria/Munich, Germany/Bremen, USA'
+    ...        execute entitlement with condition    check   geo    ${userId}    ${CHECK_GEO3}    true
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO4}" for user "${userId}" is "true"
+    run keyword and expect error
+    ...        IllegalArgumentException: *Please specify geoPath as 'Germany/Bavaria/Munich, Germany/Bremen, USA'
+    ...        execute entitlement with condition    check   geo    ${userId}    ${CHECK_GEO5}    true
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO6}" for user "${userId}" is "true"
+    check entitlement with entitlementType "geo" and conditions "${CHECK_GEO7}" for user "${userId}" is "false"
+    run keyword and expect error
+    ...        IllegalArgumentException: *Please specify geoPath as 'Germany/Bavaria/Munich, Germany/Bremen, USA'
+    ...        execute entitlement with condition    check   geo    ${userId}    ${CHECK_GEO8}    true
+    run keyword and expect error
+    ...        IllegalArgumentException: *Please specify geoPath as 'Germany/Bavaria/Munich, Germany/Bremen, USA'
+    ...        execute entitlement with condition    check   geo    ${userId}    ${CHECK_GEO9}    true
+    run keyword and expect error
+    ...        IllegalArgumentException: *Please specify geoPath as 'Germany/Bavaria/Munich, Germany/Bremen, USA'
+    ...        execute entitlement with condition    check   geo    ${userId}    ${CHECK_GEO10}    true
+    
+Test_NonMeteredEntitlements_PathConditionType_CreateAndCheck_MulitpleEntitlements_True
+    [Documentation]    Tests if it is possible to create multiple grants for entitlements with same 
+    ...                userId, entitlementType, grantSource & grantSourceId 
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${userId} =        generate random id
+    ensure there are "0" entitlements for user "${userId}"
+    grant entitlement with entitlementType "ENT_GEO" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "ENT_GEO" and conditions "${CHECK_GEO}" for user "${userId}" is "true"
+    ensure there are "1" entitlements for user "${userId}"
+    grant entitlement with entitlementType "ENT_GEO" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "ENT_GEO" and conditions "${CHECK_GEO}" for user "${userId}" is "true"
+    ensure there are "2" entitlements for user "${userId}"
+    grant entitlement with entitlementType "ENT_GEO" and conditions "${GRANT_GEO}" for user "${userId}"
+    check entitlement with entitlementType "ENT_GEO" and conditions "${CHECK_GEO}" for user "${userId}" is "true"
+    ensure there are "3" entitlements for user "${userId}"    

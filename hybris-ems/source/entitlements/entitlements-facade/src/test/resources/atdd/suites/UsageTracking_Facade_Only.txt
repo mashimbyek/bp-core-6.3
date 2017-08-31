@@ -1,0 +1,105 @@
+# -----------------------------------------------------------------------
+# [y] hybris Platform
+#
+# Copyright (c) 2017 SAP SE or an SAP affiliate company.  All rights reserved.
+# 
+# This software is the confidential and proprietary information of SAP
+# ("Confidential Information"). You shall not disclose such Confidential
+# Information and shall use it only in accordance with the terms of the
+# license agreement you entered into with SAP.
+# -----------------------------------------------------------------------
+*** Settings ***
+Resource    entitlements-test/settings_keywords.txt
+Resource    entitlements-test/builder_entitlements_keywords.txt
+Resource    entitlements-test/modify_entitlements_keywords.txt
+Resource    entitlements-test/exceptions_entitlements_keywords.txt
+Resource    entitlements-test/check_entitlements_keywords.txt
+Resource    entitlements-test/use_entitlements_keywords.txt
+Resource    entitlements-test/logger_keywords.txt
+
+*** Variables ***
+${ISO_DATE_PATTERN}    ([0-9]{4})-(1[0-2]|0[1-9])-(3[0-1]|0[1-9]|[1-2][0-9])T(2[0-3]|[01]?[0-9]):([0-5]?[0-9]):([0-5]?[0-9])?(Z)
+${USAGE_LOGGER}   com.hybris.services.entitlements.service.impl.DefaultGrantService
+
+*** Test Cases ***
+Test_TrackUsage_MeteredEntitlements_UseSingle_NoOverage
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "3", "allowOverage" : "false"}
+    ${USE_METERED_1} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    start recording logger "${USAGE_LOGGER}"
+    use entitlement with entitlementType "ENT_METERED" and conditions "${USE_METERED_1}" for user "${userId}" is "false"
+    ${entitlement}=    grant entitlement with entitlementType "ENT_METERED" and conditions "${GRANT_METERED}" for user "${userId}"
+    use entitlement with entitlementType "ENT_METERED" and conditions "${USE_METERED_1}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_METERED" and conditions "${USE_METERED_1}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_METERED" and conditions "${USE_METERED_1}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_METERED" and conditions "${USE_METERED_1}" for user "${userId}" is "false"
+    check message count in logger "${USAGE_LOGGER}" is 3
+    check message 1 in logger "${USAGE_LOGGER}" matches pattern "^use,${ISO_DATE_PATTERN},${userId},${entitlement.id},ENT_METERED,3,1,2,false$"
+    check message 2 in logger "${USAGE_LOGGER}" matches pattern "^use,${ISO_DATE_PATTERN},${userId},${entitlement.id},ENT_METERED,3,1,1,false$"
+    check message 3 in logger "${USAGE_LOGGER}" matches pattern "^use,${ISO_DATE_PATTERN},${userId},${entitlement.id},ENT_METERED,3,1,0,false$"
+
+Test_TrackUsage_MeteredEntitlements_UseSingle_AllowOverage
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "3", "allowOverage" : "true"}
+    ${USE_METERED_1} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    start recording logger "${USAGE_LOGGER}"
+    use entitlement with entitlementType "ENT_METERED" and conditions "${USE_METERED_1}" for user "${userId}" is "false"
+    ${entitlement}=    grant entitlement with entitlementType "ENT_METERED" and conditions "${GRANT_METERED}" for user "${userId}"
+    use entitlement with entitlementType "ENT_METERED" and conditions "${USE_METERED_1}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_METERED" and conditions "${USE_METERED_1}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_METERED" and conditions "${USE_METERED_1}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_METERED" and conditions "${USE_METERED_1}" for user "${userId}" is "true"
+    check message count in logger "${USAGE_LOGGER}" is 4
+    check message 1 in logger "${USAGE_LOGGER}" matches pattern "^use,${ISO_DATE_PATTERN},${userId},${entitlement.id},ENT_METERED,3,1,2,false$"
+    check message 2 in logger "${USAGE_LOGGER}" matches pattern "^use,${ISO_DATE_PATTERN},${userId},${entitlement.id},ENT_METERED,3,1,1,false$"
+    check message 3 in logger "${USAGE_LOGGER}" matches pattern "^use,${ISO_DATE_PATTERN},${userId},${entitlement.id},ENT_METERED,3,1,0,false$"
+    check message 4 in logger "${USAGE_LOGGER}" matches pattern "^use,${ISO_DATE_PATTERN},${userId},${entitlement.id},ENT_METERED,3,1,-1,true$"
+
+Test_TrackUsage_MeteredEntitlements_UseMulti_NoOverage
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "6", "allowOverage" : "false"}
+    ${USE_METERED_1} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${USE_METERED_2} =         Set Variable        "metered" condition with parameters {"quantity": "2"}
+    ${USE_METERED_3} =         Set Variable        "metered" condition with parameters {"quantity": "3"}
+    start recording logger "${USAGE_LOGGER}"
+    use entitlement with entitlementType "ENT_METERED" and conditions "${USE_METERED_1}" for user "${userId}" is "false"
+    ${entitlement}=    grant entitlement with entitlementType "ENT_METERED" and conditions "${GRANT_METERED}" for user "${userId}"
+    use entitlement with entitlementType "ENT_METERED" and conditions "${USE_METERED_1}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_METERED" and conditions "${USE_METERED_2}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_METERED" and conditions "${USE_METERED_3}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_METERED" and conditions "${USE_METERED_1}" for user "${userId}" is "false"
+    check message count in logger "${USAGE_LOGGER}" is 3
+    check message 1 in logger "${USAGE_LOGGER}" matches pattern "^use,${ISO_DATE_PATTERN},${userId},${entitlement.id},ENT_METERED,6,1,5,false$"
+    check message 2 in logger "${USAGE_LOGGER}" matches pattern "^use,${ISO_DATE_PATTERN},${userId},${entitlement.id},ENT_METERED,6,2,3,false$"
+    check message 3 in logger "${USAGE_LOGGER}" matches pattern "^use,${ISO_DATE_PATTERN},${userId},${entitlement.id},ENT_METERED,6,3,0,false$"
+
+Test_TrackUsage_MeteredEntitlements_UseMulti_AllowOverage
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "3", "allowOverage" : "true"}
+    ${USE_METERED_1} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${USE_METERED_2} =         Set Variable        "metered" condition with parameters {"quantity": "2"}
+    start recording logger "${USAGE_LOGGER}"
+    use entitlement with entitlementType "ENT_METERED" and conditions "${USE_METERED_1}" for user "${userId}" is "false"
+    ${entitlement}=    grant entitlement with entitlementType "ENT_METERED" and conditions "${GRANT_METERED}" for user "${userId}"
+    use entitlement with entitlementType "ENT_METERED" and conditions "${USE_METERED_2}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_METERED" and conditions "${USE_METERED_2}" for user "${userId}" is "true"
+    check message count in logger "${USAGE_LOGGER}" is 3
+    check message 1 in logger "${USAGE_LOGGER}" matches pattern "^use,${ISO_DATE_PATTERN},${userId},${entitlement.id},ENT_METERED,3,2,1,false$"
+    check message 2 in logger "${USAGE_LOGGER}" matches pattern "^use,${ISO_DATE_PATTERN},${userId},${entitlement.id},ENT_METERED,3,1,0,false$"
+    check message 3 in logger "${USAGE_LOGGER}" matches pattern "^use,${ISO_DATE_PATTERN},${userId},${entitlement.id},ENT_METERED,3,1,-1,true$"
+
+Test_TrackUsage_MeteredEntitlements_UseMulti_AllowOverage_TEST
+    ${userId} =         generate random id
+    ${GRANT_1} =         Set Variable        "metered" condition with parameters {"maxQuantity": "2", "allowOverage" : "false"}
+    ${GRANT_2} =         Set Variable        "metered" condition with parameters {"maxQuantity": "10", "allowOverage" : "false"}
+    ${GRANT_3} =         Set Variable        "metered" condition with parameters {"maxQuantity": "2", "allowOverage" : "false"}
+    ${GRANT_4} =         Set Variable        "metered" condition with parameters {"maxQuantity": "2", "allowOverage" : "false"}
+    ${GRANT_5} =         Set Variable        "metered" condition with parameters {"maxQuantity": "2", "allowOverage" : "false"}
+    ${GRANT_6} =         Set Variable        "metered" condition with parameters {"maxQuantity": "2", "allowOverage" : "false"}
+    ${GRANT_7} =         Set Variable        "metered" condition with parameters {"maxQuantity": "2", "allowOverage" : "false"}
+    ${GRANT_8} =         Set Variable        "metered" condition with parameters {"maxQuantity": "2", "allowOverage" : "false"}
+    ${USE_METERED_1} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${USE_METERED_2} =         Set Variable        "metered" condition with parameters {"quantity": "2"}
+    start recording logger "${USAGE_LOGGER}"
+    use entitlement with entitlementType "ENT_GRANT_1" and conditions "${USE_METERED_1}" for user "${userId}" is "false"
+    ${entitlement}=    grant entitlement with entitlementType "ENT_GRANT_1" and conditions "${GRANT_1}" for user "${userId}"

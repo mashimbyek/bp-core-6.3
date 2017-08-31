@@ -1,0 +1,56 @@
+# -----------------------------------------------------------------------
+# [y] hybris Platform
+#
+# Copyright (c) 2017 SAP SE or an SAP affiliate company.  All rights reserved.
+# 
+# This software is the confidential and proprietary information of SAP
+# ("Confidential Information"). You shall not disclose such Confidential
+# Information and shall use it only in accordance with the terms of the
+# license agreement you entered into with SAP.
+# -----------------------------------------------------------------------
+*** Settings ***
+Resource    entitlements-test/settings_keywords.txt
+Resource    entitlements-test/builder_entitlements_keywords.txt
+Resource    entitlements-test/modify_entitlements_keywords.txt
+Resource    entitlements-test/exceptions_entitlements_keywords.txt
+Resource    entitlements-test/check_entitlements_keywords.txt
+Resource    entitlements-test/use_entitlements_keywords.txt
+Resource    entitlements-test/add_usage_entitlements_keywords.txt
+
+*** Test Cases ***
+#create another ent. granted for another user and check
+#IS IT POSSIBLE FOR ANY ENTITLEMENT TYPE: WITH/WITHOUT CONDITIONS?
+
+Test_addUsage_NotFoundException
+    [Documentation]    NotFoundException.
+    ${userId} =     generate random id
+    ${simpleGrant}=    grant entitlement with entitlementType "simple" for user "${userId}"
+    revoke entitlement with grantId "${simpleGrant.id}"
+    add 0 usage for grant "${simpleGrant.id}" and expect exception "ObjectNotFoundException" with message "The object with id = [${simpleGrant.id}] doesn't exist."
+
+Test_addUsage_UndefinedProperty
+    [Documentation]    add usage test.
+    ${userId} =     generate random id
+    ${simpleGrant}=    grant entitlement with entitlementType "simple" for user "${userId}"
+    add 0 usage for grant "${simpleGrant.id}" and expect exception "ValidationException" with message "Property remainingQuantity doesn't exist."
+    # WHAT VALIDATION EXCEPTION???? NON METERED CONDITION EXCEPTION?
+
+Test_addUsage_positive
+    [Documentation]    add usage test positive.
+    ${userId} =     generate random id
+    ${simpleGrant}=    grant entitlement with entitlementType "simple" for user "${userId}"
+    set property name "remainingQuantity" and value "0" for entitlement with id "${simpleGrant.id}"
+    add 1 usage for grant "${simpleGrant.id}"
+    assert used quantity is 1 for grant id ${simpleGrant.id}
+    add 1 usage for grant "${simpleGrant.id}"
+    assert used quantity is 2 for grant id ${simpleGrant.id}
+    #VALUES MUST BE PROVIDED IN ""!!!!!!
+    #WHAT DOES IT HAVE TO DO THE  property name "remainingQuantity" AND  add 1 usage for grant "${simpleGrant.id}" ????
+
+Test_addUsage_negative
+    [Documentation]    add usage test negative.
+    ${userId} =     generate random id
+    ${simpleGrant}=    grant entitlement with entitlementType "simple" for user "${userId}"
+    set property name "remainingQuantity" and value "1" for entitlement with id "${simpleGrant.id}"
+    add -1 usage for grant "${simpleGrant.id}"
+    assert used quantity is 0 for grant id ${simpleGrant.id}

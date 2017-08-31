@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="entry" type="localizedStringEntryType"/>
+  <xs:element name="localizedStringMapType" type="localizedStringMapType"/>
+  <xs:element name="executeManyData" type="executeManyData"/>
+  <xs:element name="executeManyResult" type="executeManyResult"/>
+  <xs:element name="executeResult" type="executeResult"/>
+  <xs:element name="grantData" type="grantData"/>
+  <xs:element name="listOfCondition" type="listOfConditionData"/>
+  <xs:element name="listOfCriterion" type="listOfCriterionData"/>
+  <xs:element name="listOfExecuteMany" type="listOfExecuteManyData"/>
+  <xs:element name="listOfGrants" type="listOfGrantData"/>
+  <xs:element name="propertyData" type="propertyData"/>
+  <xs:element name="statusData" type="statusData"/>
+  <xs:complexType name="abstractPropertyAwareDto" abstract="true">
+    <xs:sequence>
+      <xs:element name="properties" type="localizedStringMapType" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="localizedStringEntryType">
+    <xs:attribute name="value" type="xs:string"/>
+    <xs:attribute name="key" type="xs:string"/>
+  </xs:complexType>
+  <xs:complexType name="localizedStringMapType">
+    <xs:sequence>
+      <xs:element name="entry" type="localizedStringEntryType" minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="executeManyData">
+    <xs:sequence>
+      <xs:element name="entitlementType" type="xs:string" minOccurs="0"/>
+      <xs:element name="criterionDataList" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="criterionDataList" type="criterionData" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="executeManyResult">
+    <xs:sequence>
+      <xs:element name="executeResultList" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="executeResult" type="executeResult" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="executeResult">
+    <xs:sequence>
+      <xs:element name="result" type="xs:boolean" minOccurs="1"/>
+      <xs:element name="grantDataList" type="grantData" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="grantData">
+    <xs:complexContent>
+      <xs:extension base="abstractPropertyAwareDto">
+        <xs:sequence>
+          <xs:element name="grantTime" type="xs:string" minOccurs="0"/>
+          <xs:element name="conditions" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="condition" type="conditionData" minOccurs="0" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="grantSourceId" type="xs:string" minOccurs="0"/>
+          <xs:element name="grantSource" type="xs:string" minOccurs="0"/>
+          <xs:element name="userId" type="xs:string" minOccurs="0"/>
+          <xs:element name="status" type="status" minOccurs="0"/>
+          <xs:element name="entitlementType" type="xs:string" minOccurs="0"/>
+          <xs:element name="id" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="listOfConditionData">
+    <xs:sequence>
+      <xs:element name="conditions" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="condition" type="conditionData" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="listOfCriterionData">
+    <xs:sequence>
+      <xs:element name="criterions" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="criterion" type="criterionData" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="listOfExecuteManyData">
+    <xs:sequence>
+      <xs:element name="executeManyDataList" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="executeManyData" type="executeManyData" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="listOfGrantData">
+    <xs:sequence>
+      <xs:element name="grants" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="grant" type="grantData" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="propertyData">
+    <xs:sequence>
+      <xs:element name="relative" type="xs:boolean" minOccurs="1"/>
+      <xs:element name="value" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="status">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="ACTIVE"/>
+      <xs:enumeration value="SUSPENDED"/>
+      <xs:enumeration value="REVOKED"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="statusData">
+    <xs:sequence>
+      <xs:element name="status" type="status" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="abstractConditionData">
+    <xs:complexContent>
+      <xs:extension base="abstractPropertyAwareDto">
+        <xs:sequence>
+          <xs:element name="type" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="conditionData">
+    <xs:complexContent>
+      <xs:extension base="abstractConditionData"/>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="criterionData">
+    <xs:complexContent>
+      <xs:extension base="abstractConditionData"/>
+    </xs:complexContent>
+  </xs:complexType>
+</xs:schema>

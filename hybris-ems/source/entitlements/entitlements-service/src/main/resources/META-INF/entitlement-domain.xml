@@ -1,0 +1,77 @@
+<!--
+ [y] hybris Platform
+
+ Copyright (c) 2017 SAP SE or an SAP affiliate company.  All rights reserved.
+
+ This software is the confidential and proprietary information of SAP
+ ("Confidential Information"). You shall not disclose such Confidential
+ Information and shall use it only in accordance with the terms of the
+ license agreement you entered into with SAP.
+-->
+<types xmlns="http://www.hybris.com/schema/ondemand/domain"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.hybris.com/schema/ondemand/domain http://www.hybris.com/schema/ondemand/domain.xsd"
+       package="com.hybris.services.entitlements.domain">
+
+    <managedobjects>
+        <managedobject code="Grant" properties="true">
+            <persistence name="Grant">
+				<index name="natural_key" unique="false">
+					<attribute name="userId"/>
+					<attribute name="entitlementType"/>
+					<attribute name="grantSource"/>
+					<attribute name="grantSourceId"/>
+					<attribute name="status"/>
+				</index>
+				<index name="access_key" unique="true">
+					<attribute name="grantId"/>
+				</index>
+			</persistence>
+            <versionattribute name="version"/>
+            <attributes>
+				<attribute name="grantId" type="String">
+					<modifiers mandatory="true"/>
+				</attribute>
+                <attribute name="userId" type="String">
+                    <modifiers mandatory="true"/>
+                </attribute>
+                <!-- reference to the reason of grant creation -->
+                <attribute name="grantSource" type="String">
+                    <modifiers mandatory="true"/>
+                </attribute>
+                <attribute name="grantSourceId" type="String">
+                    <modifiers mandatory="true"/>
+                </attribute>
+                <!-- creation date -->
+                <attribute name="grantTime" type="Date">
+                    <modifiers mandatory="true"/>
+                </attribute>
+                <!-- the id of the entitled product -->
+                <attribute name="entitlementType" type="String">
+                    <modifiers mandatory="true"/>
+                </attribute>
+                <attribute name="status" type="String">
+                    <defaultvalue>ACTIVE</defaultvalue>
+                </attribute>
+                <attribute name="conditions" type="Collection(Condition)">
+					<modifiers partof="true"/>
+				</attribute>
+            </attributes>
+			<pk>
+				<attribute name="grantId"/>
+			</pk>
+        </managedobject>
+
+        <managedobject code="Condition" properties="true">
+            <versionattribute name="version"/>
+            <persistence partOfOnly="true"/>
+            <attributes>
+                <attribute name="type" type="String">
+                    <modifiers mandatory="true" />
+                </attribute>
+            </attributes>
+        </managedobject>
+    </managedobjects>
+
+</types>
+

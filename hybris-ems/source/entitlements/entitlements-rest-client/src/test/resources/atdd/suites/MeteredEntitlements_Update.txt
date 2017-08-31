@@ -1,0 +1,271 @@
+# -----------------------------------------------------------------------
+# [y] hybris Platform
+#
+# Copyright (c) 2017 SAP SE or an SAP affiliate company.  All rights reserved.
+# 
+# This software is the confidential and proprietary information of SAP
+# ("Confidential Information"). You shall not disclose such Confidential
+# Information and shall use it only in accordance with the terms of the
+# license agreement you entered into with SAP.
+# -----------------------------------------------------------------------
+*** Settings ***
+Resource    entitlements-test/settings_keywords.txt
+Resource    entitlements-test/builder_entitlements_keywords.txt
+Resource    entitlements-test/modify_entitlements_keywords.txt
+Resource    entitlements-test/exceptions_entitlements_keywords.txt
+Resource    entitlements-test/check_entitlements_keywords.txt
+Resource    entitlements-test/use_entitlements_keywords.txt
+Resource    entitlements-test/add_usage_entitlements_keywords.txt
+
+*** Test Cases ***
+
+Test_MeteredEntitlements_Update_MaxQuantity_No1
+    [Documentation]     Update maxQuantity for entitlement with metered condition
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "1", "allowOverage" : "false"}
+    ${GRANT_METERED_UPDATED} =    Set Variable    "metered" condition with parameters {"maxQuantity": "2", "allowOverage" : "false"}
+    ${CHECK_METERED_1} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${CHECK_METERED_2} =         Set Variable        "metered" condition with parameters {"quantity": "2"}
+    ${CHECK_METERED_3} =         Set Variable        "metered" condition with parameters {"quantity": "3"}
+    ${entitlementType}      Set Variable    ENT_METERED
+    ${entitlement}=    grant entitlement with entitlementType "${entitlementType}" and conditions "${GRANT_METERED}" for user "${userId}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED_1}" for user "${userId}" is "true"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED_2}" for user "${userId}" is "false"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED_3}" for user "${userId}" is "false"
+    ${entitlementUpdated}=    remove all conditions from entitlement "${entitlement}"
+    add condition "${GRANT_METERED_UPDATED}" to entitlement "${entitlementUpdated}"
+    update entitlement "${entitlementUpdated}"
+    add 1 usage for grant "${entitlementUpdated.id}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED_1}" for user "${userId}" is "true"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED_2}" for user "${userId}" is "true"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED_3}" for user "${userId}" is "false"
+
+Test_MeteredEntitlements_Update_MaxQuantity_No2
+    [Documentation]     Update maxQuantity for entitlement with metered condition
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "2", "allowOverage" : "false"}
+    ${GRANT_METERED_UPDATED} =    Set Variable    "metered" condition with parameters {"maxQuantity": "1", "allowOverage" : "false"}
+    ${CHECK_METERED_1} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${CHECK_METERED_2} =         Set Variable        "metered" condition with parameters {"quantity": "2"}
+    ${CHECK_METERED_3} =         Set Variable        "metered" condition with parameters {"quantity": "3"}
+    ${entitlementType} =      Set Variable    ENT_METERED
+    ${entitlement}=    grant entitlement with entitlementType "${entitlementType}" and conditions "${GRANT_METERED}" for user "${userId}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED_1}" for user "${userId}" is "true"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED_2}" for user "${userId}" is "true"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED_3}" for user "${userId}" is "false"
+    ${entitlementUpdated}=    remove all conditions from entitlement "${entitlement}"
+    add condition "${GRANT_METERED_UPDATED}" to entitlement "${entitlementUpdated}"
+    update entitlement "${entitlementUpdated}"
+    add -1 usage for grant "${entitlementUpdated.id}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED_1}" for user "${userId}" is "true"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED_2}" for user "${userId}" is "false"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED_3}" for user "${userId}" is "false"
+
+Test_MeteredEntitlements_Update_AllowOverage_No1
+    [Documentation]     Update overage for entitlement with metered condition
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "1", "allowOverage" : "false"}
+    ${GRANT_METERED_UPDATED} =    Set Variable    "metered" condition with parameters {"maxQuantity": "1", "allowOverage" : "true"}
+    ${CHECK_METERED_1} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${CHECK_METERED_2} =         Set Variable        "metered" condition with parameters {"quantity": "2"}
+    ${CHECK_METERED_3} =         Set Variable        "metered" condition with parameters {"quantity": "3"}
+    ${entitlementType}      Set Variable    ENT_METERED
+    ${entitlement}=    grant entitlement with entitlementType "${entitlementType}" and conditions "${GRANT_METERED}" for user "${userId}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED_1}" for user "${userId}" is "true"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED_2}" for user "${userId}" is "false"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED_3}" for user "${userId}" is "false"
+    ${entitlementUpdated}=    remove all conditions from entitlement "${entitlement}"
+    add condition "${GRANT_METERED_UPDATED}" to entitlement "${entitlementUpdated}"
+    update entitlement "${entitlementUpdated}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED_1}" for user "${userId}" is "true"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED_2}" for user "${userId}" is "true"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED_3}" for user "${userId}" is "true"
+
+Test_MeteredEntitlements_Update_AllowOverage_No2
+    [Documentation]     Update overage for entitlement with metered condition
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "1", "allowOverage" : "true"}
+    ${GRANT_METERED_UPDATED} =    Set Variable    "metered" condition with parameters {"maxQuantity": "1", "allowOverage" : "false"}
+    ${CHECK_METERED_1} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${CHECK_METERED_2} =         Set Variable        "metered" condition with parameters {"quantity": "2"}
+    ${CHECK_METERED_3} =         Set Variable        "metered" condition with parameters {"quantity": "3"}
+    ${entitlementType}      Set Variable    ENT_METERED
+    ${entitlement}=    grant entitlement with entitlementType "${entitlementType}" and conditions "${GRANT_METERED}" for user "${userId}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED_1}" for user "${userId}" is "true"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED_2}" for user "${userId}" is "true"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED_3}" for user "${userId}" is "true"
+    ${entitlementUpdated}=    remove all conditions from entitlement "${entitlement}"
+    add condition "${GRANT_METERED_UPDATED}" to entitlement "${entitlementUpdated}"
+    update entitlement "${entitlementUpdated}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED_1}" for user "${userId}" is "true"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED_2}" for user "${userId}" is "false"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED_3}" for user "${userId}" is "false"
+
+Test_MeteredEntitlements_Update_GrantSource_And_GrantSourceId
+    [Documentation]     Update - grantSource and grantSourceId shouldn't be possible to update
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "1", "allowOverage" : "false"}
+    ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${entitlementType}      Set Variable    ENT_METERED
+    ${entitlement}=    create entitlement with entitlementType "${entitlementType}" for user "${userId}"
+    assign grantSource "grantSource_1" to entitlement "${entitlement}"
+    assign grantSourceId "grantSourceId_1" to entitlement "${entitlement}"
+    add condition "${GRANT_METERED}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "grantSource_1", grantSourceId "grantSourceId_1" for user "${userId}" is "true" in DB
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "grantSource_2", grantSourceId "grantSourceId_1" for user "${userId}" is "false" in DB
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "grantSource_1", grantSourceId "grantSourceId_2" for user "${userId}" is "false" in DB
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "grantSource_2", grantSourceId "grantSourceId_2" for user "${userId}" is "false" in DB
+    assign grantSource "grantSource_2" to entitlement "${entitlement}"
+    update entitlement "${entitlement}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "grantSource_1", grantSourceId "grantSourceId_1" for user "${userId}" is "true" in DB
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "grantSource_2", grantSourceId "grantSourceId_1" for user "${userId}" is "false" in DB
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "grantSource_1", grantSourceId "grantSourceId_2" for user "${userId}" is "false" in DB
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "grantSource_2", grantSourceId "grantSourceId_2" for user "${userId}" is "false" in DB
+    assign grantSourceId "grantSourceId_2" to entitlement "${entitlement}"
+    update entitlement "${entitlement}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "grantSource_1", grantSourceId "grantSourceId_1" for user "${userId}" is "true" in DB
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "grantSource_2", grantSourceId "grantSourceId_1" for user "${userId}" is "false" in DB
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "grantSource_1", grantSourceId "grantSourceId_2" for user "${userId}" is "false" in DB
+    ensure that entitlement with entitlementType "${entitlementType}" and grantSource "grantSource_2", grantSourceId "grantSourceId_2" for user "${userId}" is "false" in DB
+
+Test_MeteredEntitlements_Update_MeteredCondition_To_WithoutConditions
+    [Documentation]     Update overage for entitlement with metered condition
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "1", "allowOverage" : "true"}
+    ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${entitlementType} =      Set Variable    ENT_TYPE
+    ${entitlement}=    grant entitlement with entitlementType "${entitlementType}" and conditions "${GRANT_METERED}" for user "${userId}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    check entitlement with entitlementType "${entitlementType}" for user "${userId}" is "false"
+    ${entitlementUpdated}=    remove all conditions from entitlement "${entitlement}"
+    update entitlement "${entitlementUpdated}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    check entitlement with entitlementType "${entitlementType}" for user "${userId}" is "true"
+
+Test_MeteredEntitlements_Update_MeteredCondition_To_StringCondition
+    [Documentation]     Update overage for entitlement with metered condition
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "1", "allowOverage" : "true"}
+    ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${entitlementType} =      Set Variable    ENT_TYPE
+    ${GRANT_STR}       Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${entitlement}=    grant entitlement with entitlementType "${entitlementType}" and conditions "${GRANT_METERED}" for user "${userId}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+    ${entitlementUpdated}=    remove all conditions from entitlement "${entitlement}"
+    add condition "${GRANT_STR}" to entitlement "${entitlementUpdated}"
+    update entitlement "${entitlementUpdated}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_STR}" for user "${userId}" is "true"
+
+Test_MeteredEntitlements_Update_MeteredCondition_To_PathCondition
+    [Documentation]     Update overage for entitlement with metered condition
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "1", "allowOverage" : "true"}
+    ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${GRANT_PATH}      Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root"}
+    ${entitlementType} =      Set Variable    ENT_TYPE
+    ${entitlement}=    grant entitlement with entitlementType "${entitlementType}" and conditions "${GRANT_METERED}" for user "${userId}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_PATH}" for user "${userId}" is "false"
+    ${entitlementUpdated}=    remove all conditions from entitlement "${entitlement}"
+    add condition "${GRANT_PATH}" to entitlement "${entitlementUpdated}"
+    update entitlement "${entitlementUpdated}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_PATH}" for user "${userId}" is "true"
+
+Test_MeteredEntitlements_Update_MeteredCondition_To_TimeframeCondition
+    [Documentation]     Update overage for entitlement with metered condition
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "1", "allowOverage" : "true"}
+    ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${entitlementType} =      Set Variable    ENT_TYPE
+    ${entitlement}=    grant entitlement with entitlementType "${entitlementType}" and conditions "${GRANT_METERED}" for user "${userId}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}|${CHECK_TIME}" for user "${userId}" is "true"
+    ${entitlementUpdated}=    remove all conditions from entitlement "${entitlement}"
+    add condition "${GRANT_TIME}" to entitlement "${entitlementUpdated}"
+    update entitlement "${entitlementUpdated}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_TIME}" for user "${userId}" is "true"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}|${CHECK_TIME}" for user "${userId}" is "false"
+
+Test_MeteredEntitlements_Update_MeteredCondition_To_GeoCondition
+    [Documentation]     Update overage for entitlement with metered condition
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "1", "allowOverage" : "true"}
+    ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${entitlementType} =      Set Variable    ENT_TYPE
+    ${entitlement}=    grant entitlement with entitlementType "${entitlementType}" and conditions "${GRANT_METERED}" for user "${userId}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    ${entitlementUpdated}=    remove all conditions from entitlement "${entitlement}"
+    add condition "${GRANT_GEO}" to entitlement "${entitlementUpdated}"
+    update entitlement "${entitlementUpdated}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_GEO}" for user "${userId}" is "true"
+
+Test_MeteredEntitlements_Update_MeteredCondition_To_StringAndPathAndTimeframeAndGeoCondition
+    [Documentation]     Update overage for entitlement with metered condition
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "1", "allowOverage" : "true"}
+    ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${GRANT_STR}       Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${GRANT_PATH}      Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root"}
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${entitlementType} =      Set Variable    ENT_TYPE
+    ${entitlement}=    grant entitlement with entitlementType "${entitlementType}" and conditions "${GRANT_METERED}" for user "${userId}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}|${CHECK_GEO}" for user "${userId}" is "false"
+    ${entitlementUpdated}=    remove all conditions from entitlement "${entitlement}"
+    add condition "${GRANT_STR}" to entitlement "${entitlementUpdated}"
+    add condition "${GRANT_PATH}" to entitlement "${entitlementUpdated}"
+    add condition "${GRANT_TIME}" to entitlement "${entitlementUpdated}"
+    add condition "${GRANT_GEO}" to entitlement "${entitlementUpdated}"
+    update entitlement "${entitlementUpdated}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}|${CHECK_GEO}" for user "${userId}" is "true"
+
+Test_MeteredEntitlements_Update_MeteredCondition_To_MeteredAndStringAndPathAndTimeframeAndGeoCondition
+    [Documentation]     Update
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "1", "allowOverage" : "true"}
+    ${GRANT_METERED_UPDATED} =    Set Variable    "metered" condition with parameters {"maxQuantity": "2", "allowOverage" : "false"}
+    ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${GRANT_STR}       Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${GRANT_PATH}      Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root"}
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${entitlementType} =      Set Variable    ENT_TYPE
+    ${entitlement}=    grant entitlement with entitlementType "${entitlementType}" and conditions "${GRANT_METERED}" for user "${userId}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "true"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}|${CHECK_GEO}|${CHECK_METERED}" for user "${userId}" is "false"
+    ${entitlementUpdated}=    remove all conditions from entitlement "${entitlement}"
+    add condition "${GRANT_STR}" to entitlement "${entitlementUpdated}"
+    add condition "${GRANT_PATH}" to entitlement "${entitlementUpdated}"
+    add condition "${GRANT_TIME}" to entitlement "${entitlementUpdated}"
+    add condition "${GRANT_GEO}" to entitlement "${entitlementUpdated}"
+    add condition "${GRANT_METERED_UPDATED}" to entitlement "${entitlementUpdated}"
+    update entitlement "${entitlementUpdated}"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    check entitlement with entitlementType "${entitlementType}" and conditions "${CHECK_STR}|${CHECK_PATH}|${CHECK_TIME}|${CHECK_GEO}|${CHECK_METERED}" for user "${userId}" is "true"

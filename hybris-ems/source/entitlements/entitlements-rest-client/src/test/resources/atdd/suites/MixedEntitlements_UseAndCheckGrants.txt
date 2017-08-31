@@ -1,0 +1,524 @@
+# -----------------------------------------------------------------------
+# [y] hybris Platform
+#
+# Copyright (c) 2017 SAP SE or an SAP affiliate company.  All rights reserved.
+# 
+# This software is the confidential and proprietary information of SAP
+# ("Confidential Information"). You shall not disclose such Confidential
+# Information and shall use it only in accordance with the terms of the
+# license agreement you entered into with SAP.
+# -----------------------------------------------------------------------
+*** Settings ***
+Resource    entitlements-test/settings_keywords.txt
+Resource    entitlements-test/builder_entitlements_keywords.txt
+Resource    entitlements-test/modify_entitlements_keywords.txt
+Resource    entitlements-test/exceptions_entitlements_keywords.txt
+Resource    entitlements-test/check_entitlements_keywords.txt
+Resource    entitlements-test/use_entitlements_keywords.txt
+
+*** Test Cases ***
+
+### METERED + STRING:
+Test_MixedEntitlements_UseAndCheckGrants_Use_StringConditionType_AllowOverageTrue
+    [Documentation]
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "3", "allowOverage" : "true"}
+    ${USE_METERED_1} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${USE_METERED_2} =         Set Variable        "metered" condition with parameters {"quantity": "2"}
+    ${USE_METERED_4} =         Set Variable        "metered" condition with parameters {"quantity": "4"}
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${USE_STR_TRUE}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${USE_STR_FALSE}    Set Variable    "string" condition with parameters {"string":"zxc"}
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_TRUE}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_MIXED" and conditions "${GRANT_METERED}|${GRANT_STR}" for user "${userId}"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_STR_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_TRUE}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_2}|${USE_STR_TRUE}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_4}|${USE_STR_TRUE}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_TRUE}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_FALSE}" for user "${userId}" is "false"
+
+Test_MixedEntitlements_UseAndCheckGrants_Use_StringConditionType_AllowOverageFalse
+    [Documentation]
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "3", "allowOverage" : "false"}
+    ${USE_METERED_1} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${USE_METERED_2} =         Set Variable        "metered" condition with parameters {"quantity": "2"}
+    ${USE_METERED_4} =         Set Variable        "metered" condition with parameters {"quantity": "4"}
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${USE_STR_TRUE}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${USE_STR_FALSE}    Set Variable    "string" condition with parameters {"string":"zxc"}
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_TRUE}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_MIXED" and conditions "${GRANT_METERED}|${GRANT_STR}" for user "${userId}"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_STR_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_4}|${USE_STR_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_TRUE}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_TRUE}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_2}|${USE_STR_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_TRUE}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_TRUE}" for user "${userId}" is "false"
+
+Test_MixedEntitlements_UseAndCheckGrants_CheckGrants_StringConditionType_AllowOverageFalse_DetailsFlag_No1
+    [Documentation]
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "2", "allowOverage" : "false"}
+    ${CHECK_METERED_1} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${USE_METERED_1} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR_TRUE}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR_FALSE}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${USE_STR_TRUE}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${USE_STR_FALSE}    Set Variable    "string" condition with parameters {"string":"zxc"}
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED_1}|${CHECK_STR_TRUE}" if retrieve details set to "true" for user "${userId}" is "false" and has "0" grants
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED_1}|${CHECK_STR_TRUE}" if retrieve details set to "false" for user "${userId}" is "false" and has "0" grants
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_TRUE}" if retrieve details set to "true" for user "${userId}" is "false" and has "0" grants
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_TRUE}" if retrieve details set to "false" for user "${userId}" is "false" and has "0" grants
+    grant entitlement with entitlementType "ENT_MIXED" and conditions "${GRANT_METERED}|${GRANT_STR}" for user "${userId}"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED_1}|${CHECK_STR_TRUE}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED_1}|${CHECK_STR_TRUE}" if retrieve details set to "true" for user "${userId}" is "true" and has "1" grants
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED_1}|${CHECK_STR_TRUE}" if retrieve details set to "false" for user "${userId}" is "true" and has "0" grants
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_TRUE}" if retrieve details set to "true" for user "${userId}" is "true" and has "1" grants
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED_1}|${CHECK_STR_TRUE}" if retrieve details set to "true" for user "${userId}" is "true" and has "1" grants
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED_1}|${CHECK_STR_TRUE}" if retrieve details set to "false" for user "${userId}" is "true" and has "0" grants
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_TRUE}" if retrieve details set to "true" for user "${userId}" is "true" and has "1" grants
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED_1}|${CHECK_STR_TRUE}" if retrieve details set to "true" for user "${userId}" is "false" and has "1" grants
+    check entitlement with entitlementType "ENT_MIXED" and conditions "${CHECK_METERED_1}|${CHECK_STR_TRUE}" if retrieve details set to "false" for user "${userId}" is "false" and has "0" grants
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_TRUE}" if retrieve details set to "true" for user "${userId}" is "false" and has "1" grants
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_TRUE}" if retrieve details set to "false" for user "${userId}" is "false" and has "0" grants
+
+#Test_MixedEntitlements_UseAndCheckGrants_CheckGrants_StringConditionType_AllowOverageTrue_DetailsFlag
+
+### METERED + PATH:
+
+Test_MixedEntitlements_UseAndCheckGrants_Use_PathConditionType_AllowOverageTrue
+    [Documentation]
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "3", "allowOverage" : "true"}
+    ${USE_METERED_1} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${USE_METERED_2} =         Set Variable        "metered" condition with parameters {"quantity": "2"}
+    ${USE_METERED_4} =         Set Variable        "metered" condition with parameters {"quantity": "4"}
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root/subdirectory"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root/subdirectory"}
+    ${USE_PATH_TRUE}    Set Variable    "path" condition with parameters {"file":"/root/subdirectory"}
+    ${USE_PATH_FALSE}    Set Variable    "path" condition with parameters {"file":"/root"}
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_PATH_TRUE}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_MIXED" and conditions "${GRANT_METERED}|${GRANT_PATH}" for user "${userId}"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_PATH_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_PATH_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_PATH_TRUE}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_2}|${USE_PATH_TRUE}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_4}|${USE_PATH_TRUE}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_PATH_TRUE}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_PATH_FALSE}" for user "${userId}" is "false"
+
+Test_MixedEntitlements_UseAndCheckGrants_Use_PathConditionType_AllowOverageFalse
+    [Documentation]
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "3", "allowOverage" : "false"}
+    ${USE_METERED_1} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${USE_METERED_2} =         Set Variable        "metered" condition with parameters {"quantity": "2"}
+    ${USE_METERED_4} =         Set Variable        "metered" condition with parameters {"quantity": "4"}
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root/subdirectory"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root/subdirectory"}
+    ${USE_PATH_TRUE}    Set Variable    "path" condition with parameters {"file":"/root/subdirectory"}
+    ${USE_PATH_FALSE}    Set Variable    "path" condition with parameters {"file":"/root"}
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_PATH_TRUE}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_MIXED" and conditions "${GRANT_METERED}|${GRANT_PATH}" for user "${userId}"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_PATH_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_PATH_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_4}|${USE_PATH_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_PATH_TRUE}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_PATH_TRUE}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_2}|${USE_PATH_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_PATH_TRUE}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_PATH_TRUE}" for user "${userId}" is "false"
+
+### METERED + TIMEFRAME:
+
+Test_MixedEntitlements_UseAndCheckGrants_Use_TimeframeConditionType_AllowOverageTrue
+    [Documentation]
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "3", "allowOverage" : "true"}
+    ${USE_METERED_1} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${USE_METERED_2} =         Set Variable        "metered" condition with parameters {"quantity": "2"}
+    ${USE_METERED_4} =         Set Variable        "metered" condition with parameters {"quantity": "4"}
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${USE_TIME_TRUE}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${USE_TIME_FALSE}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:03Z"}
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_TIME_TRUE}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_MIXED" and conditions "${GRANT_METERED}|${GRANT_TIME}" for user "${userId}"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_TIME_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_TIME_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_TIME_TRUE}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_2}|${USE_TIME_TRUE}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_4}|${USE_TIME_TRUE}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_TIME_TRUE}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_TIME_FALSE}" for user "${userId}" is "false"
+
+Test_MixedEntitlements_UseAndCheckGrants_Use_TimeframeConditionType_AllowOverageFalse
+    [Documentation]
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "3", "allowOverage" : "false"}
+    ${USE_METERED_1} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${USE_METERED_2} =         Set Variable        "metered" condition with parameters {"quantity": "2"}
+    ${USE_METERED_4} =         Set Variable        "metered" condition with parameters {"quantity": "4"}
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${USE_TIME_TRUE}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${USE_TIME_FALSE}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:03Z"}
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_TIME_TRUE}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_MIXED" and conditions "${GRANT_METERED}|${GRANT_TIME}" for user "${userId}"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_TIME_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_TIME_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_4}|${USE_TIME_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_TIME_TRUE}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_TIME_TRUE}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_2}|${USE_TIME_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_TIME_TRUE}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_TIME_TRUE}" for user "${userId}" is "false"
+
+### METERED + GEO:
+
+Test_MixedEntitlements_UseAndCheckGrants_Use_GeoConditionType_AllowOverageTrue
+    [Documentation]
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "3", "allowOverage" : "true"}
+    ${USE_METERED_1} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${USE_METERED_2} =         Set Variable        "metered" condition with parameters {"quantity": "2"}
+    ${USE_METERED_4} =         Set Variable        "metered" condition with parameters {"quantity": "4"}
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO_TRUE}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO_FALSE}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/MunichInvalid"}
+    ${USE_GEO_TRUE}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${USE_GEO_FALSE}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/MunichInvalid"}
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_GEO_TRUE}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_MIXED" and conditions "${GRANT_METERED}|${GRANT_GEO}" for user "${userId}"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_GEO_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_GEO_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_GEO_TRUE}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_2}|${USE_GEO_TRUE}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_4}|${USE_GEO_TRUE}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_GEO_TRUE}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_GEO_FALSE}" for user "${userId}" is "false"
+
+Test_MixedEntitlements_UseAndCheckGrants_Use_GeoConditionType_AllowOverageFalse
+    [Documentation]
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "3", "allowOverage" : "false"}
+    ${USE_METERED_1} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${USE_METERED_2} =         Set Variable        "metered" condition with parameters {"quantity": "2"}
+    ${USE_METERED_4} =         Set Variable        "metered" condition with parameters {"quantity": "4"}
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO_TRUE}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO_FALSE}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/MunichInvalid"}
+    ${USE_GEO_TRUE}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${USE_GEO_FALSE}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/MunichInvalid"}
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_GEO_TRUE}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_MIXED" and conditions "${GRANT_METERED}|${GRANT_GEO}" for user "${userId}"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_GEO_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_GEO_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_4}|${USE_GEO_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_GEO_TRUE}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_GEO_TRUE}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_2}|${USE_GEO_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_GEO_TRUE}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_GEO_TRUE}" for user "${userId}" is "false"
+
+### METERED + STRING + PATH + TIMEFRAME + GEO
+
+Test_MixedEntitlements_UseAndCheckGrants_Use_StringAndPathAndTimeframeAndGeoConditionType_AllowOverageTrue
+    [Documentation]
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "3", "allowOverage" : "true"}
+    ${USE_METERED_1} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${USE_METERED_2} =         Set Variable        "metered" condition with parameters {"quantity": "2"}
+    ${USE_METERED_4} =         Set Variable        "metered" condition with parameters {"quantity": "4"}
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${USE_STR_TRUE}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${USE_STR_FALSE}    Set Variable    "string" condition with parameters {"string":"zxc"}
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root/subdirectory"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root/subdirectory"}
+    ${USE_PATH_TRUE}    Set Variable    "path" condition with parameters {"file":"/root/subdirectory"}
+    ${USE_PATH_FALSE}    Set Variable    "path" condition with parameters {"file":"/root"}
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${USE_TIME_TRUE}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${USE_TIME_FALSE}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:03Z"}
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO_TRUE}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO_FALSE}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/MunichInvalid"}
+    ${USE_GEO_TRUE}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${USE_GEO_FALSE}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/MunichInvalid"}
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_TRUE}|${USE_PATH_TRUE}|${USE_TIME_TRUE}|${USE_GEO_TRUE}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_MIXED" and conditions "${GRANT_METERED}|${GRANT_STR}|${GRANT_PATH}|${GRANT_TIME}|${GRANT_GEO}" for user "${userId}"
+    #
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_STR_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_PATH_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_TIME_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_GEO_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_PATH_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_TIME_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_GEO_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_STR_TRUE}|${USE_PATH_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_STR_TRUE}|${USE_TIME_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_STR_TRUE}|${USE_GEO_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_PATH_TRUE}|${USE_TIME_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_PATH_TRUE}|${USE_GEO_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_TIME_TRUE}|${USE_GEO_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_TRUE}|${USE_PATH_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_TRUE}|${USE_TIME_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_TRUE}|${USE_GEO_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_PATH_TRUE}|${USE_TIME_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_PATH_TRUE}|${USE_GEO_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_TIME_TRUE}|${USE_GEO_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_STR_TRUE}|${USE_PATH_TRUE}|${USE_TIME_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_STR_TRUE}|${USE_PATH_TRUE}|${USE_GEO_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_STR_TRUE}|${USE_TIME_TRUE}|${USE_GEO_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_PATH_TRUE}|${USE_TIME_TRUE}|${USE_GEO_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_TRUE}|${USE_PATH_TRUE}|${USE_TIME_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_TRUE}|${USE_PATH_TRUE}|${USE_GEO_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_TRUE}|${USE_TIME_TRUE}|${USE_GEO_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_PATH_TRUE}|${USE_TIME_TRUE}|${USE_GEO_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_STR_TRUE}|${USE_PATH_TRUE}|${USE_TIME_TRUE}|${USE_GEO_TRUE}" for user "${userId}" is "false"
+    #
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_STR_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_PATH_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_TIME_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_GEO_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_PATH_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_TIME_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_GEO_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_STR_FALSE}|${USE_PATH_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_STR_FALSE}|${USE_TIME_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_STR_FALSE}|${USE_GEO_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_PATH_FALSE}|${USE_TIME_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_PATH_FALSE}|${USE_GEO_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_TIME_FALSE}|${USE_GEO_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_FALSE}|${USE_PATH_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_FALSE}|${USE_TIME_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_FALSE}|${USE_GEO_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_PATH_FALSE}|${USE_TIME_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_PATH_FALSE}|${USE_GEO_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_TIME_FALSE}|${USE_GEO_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_STR_FALSE}|${USE_PATH_FALSE}|${USE_TIME_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_STR_FALSE}|${USE_PATH_FALSE}|${USE_GEO_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_STR_FALSE}|${USE_TIME_FALSE}|${USE_GEO_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_PATH_FALSE}|${USE_TIME_FALSE}|${USE_GEO_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_FALSE}|${USE_PATH_FALSE}|${USE_TIME_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_FALSE}|${USE_PATH_FALSE}|${USE_GEO_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_FALSE}|${USE_TIME_FALSE}|${USE_GEO_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_PATH_FALSE}|${USE_TIME_FALSE}|${USE_GEO_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_STR_FALSE}|${USE_PATH_FALSE}|${USE_TIME_FALSE}|${USE_GEO_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_FALSE}|${USE_PATH_FALSE}|${USE_TIME_FALSE}|${USE_GEO_FALSE}" for user "${userId}" is "false"
+    #
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_FALSE}|${USE_PATH_FALSE}|${USE_TIME_FALSE}|${USE_GEO_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_TRUE}|${USE_PATH_FALSE}|${USE_TIME_FALSE}|${USE_GEO_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_PATH_TRUE}|${USE_STR_FALSE}|${USE_TIME_FALSE}|${USE_GEO_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_TIME_TRUE}|${USE_STR_FALSE}|${USE_PATH_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_GEO_TRUE}|${USE_STR_FALSE}|${USE_PATH_FALSE}|${USE_TIME_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_STR_TRUE}|${USE_PATH_TRUE}|${USE_METERED_1}|${USE_TIME_FALSE}|${USE_GEO_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_STR_TRUE}|${USE_TIME_TRUE}|${USE_METERED_1}|${USE_PATH_FALSE}|${USE_GEO_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_STR_TRUE}|${USE_GEO_TRUE}|${USE_METERED_1}|${USE_PATH_FALSE}|${USE_TIME_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_PATH_TRUE}|${USE_TIME_TRUE}|${USE_STR_FALSE}|${USE_METERED_1}|${USE_GEO_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_PATH_TRUE}|${USE_GEO_TRUE}|${USE_STR_FALSE}|${USE_METERED_1}|${USE_TIME_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_TIME_TRUE}|${USE_GEO_TRUE}|${USE_STR_FALSE}|${USE_PATH_FALSE}|${USE_METERED_1}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_TRUE}|${USE_PATH_TRUE}|${USE_TIME_FALSE}|${USE_GEO_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_TRUE}|${USE_TIME_TRUE}|${USE_PATH_FALSE}|${USE_GEO_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_TRUE}|${USE_GEO_TRUE}|${USE_PATH_FALSE}|${USE_TIME_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_PATH_TRUE}|${USE_TIME_TRUE}|${USE_STR_FALSE}|${USE_GEO_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_PATH_TRUE}|${USE_GEO_TRUE}|${USE_STR_FALSE}|${USE_TIME_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_TIME_TRUE}|${USE_GEO_TRUE}|${USE_STR_FALSE}|${USE_PATH_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_STR_TRUE}|${USE_PATH_TRUE}|${USE_TIME_TRUE}|${USE_METERED_1}|${USE_GEO_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_STR_TRUE}|${USE_PATH_TRUE}|${USE_GEO_TRUE}|${USE_METERED_1}|${USE_TIME_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_STR_TRUE}|${USE_TIME_TRUE}|${USE_GEO_TRUE}|${USE_METERED_1}|${USE_PATH_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_PATH_TRUE}|${USE_TIME_TRUE}|${USE_GEO_TRUE}|${USE_STR_FALSE}|${USE_METERED_1}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_TRUE}|${USE_PATH_TRUE}|${USE_TIME_TRUE}|${USE_GEO_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_TRUE}|${USE_PATH_TRUE}|${USE_GEO_TRUE}|${USE_TIME_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_TRUE}|${USE_TIME_TRUE}|${USE_GEO_TRUE}|${USE_PATH_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_PATH_TRUE}|${USE_TIME_TRUE}|${USE_GEO_TRUE}|${USE_STR_FALSE}" for user "${userId}" is "false"
+    #####
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_TRUE}|${USE_PATH_TRUE}|${USE_TIME_TRUE}|${USE_GEO_TRUE}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_2}|${USE_STR_TRUE}|${USE_PATH_TRUE}|${USE_TIME_TRUE}|${USE_GEO_TRUE}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_4}|${USE_STR_TRUE}|${USE_PATH_TRUE}|${USE_TIME_TRUE}|${USE_GEO_TRUE}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_TRUE}|${USE_PATH_TRUE}|${USE_TIME_TRUE}|${USE_GEO_TRUE}" for user "${userId}" is "true"
+
+Test_MixedEntitlements_UseAndCheckGrants_Use_StringAndPathAndTimeframeAndGeoConditionType_AllowOverageFalse
+    [Documentation]
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "3", "allowOverage" : "false"}
+    ${USE_METERED_1} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${USE_METERED_2} =         Set Variable        "metered" condition with parameters {"quantity": "2"}
+    ${USE_METERED_4} =         Set Variable        "metered" condition with parameters {"quantity": "4"}
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${USE_STR_TRUE}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${USE_STR_FALSE}    Set Variable    "string" condition with parameters {"string":"zxc"}
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root/subdirectory"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root/subdirectory"}
+    ${USE_PATH_TRUE}    Set Variable    "path" condition with parameters {"file":"/root/subdirectory"}
+    ${USE_PATH_FALSE}    Set Variable    "path" condition with parameters {"file":"/root"}
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2010-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${USE_TIME_TRUE}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:01Z"}
+    ${USE_TIME_FALSE}    Set Variable    "timeframe" condition with parameters {"time":"2010-01-01T00:00:03Z"}
+    ${GRANT_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO_TRUE}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${CHECK_GEO_FALSE}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/MunichInvalid"}
+    ${USE_GEO_TRUE}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/Munich"}
+    ${USE_GEO_FALSE}    Set Variable    "geo" condition with parameters {"geoPath":"Germany/Bavaria/MunichInvalid"}
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_TRUE}|${USE_PATH_TRUE}|${USE_TIME_TRUE}|${USE_GEO_TRUE}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_MIXED" and conditions "${GRANT_METERED}|${GRANT_STR}|${GRANT_PATH}|${GRANT_TIME}|${GRANT_GEO}" for user "${userId}"
+    #
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_STR_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_PATH_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_TIME_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_GEO_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_PATH_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_TIME_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_GEO_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_STR_TRUE}|${USE_PATH_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_STR_TRUE}|${USE_TIME_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_STR_TRUE}|${USE_GEO_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_PATH_TRUE}|${USE_TIME_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_PATH_TRUE}|${USE_GEO_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_TIME_TRUE}|${USE_GEO_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_TRUE}|${USE_PATH_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_TRUE}|${USE_TIME_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_TRUE}|${USE_GEO_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_PATH_TRUE}|${USE_TIME_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_PATH_TRUE}|${USE_GEO_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_TIME_TRUE}|${USE_GEO_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_STR_TRUE}|${USE_PATH_TRUE}|${USE_TIME_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_STR_TRUE}|${USE_PATH_TRUE}|${USE_GEO_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_STR_TRUE}|${USE_TIME_TRUE}|${USE_GEO_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_PATH_TRUE}|${USE_TIME_TRUE}|${USE_GEO_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_TRUE}|${USE_PATH_TRUE}|${USE_TIME_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_TRUE}|${USE_PATH_TRUE}|${USE_GEO_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_TRUE}|${USE_TIME_TRUE}|${USE_GEO_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_PATH_TRUE}|${USE_TIME_TRUE}|${USE_GEO_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_STR_TRUE}|${USE_PATH_TRUE}|${USE_TIME_TRUE}|${USE_GEO_TRUE}" for user "${userId}" is "false"
+    #
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_4}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_STR_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_PATH_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_TIME_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_GEO_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_PATH_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_TIME_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_GEO_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_STR_FALSE}|${USE_PATH_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_STR_FALSE}|${USE_TIME_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_STR_FALSE}|${USE_GEO_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_PATH_FALSE}|${USE_TIME_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_PATH_FALSE}|${USE_GEO_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_TIME_FALSE}|${USE_GEO_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_FALSE}|${USE_PATH_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_FALSE}|${USE_TIME_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_FALSE}|${USE_GEO_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_PATH_FALSE}|${USE_TIME_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_PATH_FALSE}|${USE_GEO_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_TIME_FALSE}|${USE_GEO_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_STR_FALSE}|${USE_PATH_FALSE}|${USE_TIME_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_STR_FALSE}|${USE_PATH_FALSE}|${USE_GEO_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_STR_FALSE}|${USE_TIME_FALSE}|${USE_GEO_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_PATH_FALSE}|${USE_TIME_FALSE}|${USE_GEO_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_FALSE}|${USE_PATH_FALSE}|${USE_TIME_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_FALSE}|${USE_PATH_FALSE}|${USE_GEO_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_FALSE}|${USE_TIME_FALSE}|${USE_GEO_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_PATH_FALSE}|${USE_TIME_FALSE}|${USE_GEO_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_STR_FALSE}|${USE_PATH_FALSE}|${USE_TIME_FALSE}|${USE_GEO_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_FALSE}|${USE_PATH_FALSE}|${USE_TIME_FALSE}|${USE_GEO_FALSE}" for user "${userId}" is "false"
+    #
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_FALSE}|${USE_PATH_FALSE}|${USE_TIME_FALSE}|${USE_GEO_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_TRUE}|${USE_PATH_FALSE}|${USE_TIME_FALSE}|${USE_GEO_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_PATH_TRUE}|${USE_STR_FALSE}|${USE_TIME_FALSE}|${USE_GEO_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_TIME_TRUE}|${USE_STR_FALSE}|${USE_PATH_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_GEO_TRUE}|${USE_STR_FALSE}|${USE_PATH_FALSE}|${USE_TIME_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_STR_TRUE}|${USE_PATH_TRUE}|${USE_METERED_1}|${USE_TIME_FALSE}|${USE_GEO_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_STR_TRUE}|${USE_TIME_TRUE}|${USE_METERED_1}|${USE_PATH_FALSE}|${USE_GEO_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_STR_TRUE}|${USE_GEO_TRUE}|${USE_METERED_1}|${USE_PATH_FALSE}|${USE_TIME_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_PATH_TRUE}|${USE_TIME_TRUE}|${USE_STR_FALSE}|${USE_METERED_1}|${USE_GEO_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_PATH_TRUE}|${USE_GEO_TRUE}|${USE_STR_FALSE}|${USE_METERED_1}|${USE_TIME_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_TIME_TRUE}|${USE_GEO_TRUE}|${USE_STR_FALSE}|${USE_PATH_FALSE}|${USE_METERED_1}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_TRUE}|${USE_PATH_TRUE}|${USE_TIME_FALSE}|${USE_GEO_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_TRUE}|${USE_TIME_TRUE}|${USE_PATH_FALSE}|${USE_GEO_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_TRUE}|${USE_GEO_TRUE}|${USE_PATH_FALSE}|${USE_TIME_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_PATH_TRUE}|${USE_TIME_TRUE}|${USE_STR_FALSE}|${USE_GEO_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_PATH_TRUE}|${USE_GEO_TRUE}|${USE_STR_FALSE}|${USE_TIME_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_TIME_TRUE}|${USE_GEO_TRUE}|${USE_STR_FALSE}|${USE_PATH_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_STR_TRUE}|${USE_PATH_TRUE}|${USE_TIME_TRUE}|${USE_METERED_1}|${USE_GEO_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_STR_TRUE}|${USE_PATH_TRUE}|${USE_GEO_TRUE}|${USE_METERED_1}|${USE_TIME_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_STR_TRUE}|${USE_TIME_TRUE}|${USE_GEO_TRUE}|${USE_METERED_1}|${USE_PATH_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_PATH_TRUE}|${USE_TIME_TRUE}|${USE_GEO_TRUE}|${USE_STR_FALSE}|${USE_METERED_1}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_TRUE}|${USE_PATH_TRUE}|${USE_TIME_TRUE}|${USE_GEO_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_TRUE}|${USE_PATH_TRUE}|${USE_GEO_TRUE}|${USE_TIME_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_TRUE}|${USE_TIME_TRUE}|${USE_GEO_TRUE}|${USE_PATH_FALSE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_PATH_TRUE}|${USE_TIME_TRUE}|${USE_GEO_TRUE}|${USE_STR_FALSE}" for user "${userId}" is "false"
+    #####
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_4}|${USE_STR_TRUE}|${USE_PATH_TRUE}|${USE_TIME_TRUE}|${USE_GEO_TRUE}" for user "${userId}" is "false"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_TRUE}|${USE_PATH_TRUE}|${USE_TIME_TRUE}|${USE_GEO_TRUE}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_2}|${USE_STR_TRUE}|${USE_PATH_TRUE}|${USE_TIME_TRUE}|${USE_GEO_TRUE}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR_TRUE}|${USE_PATH_TRUE}|${USE_TIME_TRUE}|${USE_GEO_TRUE}" for user "${userId}" is "false"
+
+### CheckGrants:
+
+### METERED + STRING:
+
+Test_MixedEntitlements_UseAndCheckGrants_CheckGrants_RanOutOfGrants_Grants
+    [Documentation]    If 'details' flag is true, and applicable grant have run out,
+    ...                execute should return the grant despite of execution result is false.
+    ...                It can help to determine which grant has run out.
+    ${userId} =                generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "1"}
+    ${USE_METERED_1} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${USE_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    grant entitlement with entitlementType "ENT_MIXED" and conditions "${GRANT_METERED}|${GRANT_STR}" for user "${userId}"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR}" for user "${userId}" is "true"
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR}" if retrieve details set to "true" for user "${userId}" is "false" and has "1" grants
+    ### Use with incorrect conditions: false!!!
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_STR}" if retrieve details set to "true" for user "${userId}" is "false" and has "0" grants
+    ### Use with no conditions: false!!!
+    use entitlement with entitlementType "ENT_MIXED" if retrieve details set to "true" for user "${userId}" is "false" and has "0" grants
+
+Test_MixedEntitlements_UseAndCheckGrants_CheckGrants_RanOutGrants_GrantSourceId
+    [Documentation]    Returned grantSourceId is depends on the particular entitlement that
+    ...                was tried to be used(the result: false/true does not matter).
+    ${userId} =                generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "1"}
+    ${USE_METERED_1} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${GRANT_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${USE_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${mixedGrant} =          create entitlement with entitlementType "ENT_MIXED" for user "${userId}"
+    add condition "${GRANT_METERED}" to entitlement "${mixedGrant}"
+    add condition "${GRANT_STR}" to entitlement "${mixedGrant}"
+    assign grantSourceId "meteredGrantSourceId" to entitlement "${mixedGrant}"
+    grant entitlement "${mixedGrant}"
+    # use with result='true':
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR}" for user "${userId}" and verify that grantSourceId is "meteredGrantSourceId"
+    # use with result='false':
+    use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_METERED_1}|${USE_STR}" for user "${userId}" and verify that grantSourceId is "meteredGrantSourceId"
+    # use with incorrect conditions: EXCEPTION EXPECTED!!!
+    #use entitlement with entitlementType "ENT_MIXED" and conditions "${USE_STR}" for user "${userId}" and verify that grantSourceId is "meteredGrantSourceId"
+    # use with no conditions: EXCEPTION EXPECTED!!!
+    #use entitlement with entitlementType "ENT_MIXED" for user "${userId}" and verify that grantSourceId is "meteredGrantSourceId"

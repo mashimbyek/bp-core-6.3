@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>entitlements</artifactId>
+        <groupId>com.hybris.services.entitlements</groupId>
+        <version>6.3.0.0-RC4</version>
+    </parent>
+
+    <artifactId>entitlements-service</artifactId>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>com.hybris.services.entitlements</groupId>
+            <artifactId>entitlements-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <!-- kernel dependencies -->
+        <dependency>
+            <groupId>com.hybris.kernel</groupId>
+            <artifactId>kernel-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.hybris.kernel</groupId>
+            <artifactId>kernel-service</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.hybris.kernel</groupId>
+            <artifactId>jdbc-engine</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.hybris.kernel</groupId>
+            <artifactId>mongodb-engine</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.hybris.services.entitlements</groupId>
+            <artifactId>entitlements-test-configuration</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.hybris.kernel</groupId>
+                <artifactId>kernel-codegenerator</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

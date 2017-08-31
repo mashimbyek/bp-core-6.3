@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ [y] hybris Platform
+
+ Copyright (c) 2017 SAP SE or an SAP affiliate company.  All rights reserved.
+
+ This software is the confidential and proprietary information of SAP
+ ("Confidential Information"). You shall not disclose such Confidential
+ Information and shall use it only in accordance with the terms of the
+ license agreement you entered into with SAP.
+-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context 
+    http://www.springframework.org/schema/context/spring-context.xsd" >
+
+	<context:annotation-config />
+
+	<import resource="classpath:/META-INF/entitlement-service-spring.xml"/>
+
+	<bean id="converters" class="com.hybris.commons.conversion.util.Converters" />
+
+	<bean id="grantDataToModelPopulator" class="com.hybris.services.entitlements.conversion.grant.GrantDataToModelPopulator" >
+		<property name="conditionDataToModelConverter" ref="conditionDataToModelConverter" />
+		<property name="dateTimeConverter" ref="dateTimeConverter"/>
+		<property name="propertyPopulator" ref="propertyAwareReversePopulator"/>
+	</bean>
+
+	<bean id="grantDataToModelConverter" class="com.hybris.services.entitlements.conversion.grant.GrantDataToModelConverter">
+		<property name="grantService" ref="grantService"/>
+		<property name="populator" ref="grantDataToModelPopulator"/>
+	</bean>
+
+	<bean id="grantModelToDataConverter" class="com.hybris.services.entitlements.conversion.grant.GrantModelToDataConverter">
+		<property name="populator" ref="grantModelToDataPopulator"/>
+	</bean>
+	<bean id="grantModelToDataPopulator" class="com.hybris.services.entitlements.conversion.grant.GrantModelToDataPopulator">
+		<property name="conditionModelToDataConverter" ref="conditionModelToDataConverter" />
+		<property name="dateTimeConverter" ref="dateTimeConverter"/>
+		<property name="propertyPopulator" ref="propertyAwarePopulator"/>
+	</bean>
+
+	<bean id="conditionModelToDataPopulator" class="com.hybris.services.entitlements.conversion.condition.ConditionModelToDataPopulator">
+		<property name="propertyPopulator" ref="propertyAwarePopulator"/>
+	</bean>
+	<bean id="conditionModelToDataConverter" class="com.hybris.services.entitlements.conversion.condition.ConditionModelToDataConverter">
+		<property name="populator" ref="conditionModelToDataPopulator"/>
+	</bean>
+
+	<bean id="conditionDataToModelPopulator" class="com.hybris.services.entitlements.conversion.condition.ConditionDataToModelPopulator">
+		<property name="propertyPopulator" ref="propertyAwareReversePopulator"/>
+	</bean>
+	<bean id="conditionDataToModelConverter" class="com.hybris.services.entitlements.conversion.condition.ConditionDataToModelConverter">
+		<property name="grantService" ref="grantService"/>
+		<property name="populator" ref="conditionDataToModelPopulator"/>
+	</bean>
+
+	<bean id="criterionDataValidator" class="com.hybris.services.entitlements.validation.CriterionDataValidator"/>
+
+	<bean id="conditionDataListValidator" class="com.hybris.services.entitlements.validation.ConditionDataListValidator"/>
+
+	<bean id="criterionDataToModelConverter" class="com.hybris.services.entitlements.conversion.criterion.CriterionDataToModelConverter">
+		<property name="populator" ref="criterionDataToModelPopulator"/>
+	</bean>
+	<bean id="criterionDataToModelPopulator" class="com.hybris.services.entitlements.conversion.criterion.CriterionDataToModelPopulator"/>
+
+</beans>

@@ -1,0 +1,158 @@
+# -----------------------------------------------------------------------
+# [y] hybris Platform
+#
+# Copyright (c) 2017 SAP SE or an SAP affiliate company.  All rights reserved.
+# 
+# This software is the confidential and proprietary information of SAP
+# ("Confidential Information"). You shall not disclose such Confidential
+# Information and shall use it only in accordance with the terms of the
+# license agreement you entered into with SAP.
+# -----------------------------------------------------------------------
+*** Settings ***
+Resource    entitlements-test/settings_keywords.txt
+Resource    entitlements-test/builder_entitlements_keywords.txt
+Resource    entitlements-test/modify_entitlements_keywords.txt
+Resource    entitlements-test/exceptions_entitlements_keywords.txt
+Resource    entitlements-test/check_entitlements_keywords.txt
+Resource    entitlements-test/use_entitlements_keywords.txt
+
+*** Test Cases ***
+###############################################
+#### currently quantity = 1 is supported only, so all steps that are failing due to not supporting it right now 12/12/2013, are commented temporary
+###############################################
+
+#### Exceptions - multiconditions:
+
+Test_MeteredEntitlements_Exceptions_2MeteredConditions_No1
+    [Documentation]    Checks that more than 1 metered condition per entitlement is not supported - exception is thrown when granting
+    ${userId} =         generate random id
+    ${GRANT_METERED_1} =         Set Variable        "metered" condition with parameters {"maxQuantity": "1"}
+    grant entitlement with entitlementType "ENT_METERED" and conditions "${GRANT_METERED_1}|${GRANT_METERED_1}" for user "${userId}" and expect exception "ValidationException" with message "conditions.conditions[1].type=metered: Duplicate condition type"
+
+Test_MeteredEntitlements_Exceptions_2MeteredConditions_No2
+    [Documentation]    Checks that more than 1 metered condition per entitlement is not supported - exception is thrown when granting
+    ${userId} =         generate random id
+    ${GRANT_METERED_1} =         Set Variable        "metered" condition with parameters {"maxQuantity": "1"}
+    ${GRANT_METERED_2} =         Set Variable        "metered" condition with parameters {"maxQuantity": "2"}
+    grant entitlement with entitlementType "ENT_METERED" and conditions "${GRANT_METERED_1}|${GRANT_METERED_2}" for user "${userId}" and expect exception "ValidationException" with message "conditions.conditions[1].type=metered: Duplicate condition type"
+
+#### Exceptions - maxQuantity:
+Test_MeteredEntitlements_Exceptions_MaxQuantity_No1
+    [Documentation]    Checks exception in case of maxQuantity < 0
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "-1", "allowOverage" : "true"}
+    grant entitlement with entitlementType "ENT_METERED" and conditions "${GRANT_METERED}" for user "${userId}" and expect exception "ValidationException" with message "conditions[0].properties.maxQuantity=-1: Negative values are not allowed"
+
+Test_MeteredEntitlements_Exceptions_MaxQuantity_No2
+    [Documentation]    Checks exception in case of maxQuantity = null
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "null", "allowOverage" : "true"}
+    grant entitlement with entitlementType "ENT_METERED" and conditions "${GRANT_METERED}" for user "${userId}" and expect exception "ValidationException" with message "conditions[0].properties.maxQuantity=null: Is not a number"
+
+Test_MeteredEntitlements_Exceptions_MaxQuantity_No3
+    [Documentation]    Checks exception in case of maxQuantity = wrongValue
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "wrongValue", "allowOverage" : "true"}
+    grant entitlement with entitlementType "ENT_METERED" and conditions "${GRANT_METERED}" for user "${userId}" and expect exception "ValidationException" with message "conditions[0].properties.maxQuantity=wrongValue: Is not a number"
+
+Test_MeteredEntitlements_Exceptions_MaxQuantity_No4
+    [Documentation]    Checks exception in case of maxQuantity as wrongParam
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"wrongParam": "1", "allowOverage" : "true"}
+    grant entitlement with entitlementType "ENT_METERED" and conditions "${GRANT_METERED}" for user "${userId}" and expect exception "ValidationException" with message "conditions[0].properties.maxQuantity=null: Required field was not found"
+
+Test_MeteredEntitlements_Exceptions_MaxQuantity_No5
+    [Documentation]    Checks exception in case of maxQuantity as wrongParam with wrongValue
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"wrongParam": "wrongValue", "allowOverage" : "true"}
+    grant entitlement with entitlementType "ENT_METERED" and conditions "${GRANT_METERED}" for user "${userId}" and expect exception "ValidationException" with message "conditions[0].properties.maxQuantity=null: Required field was not found"
+
+#### Exceptions - allowOverage:
+Test_MeteredEntitlements_Exceptions_AllowOverage_No1
+    [Documentation]    Checks exception in case of allowOverage = 0
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "1", "allowOverage" : "0"}
+    grant entitlement with entitlementType "ENT_METERED" and conditions "${GRANT_METERED}" for user "${userId}" and expect exception "ValidationException" with message "conditions[0].properties.allowOverage=0: Value must be a boolean"
+
+Test_MeteredEntitlements_Exceptions_AllowOverage_No2
+    [Documentation]    Checks exception in case of allowOverage = 1
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "1", "allowOverage" : "1"}
+    grant entitlement with entitlementType "ENT_METERED" and conditions "${GRANT_METERED}" for user "${userId}" and expect exception "ValidationException" with message "conditions[0].properties.allowOverage=1: Value must be a boolean"
+
+Test_MeteredEntitlements_Exceptions_AllowOverage_No3
+    [Documentation]    Checks exception in case of allowOverage = null
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "1", "allowOverage" : "null"}
+    grant entitlement with entitlementType "ENT_METERED" and conditions "${GRANT_METERED}" for user "${userId}" and expect exception "ValidationException" with message "conditions[0].properties.allowOverage=null: Value must be a boolean"
+
+Test_MeteredEntitlements_Exceptions_AllowOverage_No4
+    [Documentation]    Checks exception in case of allowOverage = truee;
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "1", "allowOverage" : "truee"}
+    grant entitlement with entitlementType "ENT_METERED" and conditions "${GRANT_METERED}" for user "${userId}" and expect exception "ValidationException" with message "conditions[0].properties.allowOverage=truee: Value must be a boolean"
+
+Test_MeteredEntitlements_Exceptions_AllowOverage_No5
+    [Documentation]    Checks exception in case of allowOverage = falsee
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "1", "allowOverage" : "falsee"}
+    grant entitlement with entitlementType "ENT_METERED" and conditions "${GRANT_METERED}" for user "${userId}" and expect exception "ValidationException" with message "conditions[0].properties.allowOverage=falsee: Value must be a boolean"
+
+Test_MeteredEntitlements_Exceptions_AllowOverage_No6
+    [Documentation]    Checks exception in case of allowOverage = wrongValue
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "1", "allowOverage" : "wrongValue"}
+    grant entitlement with entitlementType "ENT_METERED" and conditions "${GRANT_METERED}" for user "${userId}" and expect exception "ValidationException" with message "conditions[0].properties.allowOverage=wrongValue: Value must be a boolean"
+
+#### Exceptions - quantity:
+Test_MeteredEntitlements_Exceptions_Quantity_No1
+    [Documentation]    Checks exception in case of quantity < 0
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "1"}
+    ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "-1"}
+    ${USE_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "-1"}
+    grant entitlement with entitlementType "ENT_METERED" and conditions "${GRANT_METERED}" for user "${userId}"
+    check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED}" for user "${userId}" and expect exception "ValidationException" with message "criteria[0].quantity=-1: Negative values are not allowed"
+    use entitlement with entitlementType "ENT_METERED" and conditions "${USE_METERED}" for user "${userId}" and expect exception "ValidationException" with message "criteria[0].quantity=-1: Negative values are not allowed"
+
+Test_MeteredEntitlements_Exceptions_Quantity_No4
+    [Documentation]    Checks exception in case of quantity = null
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "1"}
+    ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "null"}
+    ${USE_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "null"}
+    grant entitlement with entitlementType "ENT_METERED" and conditions "${GRANT_METERED}" for user "${userId}"
+    check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED}" for user "${userId}" and expect exception "ValidationException" with message "criteria[0].quantity=null: Is not a number"
+    use entitlement with entitlementType "ENT_METERED" and conditions "${USE_METERED}" for user "${userId}" and expect exception "ValidationException" with message "criteria[0].quantity=null: Is not a number"
+
+Test_MeteredEntitlements_Exceptions_Quantity_No5
+    [Documentation]    Checks exception in case of quantity = wrongValue
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "1"}
+    ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "wrongValue"}
+    ${USE_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "wrongValue"}
+    grant entitlement with entitlementType "ENT_METERED" and conditions "${GRANT_METERED}" for user "${userId}"
+    check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED}" for user "${userId}" and expect exception "ValidationException" with message "criteria[0].quantity=wrongValue: Is not a number"
+    use entitlement with entitlementType "ENT_METERED" and conditions "${USE_METERED}" for user "${userId}" and expect exception "ValidationException" with message "criteria[0].quantity=wrongValue: Is not a number"
+
+Test_MeteredEntitlements_Exceptions_Quantity_No6
+    [Documentation]    Checks exception in case of quantity as wrongParam
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "1"}
+    ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"wrongParam": "1"}
+    ${USE_METERED} =         Set Variable        "metered" condition with parameters {"wrongParam": "1"}
+    grant entitlement with entitlementType "ENT_METERED" and conditions "${GRANT_METERED}" for user "${userId}"
+    check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED}" for user "${userId}" and expect exception "ValidationException" with message "criteria[0].quantity=null: Required field was not found"
+    use entitlement with entitlementType "ENT_METERED" and conditions "${USE_METERED}" for user "${userId}" and expect exception "ValidationException" with message "criteria[0].quantity=null: Required field was not found"
+
+Test_MeteredEntitlements_Exceptions_Quantity_No7
+    [Documentation]    Checks exception in case of quantity as wrongParam with wrongValue
+    ${userId} =         generate random id
+    ${GRANT_METERED} =         Set Variable        "metered" condition with parameters {"maxQuantity": "1"}
+    ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"wrongParam": "wrongValue"}
+    ${USE_METERED} =         Set Variable        "metered" condition with parameters {"wrongParam": "wrongValue"}
+    grant entitlement with entitlementType "ENT_METERED" and conditions "${GRANT_METERED}" for user "${userId}"
+    check entitlement with entitlementType "ENT_METERED" and conditions "${CHECK_METERED}" for user "${userId}" and expect exception "ValidationException" with message "criteria[0].quantity=null: Required field was not found"
+    use entitlement with entitlementType "ENT_METERED" and conditions "${USE_METERED}" for user "${userId}" and expect exception "ValidationException" with message "criteria[0].quantity=null: Required field was not found"
+
+

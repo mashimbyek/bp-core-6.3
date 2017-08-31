@@ -1,0 +1,50 @@
+<configuration>
+<!--
+ [y] hybris Platform
+
+ Copyright (c) 2017 SAP SE or an SAP affiliate company.  All rights reserved.
+
+ This software is the confidential and proprietary information of SAP
+ ("Confidential Information"). You shall not disclose such Confidential
+ Information and shall use it only in accordance with the terms of the
+ license agreement you entered into with SAP.
+-->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <Pattern>[%level] [%logger] %msg%n</Pattern>
+        </encoder>
+    </appender>
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>com.hybris.services.entitlements-entitlements-web.log</file>
+        <encoder>
+            <Pattern>%d [%-5level][%t][%c][%X{tenant}][%X{requestId}] %m%n</Pattern>
+        </encoder>
+    </appender>
+
+    <appender name="FILE_WEB" class="ch.qos.logback.core.FileAppender">
+        <file>usageLog.csv</file>
+        <append>true</append>
+        <encoder>
+            <pattern>%msg%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+        <param name="queueSize" value="1000"/>
+        <appender-ref ref="FILE_WEB"/>
+        <includeCallerData>true</includeCallerData>
+    </appender>
+    <logger name="com.hybris.services.entitlements.service.impl.DefaultGrantService" additivity="false" level="INFO">
+        <appender-ref ref="ASYNC"/>
+    </logger>
+
+    <logger name="com.hybris.services.entitlements" level="info" />
+
+    <root level="warn">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="FILE"/>
+    </root>
+
+    <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
+        <resetJUL>true</resetJUL>
+    </contextListener>
+</configuration>

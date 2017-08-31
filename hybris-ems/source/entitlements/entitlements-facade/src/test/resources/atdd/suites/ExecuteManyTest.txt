@@ -1,0 +1,89 @@
+# -----------------------------------------------------------------------
+# [y] hybris Platform
+#
+# Copyright (c) 2017 SAP SE or an SAP affiliate company.  All rights reserved.
+# 
+# This software is the confidential and proprietary information of SAP
+# ("Confidential Information"). You shall not disclose such Confidential
+# Information and shall use it only in accordance with the terms of the
+# license agreement you entered into with SAP.
+# -----------------------------------------------------------------------
+*** Settings ***
+Resource    entitlements-test/settings_keywords.txt
+Resource    entitlements-test/builder_entitlements_keywords.txt
+Resource    entitlements-test/modify_entitlements_keywords.txt
+Resource    entitlements-test/exceptions_entitlements_keywords.txt
+Resource    entitlements-test/check_entitlements_keywords.txt
+Resource    entitlements-test/use_entitlements_keywords.txt
+Resource    entitlements-test/check_many_entitlements_keywords.txt
+
+*** Test Cases ***
+#create another ent. granted for another user and check
+
+Test_executeMany_useFailed
+    [Documentation]    executeManyUseTest
+    ${userId} =     generate random id
+    grant entitlement with entitlementType "simple" for user "${userId}"
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2000-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2005-01-01T00:00:01Z"}
+    grant entitlement with entitlementType "timeframe" and conditions "${GRANT_TIME}" for user "${userId}"
+    ${simpleExecuteManyData}=    create simple execute many
+    ${timeframeExecuteManyData}=    create timeframe execute many
+    @{LIST_VARS}    Create List   ${simpleExecuteManyData}    ${timeframeExecuteManyData}
+    ${executeManyResult}=    use many with "${LIST_VARS}" for user "${userId}" and expect exception "ValidationException" with message "action=use: Unsupported action"
+
+Test_executeMany_check
+    [Documentation]    executeManyUseTest
+    ${userId} =     generate random id
+    grant entitlement with entitlementType "simple" for user "${userId}"
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2000-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2005-01-01T00:00:01Z"}
+    grant entitlement with entitlementType "timeframe" and conditions "${GRANT_TIME}" for user "${userId}"
+    ${simpleExecuteManyData}=    create simple execute many
+    ${timeframeExecuteManyData}=    create timeframe execute many
+    @{LIST_VARS}    Create List   ${simpleExecuteManyData}    ${timeframeExecuteManyData}
+    ${executeManyResult}=    check many with "${LIST_VARS}" for user "${userId}"
+    assert in ${executeManyResult} result with offset 0 is true
+    assert in ${executeManyResult} result with offset 1 is true
+
+Test_executeMany_checkNoTimeframe
+    [Documentation]    executeManyUseTest
+    ${userId} =     generate random id
+    grant entitlement with entitlementType "simple" for user "${userId}"
+    ${simpleExecuteManyData}=    create simple execute many
+    ${timeframeExecuteManyData}=    create timeframe execute many
+    @{LIST_VARS}    Create List   ${simpleExecuteManyData}    ${timeframeExecuteManyData}
+    ${executeManyResult}=    check many with "${LIST_VARS}" for user "${userId}"
+    assert in ${executeManyResult} result with offset 0 is true
+    assert in ${executeManyResult} result with offset 1 is false
+
+Test_executeMany_checkNoSimple
+    [Documentation]    executeManyUseTest
+    ${userId} =     generate random id
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2000-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2005-01-01T00:00:01Z"}
+    grant entitlement with entitlementType "timeframe" and conditions "${GRANT_TIME}" for user "${userId}"
+
+    ${simpleExecuteManyData}=    create simple execute many
+    ${conditionExecuteManyData} =    create execute many from condition ${CHECK_TIME}
+
+    @{LIST_VARS}    Create List   ${simpleExecuteManyData}    ${conditionExecuteManyData}
+
+    ${executeManyResult}=    check many with "${LIST_VARS}" for user "${userId}"
+    assert in ${executeManyResult} result with offset 0 is false
+    assert in ${executeManyResult} result with offset 1 is true
+
+Test_executeMany_checkValidationFailed
+    [Documentation]    executeManyUseTest
+    ${userId} =     generate random id
+    grant entitlement with entitlementType "simple" for user "${userId}"
+    ${GRANT_TIME}    Set Variable    "timeframe" condition with parameters {"startTime":"2000-01-01T00:00:00Z","endTime":"2010-01-01T00:00:02Z"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"wrong_property_name":"2005-01-01T00:00:01Z"}
+    grant entitlement with entitlementType "timeframe" and conditions "${GRANT_TIME}" for user "${userId}"
+
+    ${simpleExecuteManyData} =    create simple execute many
+    ${conditionExecuteManyData} =    create execute many from condition ${CHECK_TIME}
+
+    @{LIST_VARS}    Create List    ${simpleExecuteManyData}    ${conditionExecuteManyData}
+
+    ${executeManyResult}=    check many with "${LIST_VARS}" for user "${userId}" and expect exception "ValidationException" with message "executeManyDataList[1].criterionDataList[0].time=null: Required field was not found"

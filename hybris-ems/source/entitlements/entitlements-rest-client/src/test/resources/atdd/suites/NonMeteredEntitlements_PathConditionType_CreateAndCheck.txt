@@ -1,0 +1,454 @@
+# -----------------------------------------------------------------------
+# [y] hybris Platform
+#
+# Copyright (c) 2017 SAP SE or an SAP affiliate company.  All rights reserved.
+# 
+# This software is the confidential and proprietary information of SAP
+# ("Confidential Information"). You shall not disclose such Confidential
+# Information and shall use it only in accordance with the terms of the
+# license agreement you entered into with SAP.
+# -----------------------------------------------------------------------
+*** Settings ***
+Resource    entitlements-test/settings_keywords.txt
+Resource    entitlements-test/builder_entitlements_keywords.txt
+Resource    entitlements-test/modify_entitlements_keywords.txt
+Resource    entitlements-test/exceptions_entitlements_keywords.txt
+Resource    entitlements-test/check_entitlements_keywords.txt
+Resource    entitlements-test/use_entitlements_keywords.txt
+
+*** Test Cases ***
+Test_NonMeteredEntitlements_PathConditionType_CreateAndCheck_CheckWithPathCondition_No1_True
+    [Documentation]    Checking param equals path  condition
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root/subdirectory"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root/subdirectory"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_PATH" and conditions "${GRANT_PATH}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH}" for user "${userId}" is "true"
+
+Test_NonMeteredEntitlements_PathConditionType_CreateAndCheck_CheckWithPathCondition_No2_True
+    [Documentation]    Checking param equals path  condition
+    ${GRANT_PATH1}    Set Variable    "path" condition with parameters {"path":"/root/subdirectory"}
+    ${CHECK_PATH1}    Set Variable    "path" condition with parameters {"file":"/root/subdirectory"}
+    ${CHECK_PATH2}    Set Variable    "path" condition with parameters {"file":"/root/subdirectory/"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH2}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_PATH" and conditions "${GRANT_PATH1}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH1}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH2}" for user "${userId}" is "true"
+
+Test_NonMeteredEntitlements_PathConditionType_CreateAndCheck_CheckWithPathCondition_No3_True
+    [Documentation]    Checking param equals path  condition
+    ${GRANT_PATH1}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH1}    Set Variable    "path" condition with parameters {"file":"/root"}
+    ${CHECK_PATH2}    Set Variable    "path" condition with parameters {"file":"/root/subdirectory/"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH2}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_PATH" and conditions "${GRANT_PATH1}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH1}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH2}" for user "${userId}" is "true"
+
+Test_NonMeteredEntitlements_PathConditionType_CreateAndCheck_CheckWithPathCondition_No4_True
+    [Documentation]    Checking param equals path  condition
+    ${GRANT_PATH1}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH1}    Set Variable    "path" condition with parameters {"file":"/root"}
+    ${CHECK_PATH2}    Set Variable    "path" condition with parameters {"file":"/root/subdirectory"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH2}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_PATH" and conditions "${GRANT_PATH1}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH1}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH2}" for user "${userId}" is "true"
+
+Test_NonMeteredEntitlements_PathConditionType_CreateAndCheck_CheckWithPathCondition_No5_True
+    [Documentation]    String condition should be compared with passed parameter
+    ${GRANT_PATH1}    Set Variable    "path" condition with parameters {"path":"/ "}
+    ${CHECK_PATH1}    Set Variable    "path" condition with parameters {"file":"/ "}
+    ${CHECK_PATH2}    Set Variable    "path" condition with parameters {"file":"/ /subdirectory"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH2}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_PATH" and conditions "${GRANT_PATH1}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH1}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH2}" for user "${userId}" is "true"
+
+Test_NonMeteredEntitlements_PathConditionType_CreateAndCheck_CheckWithPathCondition_No6_False
+    [Documentation]    String condition should be compared with passed parameter
+    ${GRANT_PATH1}    Set Variable    "path" condition with parameters {"path":"/root/subdirectory"}
+    ${CHECK_PATH1}    Set Variable    "path" condition with parameters {"file":"/root/subdirectory"}
+    ${CHECK_PATH2}    Set Variable    "path" condition with parameters {"file":"/root/sub"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH2}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_PATH" and conditions "${GRANT_PATH1}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH1}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH2}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_PathConditionType_CreateAndCheck_CheckWithPathCondition_No7_False
+    [Documentation]    String condition should be compared with passed parameter
+    ${GRANT_PATH1}    Set Variable    "path" condition with parameters {"path":"/root/subdirectory"}
+    ${CHECK_PATH1}    Set Variable    "path" condition with parameters {"file":"/root/subdirectory"}
+    ${CHECK_PATH2}    Set Variable    "path" condition with parameters {"file":"/root/"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH2}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_PATH" and conditions "${GRANT_PATH1}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH1}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH2}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_PathConditionType_CreateAndCheck_CheckWithPathCondition_No8_False
+    [Documentation]    String condition should be compared with passed parameter
+    ${GRANT_PATH1}    Set Variable    "path" condition with parameters {"path":"/root/subdirectory"}
+    ${CHECK_PATH1}    Set Variable    "path" condition with parameters {"file":"/root/subdirectory"}
+    ${CHECK_PATH2}    Set Variable    "path" condition with parameters {"file":"/root"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH2}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_PATH" and conditions "${GRANT_PATH1}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH1}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH2}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_PathConditionType_CreateAndCheck_CheckWithPathCondition_No9_False
+    [Documentation]    String condition should be compared with passed parameter
+    ${GRANT_PATH1}    Set Variable    "path" condition with parameters {"path":"/rootA"}
+    ${CHECK_PATH1}    Set Variable    "path" condition with parameters {"file":"/rootA"}
+    ${CHECK_PATH2}    Set Variable    "path" condition with parameters {"file":"/rootB"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH2}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_PATH" and conditions "${GRANT_PATH1}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH1}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH2}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_PathConditionType_CreateAndCheck_CheckWithPathCondition_No10_False
+    [Documentation]    String condition should be compared with passed parameter
+    ${GRANT_PATH1}    Set Variable    "path" condition with parameters {"path":"/root/subdirectoryA"}
+    ${CHECK_PATH1}    Set Variable    "path" condition with parameters {"file":"/root/subdirectoryA"}
+    ${CHECK_PATH2}    Set Variable    "path" condition with parameters {"file":"/root/subdirectoryB"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH2}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_PATH" and conditions "${GRANT_PATH1}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH1}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH2}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_PathConditionType_CreateAndCheck_CheckWithPathCondition_No11_False
+    [Documentation]    String condition should be compared with passed parameter
+    ${GRANT_PATH1}    Set Variable    "path" condition with parameters {"path":"/rootA"}
+    ${CHECK_PATH1}    Set Variable    "path" condition with parameters {"file":"/rootA"}
+    ${CHECK_PATH2}    Set Variable    "path" condition with parameters {"file":"/root"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH2}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_PATH" and conditions "${GRANT_PATH1}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH1}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH2}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_PathConditionType_CreateAndCheck_CheckWithPathCondition_No12_False
+    [Documentation]    String condition should be compared with passed parameter
+    ${GRANT_PATH1}    Set Variable    "path" condition with parameters {"path":"/rootA"}
+    ${CHECK_PATH1}    Set Variable    "path" condition with parameters {"file":"/rootA"}
+    ${CHECK_PATH2}    Set Variable    "path" condition with parameters {"file":"/root/subdirectory"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH2}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_PATH" and conditions "${GRANT_PATH1}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH1}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH2}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_PathConditionType_CreateAndCheck_CheckWithPathCondition_No13_False
+    [Documentation]    String condition should be compared with passed parameter
+    ${GRANT_PATH1}    Set Variable    "path" condition with parameters {"path":"root"}
+    ${CHECK_PATH1}    Set Variable    "path" condition with parameters {"file":"root"}
+    ${CHECK_PATH2}    Set Variable    "path" condition with parameters {"file":"roo"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH2}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_PATH" and conditions "${GRANT_PATH1}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH1}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH2}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_PathConditionType_CreateAndCheck_CheckWithPathCondition_No14_False
+    [Documentation]    String condition should be compared with passed parameter
+    ${GRANT_PATH1}    Set Variable    "path" condition with parameters {"path":"roo"}
+    ${CHECK_PATH1}    Set Variable    "path" condition with parameters {"file":"roo"}
+    ${CHECK_PATH2}    Set Variable    "path" condition with parameters {"file":"root"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH2}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_PATH" and conditions "${GRANT_PATH1}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH1}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH2}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_PathConditionType_CreateAndCheck_CheckWithPathCondition_No15_False
+    [Documentation]    String condition should be compared with passed parameter
+    ${GRANT_PATH1}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH1}    Set Variable    "path" condition with parameters {"file":"/root"}
+    ${CHECK_PATH2}    Set Variable    "path" condition with parameters {"file":"oo"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH2}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_PATH" and conditions "${GRANT_PATH1}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH1}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH2}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_PathConditionType_CreateAndCheck_CheckWithPathCondition_No16_False
+    [Documentation]    String condition should be compared with passed parameter
+    ${GRANT_PATH1}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH1}    Set Variable    "path" condition with parameters {"file":"/root"}
+    ${CHECK_PATH2}    Set Variable    "path" condition with parameters {"file":"/"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH2}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_PATH" and conditions "${GRANT_PATH1}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH1}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH2}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_PathConditionType_CreateAndCheck_CheckWithPathCondition_No17_False
+    [Documentation]    String condition should be compared with passed parameter
+    ${GRANT_PATH1}    Set Variable    "path" condition with parameters {"path":"/root"}
+    ${CHECK_PATH1}    Set Variable    "path" condition with parameters {"file":"/root"}
+    ${CHECK_PATH2}    Set Variable    "path" condition with parameters {"file":""}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH2}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_PATH" and conditions "${GRANT_PATH1}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH1}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH2}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_PathConditionType_CreateAndCheck_CheckWithPathCondition_No18_False
+    [Documentation]    String condition should be compared with passed parameter
+    ${GRANT_PATH1}    Set Variable    "path" condition with parameters {"path":"/ "}
+    ${CHECK_PATH1}    Set Variable    "path" condition with parameters {"file":"/ "}
+    ${CHECK_PATH2}    Set Variable    "path" condition with parameters {"file":"/"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH2}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_PATH" and conditions "${GRANT_PATH1}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH1}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH2}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_PathConditionType_CreateAndCheck_CheckWithPathCondition_SpecialChars_True
+    [Documentation]    String condition should be compared with passed parameter
+    ${GRANT_PATH1}    Set Variable    "path" condition with parameters {"path":"/!@#$%^&*"}
+    ${CHECK_PATH1}    Set Variable    "path" condition with parameters {"file":"/!@#$%^&*"}
+    ${CHECK_PATH2}    Set Variable    "path" condition with parameters {"file":"/!@#$%^&*/ŮÜčÇ╔╬"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH2}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_PATH" and conditions "${GRANT_PATH1}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH1}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH2}" for user "${userId}" is "true"
+
+Test_NonMeteredEntitlements_PathConditionType_CreateAndCheck_CheckWithPathCondition_NocaseDefault
+    [Documentation]    String condition should be compared with passed parameter
+    ${GRANT_PATH1}    Set Variable    "path" condition with parameters {"path":"/rOot"}
+    ${CHECK_PATH1}    Set Variable    "path" condition with parameters {"file":"/rOot"}
+    ${CHECK_PATH2}    Set Variable    "path" condition with parameters {"file":"/root"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH2}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_PATH" and conditions "${GRANT_PATH1}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH1}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH2}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_PathConditionType_CreateAndCheck_CheckWithPathCondition_NocaseFalse
+    [Documentation]    String condition should be compared with passed parameter
+    ${GRANT_PATH1}    Set Variable    "path" condition with parameters {"path":"/rOot";"nocase":"false"}
+    ${CHECK_PATH1}    Set Variable    "path" condition with parameters {"file":"/rOot"}
+    ${CHECK_PATH2}    Set Variable    "path" condition with parameters {"file":"/root"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH2}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_PATH" and conditions "${GRANT_PATH1}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH1}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH2}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_PathConditionType_CreateAndCheck_CheckWithPathCondition_NocaseTrue
+    [Documentation]    String condition should be compared with passed parameter
+    ${GRANT_PATH1}    Set Variable    "path" condition with parameters {"path":"/rOot";"nocase":"true"}
+    ${CHECK_PATH1}    Set Variable    "path" condition with parameters {"file":"/rOot"}
+    ${CHECK_PATH2}    Set Variable    "path" condition with parameters {"file":"/root"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH2}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_PATH" and conditions "${GRANT_PATH1}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH1}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH2}" for user "${userId}" is "true"
+
+Test_NonMeteredEntitlements_PathConditionType_CreateAndCheck_CheckWithPathCondition_SeparatorDefault
+    [Documentation]    String condition should be compared with passed parameter
+    ${GRANT_PATH1}    Set Variable    "path" condition with parameters {"path":"/root/subdirectory->abc"}
+    ${CHECK_PATH1}    Set Variable    "path" condition with parameters {"file":"/root/subdirectory->abc"}
+    ${CHECK_PATH2}    Set Variable    "path" condition with parameters {"file":"/root/subdirectory"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH2}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_PATH" and conditions "${GRANT_PATH1}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH1}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH2}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_PathConditionType_CreateAndCheck_CheckWithPathCondition_SeparatorSet_No1
+    [Documentation]    String condition should be compared with passed parameter
+    ${GRANT_PATH1}    Set Variable    "path" condition with parameters {"path":"/root/subdirectory->abc";"separator":"/"}
+    ${CHECK_PATH1}    Set Variable    "path" condition with parameters {"file":"/root/subdirectory->abc"}
+    ${CHECK_PATH2}    Set Variable    "path" condition with parameters {"file":"/root/subdirectory"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH2}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_PATH" and conditions "${GRANT_PATH1}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH1}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH2}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_PathConditionType_CreateAndCheck_CheckWithPathCondition_SeparatorSet_No2
+    [Documentation]    String condition should be compared with passed parameter
+    ${GRANT_PATH1}    Set Variable    "path" condition with parameters {"path":"->root->subdirectory/abc";"separator":"->"}
+    ${CHECK_PATH1}    Set Variable    "path" condition with parameters {"file":"->root->subdirectory/abc"}
+    ${CHECK_PATH2}    Set Variable    "path" condition with parameters {"file":"->root/subdirectory->abc"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH2}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_PATH" and conditions "${GRANT_PATH1}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH1}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH2}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_PathConditionType_CreateAndCheck_CheckWithPathCondition_NocaseTrue_SeparatorSet_True
+    [Documentation]    String condition should be compared with passed parameter
+    ${GRANT_PATH1}    Set Variable    "path" condition with parameters {"path":"->root->subdirectory->abc";"nocase":"true";"separator":"->"}
+    ${CHECK_PATH1}    Set Variable    "path" condition with parameters {"file":"->root->subdirectory->abc"}
+    ${CHECK_PATH2}    Set Variable    "path" condition with parameters {"file":"->rooT->Subdirectory->aBc"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH2}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_PATH" and conditions "${GRANT_PATH1}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH1}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH2}" for user "${userId}" is "true"
+
+Test_NonMeteredEntitlements_PathConditionType_CreateAndCheck_CheckWithPathCondition_NocaseTrue_SeparatorSet_False
+    [Documentation]    String condition should be compared with passed parameter
+    ${GRANT_PATH1}    Set Variable    "path" condition with parameters {"path":"->root->subdirectory->abc";"nocase":"true";"separator":"->"}
+    ${CHECK_PATH1}    Set Variable    "path" condition with parameters {"file":"->root->subdirectory->abc"}
+    ${CHECK_PATH2}    Set Variable    "path" condition with parameters {"file":"->rooT->Subdirectory->aB"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH1}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH2}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_PATH" and conditions "${GRANT_PATH1}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH1}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH2}" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_PathConditionType_CreateAndCheck_CheckWithoutCondition_False
+    [Documentation]    String condition should be compared with passed parameter
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root/subdirectory"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root/subdirectory"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_PATH" and conditions "${GRANT_PATH}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_PATH" for user "${userId}" is "false"
+
+Test_NonMeteredEntitlements_PathConditionType_CreateAndCheck_CheckWithStringCondition_False
+    [Documentation]    String condition should be compared with passed parameter
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"root/subdirectory"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"root/subdirectory"}
+    ${CHECK_STR}    Set Variable    "string" condition with parameters {"string":"abc"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_PATH" and conditions "${GRANT_PATH}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_STR}" for user "${userId}" is "false"
+
+###Timeframe condition:
+Test_NonMeteredEntitlements_PathConditionType_CreateAndCheck_CheckWithTimeframeCondition
+    [Documentation]    String condition should be compared with passed parameter
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"root/subdirectory"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"root/subdirectory"}
+    ${CHECK_TIME}    Set Variable    "timeframe" condition with parameters {"time":"2011-01-01T01:01:01Z"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_PATH" and conditions "${GRANT_PATH}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_TIME}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH}|${CHECK_TIME}" for user "${userId}" is "true"
+
+###Geo condition:
+Test_NonMeteredEntitlements_PathConditionType_CreateAndCheck_CheckWithGeoCondition
+    [Documentation]    String condition should be compared with passed parameter
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"root"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"root"}
+    ${CHECK_GEO}    Set Variable    "geo" condition with parameters {"geoPath":"root"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_PATH" and conditions "${GRANT_PATH}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_GEO}" for user "${userId}" is "false"
+
+###Metered condition:
+Test_NonMeteredEntitlements_PathConditionType_CreateAndCheck_CheckWithMeteredCondition
+    [Documentation]    String condition should be compared with passed parameter
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"root/subdirectory"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"root/subdirectory"}
+    ${CHECK_METERED} =         Set Variable        "metered" condition with parameters {"quantity": "1"}
+    ${userId} =        generate random id
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH}" for user "${userId}" is "false"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+    grant entitlement with entitlementType "ENT_PATH" and conditions "${GRANT_PATH}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH}" for user "${userId}" is "true"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_METERED}" for user "${userId}" is "false"
+
+### 2Users_2Entitlements
+Test_NonMeteredEntitlements_PathConditionType_CreateAndCheck_2Users_2Entitlements
+    [Documentation]
+    ${userId1} =     generate random id
+    ${userId2} =     generate random id
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"root/subdirectory"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"root/subdirectory"}
+    ${entitlementType1}      Set Variable    ENT_PATH_1
+    ${entitlementType2}      Set Variable    ENT_PATH_2
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_PATH}" for user "${userId1}" is "false"
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_PATH}" for user "${userId2}" is "false"
+    grant entitlement with entitlementType "${entitlementType1}" and conditions "${GRANT_PATH}" for user "${userId1}"
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_PATH}" for user "${userId1}" is "true"
+    ensure there are "1" entitlements for user "${userId1}"
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_PATH}" for user "${userId2}" is "false"
+    ensure there are "0" entitlements for user "${userId2}"
+    grant entitlement with entitlementType "${entitlementType1}" and conditions "${GRANT_PATH}" for user "${userId2}"
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_PATH}" for user "${userId1}" is "true"
+    ensure there are "1" entitlements for user "${userId1}"
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_PATH}" for user "${userId2}" is "true"
+    ensure there are "1" entitlements for user "${userId2}"
+    grant entitlement with entitlementType "${entitlementType2}" and conditions "${GRANT_PATH}" for user "${userId1}"
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_PATH}" for user "${userId1}" is "true"
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_PATH}" for user "${userId1}" is "true"
+    ensure there are "2" entitlements for user "${userId1}"
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_PATH}" for user "${userId2}" is "true"
+    ensure there are "1" entitlements for user "${userId2}"
+    grant entitlement with entitlementType "${entitlementType2}" and conditions "${GRANT_PATH}" for user "${userId2}"
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_PATH}" for user "${userId1}" is "true"
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_PATH}" for user "${userId1}" is "true"
+    ensure there are "2" entitlements for user "${userId1}"
+    check entitlement with entitlementType "${entitlementType1}" and conditions "${CHECK_PATH}" for user "${userId2}" is "true"
+    check entitlement with entitlementType "${entitlementType2}" and conditions "${CHECK_PATH}" for user "${userId2}" is "true"
+    ensure there are "2" entitlements for user "${userId2}"
+
+Test_NonMeteredEntitlements_PathConditionType_CreateAndCheck_MulitpleEntitlements_True
+    [Documentation]    Tests if it is possible to create multiple grants for entitlements with same 
+    ...                userId, entitlementType, grantSource & grantSourceId 
+    ${GRANT_PATH}    Set Variable    "path" condition with parameters {"path":"/root/subdirectory"}
+    ${CHECK_PATH}    Set Variable    "path" condition with parameters {"file":"/root/subdirectory"}
+    ${userId} =        generate random id
+    ensure there are "0" entitlements for user "${userId}"
+    grant entitlement with entitlementType "ENT_PATH" and conditions "${GRANT_PATH}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH}" for user "${userId}" is "true"
+    ensure there are "1" entitlements for user "${userId}"
+    grant entitlement with entitlementType "ENT_PATH" and conditions "${GRANT_PATH}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH}" for user "${userId}" is "true"
+    ensure there are "2" entitlements for user "${userId}"
+    grant entitlement with entitlementType "ENT_PATH" and conditions "${GRANT_PATH}" for user "${userId}"
+    check entitlement with entitlementType "ENT_PATH" and conditions "${CHECK_PATH}" for user "${userId}" is "true"
+    ensure there are "3" entitlements for user "${userId}"

@@ -1,0 +1,403 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wadl:application xmlns:wadl="http://wadl.dev.java.net/2009/02" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <wadl:doc xmlns:enunciate="http://enunciate.codehaus.org/" enunciate:generatedBy="Enunciate-1.28"/>
+  <wadl:grammars>
+    <wadl:include href="ns0.xsd"/>
+  </wadl:grammars>
+  <wadl:resources base="http://localhost:8080/OMS">
+    <wadl:resource path="/rest/grants">
+      <wadl:method name="POST">
+        <wadl:doc>
+          <![CDATA[Creates a grant.]]>
+        </wadl:doc>
+        <wadl:request>
+          <wadl:doc>
+            <![CDATA[Grant object including list of conditions]]>
+          </wadl:doc>
+          <wadl:representation mediaType="application/xml" element="grantData"/>
+          <wadl:representation mediaType="application/json"/>
+        </wadl:request>
+        <wadl:response>
+          <wadl:doc>
+            <![CDATA[Same as request, but <i>Id</i> is added and current time assigned to grantTime if it was omitted.]]>
+          </wadl:doc>
+          <wadl:representation mediaType="application/xml" element="grantData"/>
+          <wadl:representation mediaType="application/json"/>
+        </wadl:response>
+      </wadl:method>
+    </wadl:resource>
+    <wadl:resource path="/rest/grants/{grantId}">
+      <wadl:param name="grantId" style="template">
+        <wadl:doc>
+          <![CDATA[grant id]]>
+        </wadl:doc>
+      </wadl:param>
+      <wadl:method name="GET">
+        <wadl:doc>
+          <![CDATA[Get single grant by internal id.]]>
+        </wadl:doc>
+        <wadl:request/>
+        <wadl:response>
+          <wadl:doc>
+            <![CDATA[grant]]>
+          </wadl:doc>
+          <wadl:representation mediaType="application/xml" element="grantData"/>
+          <wadl:representation mediaType="application/json"/>
+        </wadl:response>
+      </wadl:method>
+      <wadl:method name="DELETE">
+        <wadl:doc>
+          <![CDATA[Revoke single grant by internal id.]]>
+        </wadl:doc>
+        <wadl:request/>
+      </wadl:method>
+    </wadl:resource>
+    <wadl:resource path="/rest/grants/userId/{userId}">
+      <wadl:param name="userId" style="template">
+        <wadl:doc>
+          <![CDATA[user id]]>
+        </wadl:doc>
+      </wadl:param>
+      <wadl:method name="GET">
+        <wadl:doc>
+          <![CDATA[Get all user's grants of given entitlement type, grant source and grant source id.]]>
+        </wadl:doc>
+        <wadl:request>
+          <wadl:param name="entitlementType" style="query">
+            <wadl:doc>
+              <![CDATA[type of entitlement]]>
+            </wadl:doc>
+          </wadl:param>
+          <wadl:param name="grantSource" style="query">
+            <wadl:doc>
+              <![CDATA[reason of granting.]]>
+            </wadl:doc>
+          </wadl:param>
+          <wadl:param name="grantSourceId" style="query">
+            <wadl:doc>
+              <![CDATA[external granting event id.]]>
+            </wadl:doc>
+          </wadl:param>
+        </wadl:request>
+        <wadl:response>
+          <wadl:doc>
+            <![CDATA[list of user's grants]]>
+          </wadl:doc>
+          <wadl:representation mediaType="application/xml" element="listOfGrants"/>
+          <wadl:representation mediaType="application/json"/>
+        </wadl:response>
+      </wadl:method>
+      <wadl:method name="DELETE">
+        <wadl:doc>
+          <![CDATA[Revoke user's entitlements of given type, grant source and grant source id.]]>
+        </wadl:doc>
+        <wadl:request>
+          <wadl:param name="entitlementType" style="query">
+            <wadl:doc>
+              <![CDATA[type of entitlement]]>
+            </wadl:doc>
+          </wadl:param>
+          <wadl:param name="grantSource" style="query">
+            <wadl:doc>
+              <![CDATA[reason of granting]]>
+            </wadl:doc>
+          </wadl:param>
+          <wadl:param name="grantSourceId" style="query">
+            <wadl:doc>
+              <![CDATA[external granting event id]]>
+            </wadl:doc>
+          </wadl:param>
+        </wadl:request>
+      </wadl:method>
+    </wadl:resource>
+    <wadl:resource path="/rest/grants/{grantId}/conditions">
+      <wadl:param name="grantId" style="template">
+        <wadl:doc>
+          <![CDATA[id of grant]]>
+        </wadl:doc>
+      </wadl:param>
+      <wadl:method name="POST">
+        <wadl:doc>
+          <![CDATA[Set new conditions for existing grant.]]>
+        </wadl:doc>
+        <wadl:request>
+          <wadl:doc>
+            <![CDATA[new list of conditions. It will overwrite the existing one.]]>
+          </wadl:doc>
+          <wadl:representation mediaType="application/xml" element="listOfCondition"/>
+          <wadl:representation mediaType="application/json"/>
+        </wadl:request>
+        <wadl:response>
+          <wadl:doc>
+            <![CDATA[modified grant]]>
+          </wadl:doc>
+          <wadl:representation mediaType="application/xml" element="grantData"/>
+          <wadl:representation mediaType="application/json"/>
+        </wadl:response>
+      </wadl:method>
+      <wadl:method name="DELETE">
+        <wadl:doc>
+          <![CDATA[Remove conditions from existing grant.]]>
+        </wadl:doc>
+        <wadl:request/>
+        <wadl:response>
+          <wadl:doc>
+            <![CDATA[updated grant]]>
+          </wadl:doc>
+          <wadl:representation mediaType="application/xml" element="grantData"/>
+          <wadl:representation mediaType="application/json"/>
+        </wadl:response>
+      </wadl:method>
+    </wadl:resource>
+    <wadl:resource path="/rest/grants/{grantId}/properties">
+      <wadl:param name="grantId" style="template">
+        <wadl:doc>
+          <![CDATA[id of an existing grant]]>
+        </wadl:doc>
+      </wadl:param>
+      <wadl:method name="GET">
+        <wadl:doc>
+          <![CDATA[Get grant properties.]]>
+        </wadl:doc>
+        <wadl:request/>
+        <wadl:response>
+          <wadl:doc>
+            <![CDATA[list of grant properties]]>
+          </wadl:doc>
+          <wadl:representation mediaType="application/xml"/>
+          <wadl:representation mediaType="application/json"/>
+        </wadl:response>
+      </wadl:method>
+    </wadl:resource>
+    <wadl:resource path="/rest/grants/{grantId}/status">
+      <wadl:param name="grantId" style="template">
+        <wadl:doc>
+          <![CDATA[grant id]]>
+        </wadl:doc>
+      </wadl:param>
+      <wadl:method name="GET">
+        <wadl:doc>
+          <![CDATA[Get grant status. Status affects if grant is processed or skipped by methods]]>
+<![CDATA[#executeMany(String, String, Boolean, com.hybris.services]]>
+<![CDATA[.entitlements.api.ListOfExecuteManyData) and]]>
+<![CDATA[#execute(String, String, String, Boolean, com.hybris.services.entitlements.api.ListOfCriterionData).]]>
+        </wadl:doc>
+        <wadl:request/>
+        <wadl:response>
+          <wadl:doc>
+            <![CDATA[grant status]]>
+          </wadl:doc>
+          <wadl:representation mediaType="application/xml" element="statusData"/>
+          <wadl:representation mediaType="application/json"/>
+        </wadl:response>
+      </wadl:method>
+      <wadl:method name="PUT">
+        <wadl:doc>
+          <![CDATA[Update grant status. Status affects if grant is processed or skipped by methods]]>
+<![CDATA[#executeMany(String, String, Boolean, com.hybris.services.entitlements.api.ListOfExecuteManyData) and]]>
+<![CDATA[#execute(String, String, String, Boolean, com.hybris.services.entitlements.api.ListOfCriterionData).]]>
+        </wadl:doc>
+        <wadl:request>
+          <wadl:doc>
+            <![CDATA[new status]]>
+          </wadl:doc>
+          <wadl:representation mediaType="application/xml" element="statusData"/>
+          <wadl:representation mediaType="application/json"/>
+        </wadl:request>
+        <wadl:response>
+          <wadl:doc>
+            <![CDATA[updated grant]]>
+          </wadl:doc>
+          <wadl:representation mediaType="application/xml" element="grantData"/>
+          <wadl:representation mediaType="application/json"/>
+        </wadl:response>
+      </wadl:method>
+    </wadl:resource>
+    <wadl:resource path="/rest/grants/userId/{userId}/execute">
+      <wadl:param name="userId" style="template">
+        <wadl:doc>
+          <![CDATA[user id]]>
+        </wadl:doc>
+      </wadl:param>
+      <wadl:method name="PUT">
+        <wadl:doc>
+          <![CDATA[Checks if a user has a grant.]]>
+        </wadl:doc>
+        <wadl:request>
+          <wadl:doc>
+            <![CDATA[execution criteria. Depend on set of conditions you expect to have in grants.]]>
+          </wadl:doc>
+          <wadl:representation mediaType="application/xml" element="listOfCriterion"/>
+          <wadl:representation mediaType="application/json"/>
+          <wadl:param name="action" style="query">
+            <wadl:doc>
+              <![CDATA[which action to perform on the grant]]>
+            </wadl:doc>
+          </wadl:param>
+          <wadl:param name="entitlementType" style="query">
+            <wadl:doc>
+              <![CDATA[type of entitlement]]>
+            </wadl:doc>
+          </wadl:param>
+          <wadl:param name="details" style="query">
+            <wadl:doc>
+              <![CDATA[if grant details should be returned]]>
+            </wadl:doc>
+          </wadl:param>
+        </wadl:request>
+        <wadl:response>
+          <wadl:doc>
+            <![CDATA[boolean result and optional list of affected grants. If the result is false,]]>
+<![CDATA[the list contains the most suitable candidates.]]>
+          </wadl:doc>
+          <wadl:representation mediaType="application/xml" element="executeResult"/>
+          <wadl:representation mediaType="application/json"/>
+        </wadl:response>
+      </wadl:method>
+    </wadl:resource>
+    <wadl:resource path="/rest/grants/userId/{userId}/executeMany">
+      <wadl:param name="userId" style="template">
+        <wadl:doc>
+          <![CDATA[user id]]>
+        </wadl:doc>
+      </wadl:param>
+      <wadl:method name="PUT">
+        <wadl:doc>
+          <![CDATA[Checks if a user has a grant.]]>
+        </wadl:doc>
+        <wadl:request>
+          <wadl:doc>
+            <![CDATA[entitlement types and execution criteria for each type.]]>
+<![CDATA[The criteria on set of conditions you expect to have in grants.]]>
+          </wadl:doc>
+          <wadl:representation mediaType="application/xml" element="listOfExecuteMany"/>
+          <wadl:representation mediaType="application/json"/>
+          <wadl:param name="action" style="query">
+            <wadl:doc>
+              <![CDATA[which action to perform on the grant]]>
+            </wadl:doc>
+          </wadl:param>
+          <wadl:param name="details" style="query">
+            <wadl:doc>
+              <![CDATA[if grant details should be returned]]>
+            </wadl:doc>
+          </wadl:param>
+        </wadl:request>
+        <wadl:response>
+          <wadl:doc>
+            <![CDATA[boolean result and optional list of affected g]]>
+<![CDATA[rants for each entitlement type.]]>
+<![CDATA[For the results which are false, the lists contain the most suitable candidates.]]>
+          </wadl:doc>
+          <wadl:representation mediaType="application/xml" element="executeManyResult"/>
+          <wadl:representation mediaType="application/json"/>
+        </wadl:response>
+      </wadl:method>
+    </wadl:resource>
+    <wadl:resource path="/rest/grants/{grantId}/conditions/{conditionType}">
+      <wadl:param name="grantId" style="template">
+        <wadl:doc>
+          <![CDATA[id of grant]]>
+        </wadl:doc>
+      </wadl:param>
+      <wadl:param name="conditionType" style="template">
+        <wadl:doc>
+          <![CDATA[optional type of condition to remove]]>
+        </wadl:doc>
+      </wadl:param>
+      <wadl:method name="DELETE">
+        <wadl:doc>
+          <![CDATA[Remove condition of given type from existing grant.]]>
+        </wadl:doc>
+        <wadl:request/>
+        <wadl:response>
+          <wadl:doc>
+            <![CDATA[updated grant]]>
+          </wadl:doc>
+          <wadl:representation mediaType="application/xml" element="grantData"/>
+          <wadl:representation mediaType="application/json"/>
+        </wadl:response>
+      </wadl:method>
+    </wadl:resource>
+    <wadl:resource path="/rest/grants/{grantId}/properties/{key}">
+      <wadl:param name="grantId" style="template">
+        <wadl:doc>
+          <![CDATA[id of an existing grant]]>
+        </wadl:doc>
+      </wadl:param>
+      <wadl:param name="key" style="template">
+        <wadl:doc>
+          <![CDATA[property name]]>
+        </wadl:doc>
+      </wadl:param>
+      <wadl:method name="GET">
+        <wadl:doc>
+          <![CDATA[Get single property of given grant.]]>
+        </wadl:doc>
+        <wadl:request/>
+        <wadl:response>
+          <wadl:doc>
+            <![CDATA[current value of property]]>
+          </wadl:doc>
+          <wadl:representation mediaType="application/xml"/>
+          <wadl:representation mediaType="application/json"/>
+        </wadl:response>
+      </wadl:method>
+      <wadl:method name="DELETE">
+        <wadl:doc>
+          <![CDATA[Delete single property of a grant.]]>
+        </wadl:doc>
+        <wadl:request/>
+        <wadl:response>
+          <wadl:doc>
+            <![CDATA[the most recent value of the property]]>
+          </wadl:doc>
+          <wadl:representation mediaType="application/xml"/>
+          <wadl:representation mediaType="application/json"/>
+        </wadl:response>
+      </wadl:method>
+      <wadl:method name="PUT">
+        <wadl:doc>
+          <![CDATA[Update custom grant property.]]>
+<![CDATA[<p>]]>
+<![CDATA[To increment value of given property by specified number set <i>relative</i> to true. Use negative numbers for decrement.]]>
+<![CDATA[Increment/decrement works for numeric properties only.]]>
+<![CDATA[</p>]]>
+        </wadl:doc>
+        <wadl:request>
+          <wadl:doc>
+            <![CDATA[new value]]>
+          </wadl:doc>
+          <wadl:representation mediaType="application/xml" element="propertyData"/>
+          <wadl:representation mediaType="application/json"/>
+        </wadl:request>
+        <wadl:response>
+          <wadl:doc>
+            <![CDATA[updated grant]]>
+          </wadl:doc>
+          <wadl:representation mediaType="application/xml" element="grantData"/>
+          <wadl:representation mediaType="application/json"/>
+        </wadl:response>
+      </wadl:method>
+      <wadl:method name="POST">
+        <wadl:doc>
+          <![CDATA[Set custom grant property.]]>
+        </wadl:doc>
+        <wadl:request>
+          <wadl:doc>
+            <![CDATA[new value]]>
+          </wadl:doc>
+          <wadl:representation mediaType="application/xml"/>
+          <wadl:representation mediaType="application/json"/>
+        </wadl:request>
+        <wadl:response>
+          <wadl:doc>
+            <![CDATA[updated grant]]>
+          </wadl:doc>
+          <wadl:representation mediaType="application/xml" element="grantData"/>
+          <wadl:representation mediaType="application/json"/>
+        </wadl:response>
+      </wadl:method>
+    </wadl:resource>
+  </wadl:resources>
+</wadl:application>

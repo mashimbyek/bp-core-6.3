@@ -1,0 +1,34 @@
+# -----------------------------------------------------------------------
+# [y] hybris Platform
+#
+# Copyright (c) 2017 SAP SE or an SAP affiliate company.  All rights reserved.
+# 
+# This software is the confidential and proprietary information of SAP
+# ("Confidential Information"). You shall not disclose such Confidential
+# Information and shall use it only in accordance with the terms of the
+# license agreement you entered into with SAP.
+# -----------------------------------------------------------------------
+*** Settings ***
+Resource    entitlements-test/settings_keywords.txt
+Resource    entitlements-test/builder_entitlements_keywords.txt
+Resource    entitlements-test/modify_entitlements_keywords.txt
+Resource    entitlements-test/exceptions_entitlements_keywords.txt
+Resource    entitlements-test/check_entitlements_keywords.txt
+Resource    entitlements-test/use_entitlements_keywords.txt
+
+*** Test Cases ***
+#create another ent. granted for another user and check
+Test_entitlement_simple
+    [Documentation]    Update entitlement test
+    ${userId} =     generate random id
+    ${grantSourceId} =      Set Variable   "0x000001"
+    ${grantSource} =        Set Variable   "Source"
+    ${entitlement}=    create entitlement with entitlementType "simple" for user "${userId}"
+    assign grantSourceId "${grantSourceId}" to entitlement "${entitlement}"
+    assign grantSource "${grantSource}" to entitlement "${entitlement}"
+    ${entitlement}=    grant entitlement "${entitlement}"
+    get entitlement with grantId "${entitlement.id}" is "true"
+    get entitlement with grantId "${entitlement.id}q" is "false"
+    #revoke entitlement with entitlementType "simple" and grantSource "${grantSource}", grantSourceId "${grantSourceId}" for user "${userId}"
+    revoke entitlement for user "${userId}" and entitlementType "simple" and grantSource "${grantSource}" and grantSourceId "${grantSourceId}"
+    get entitlement with grantId "${entitlement.id}" is "false"

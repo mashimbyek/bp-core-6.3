@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ [y] hybris Platform
+
+ Copyright (c) 2017 SAP SE or an SAP affiliate company.  All rights reserved.
+
+ This software is the confidential and proprietary information of SAP
+ ("Confidential Information"). You shall not disclose such Confidential
+ Information and shall use it only in accordance with the terms of the
+ license agreement you entered into with SAP.
+-->
+<!-- ++++++++++++++++++++++++++++++++++++++ -->
+<!-- +++++ findbugs filter definition +++++ -->
+<!-- ++++++++++++++++++++++++++++++++++++++ -->
+<!-- see documentation at 
+    http://findbugs.sourceforge.net/manual/filter.html -->
+<FindBugsFilter xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xsi:noNamespaceSchemaLocation="https://findbugs.googlecode.com/svn/trunk/findbugs/etc/bugcollection.xsd">
+    <!-- do not report EI_EXPOSE_REP for java.util.Date -->
+    <Match>
+        <Bug code="EI,EI2" />
+		<Priority value="2" />
+    </Match>
+</FindBugsFilter>
