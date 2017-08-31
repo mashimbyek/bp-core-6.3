@@ -1,0 +1,46 @@
+<hybrisconfig xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:noNamespaceSchemaLocation='../bin/platform/resources/schemas/extensions.xsd'>
+  <extensions>
+    <path dir='${HYBRIS_BIN_DIR}' autoload='false' />
+    <extension name='ordermanagementaddon' />
+    <extension name='orderselfserviceaddon' />
+    <extension name='ordermanagementfacade' />
+    <extension name='ordermanagementwebservices' />
+    <extension name='warehousing' />
+    <extension name='warehousingbackoffice' />
+    <extension name='warehousingfacade' />
+    <extension name='warehousingwebservices' />
+    <extension name='instore' />
+    <extension name='mcc' />
+    <extension name='backoffice' />
+    <extension name='commercesearchbackoffice' />
+    <extension name='b2bcommercebackoffice' />
+    <extension name='commerceservicesbackoffice' />
+    <extension name='b2badmincockpit' />
+    <extension name='yacceleratorcockpits' />
+    <extension name='yacceleratorinitialdata' />
+    <extension name='yacceleratorordermanagement' />
+    <extension name='yacceleratorstorefront' />
+    <extension name='yaddon' />
+    <extension name='ycommercewebservices' />
+    <extension name='apparelstore' />
+    <extension name='electronicsstore' />
+    <extension name='powertoolsstore' />
+    <extension name='solrserver' />
+    <extension name='acceleratorwebservicesaddon' />
+    <extension name='b2bacceleratoraddon' />
+    <extension name='commerceorgaddon' />
+    <extension name='assistedservicestorefront' />
+    <extension name='customerticketingaddon' />
+    <extension name='customersupportbackoffice' />
+    <extension name='ticketsystembackoffice' />
+    <extension name='rulebuilderbackoffice' />
+    <extension name='couponbackoffice' />
+    <extension name='droolsruleengineservices' />
+    <extension name='couponfacades' />
+    <extension name='promotionenginesamplesaddon' />
+    <extension name='yb2bacceleratorstorefront' />
+	<extension name='mediaconversion' />
+	<extension name='datahubadapter' />
+	<extension name='datahubbackoffice' />
+  </extensions>
+</hybrisconfig>
