@@ -1,0 +1,11 @@
+INSERT_UPDATE Principal2ReadableCatalogVersionRelation;source(uid)[unique=true];target(catalog(id),version)[unique=true]
+;cmsmanagergroup;apparel-ukContentCatalog:Online;
+;cmsmanagergroup;apparel-ukContentCatalog:Staged;
+;cmsmanagergroup;apparel-deContentCatalog:Online;
+;cmsmanagergroup;apparel-deContentCatalog:Staged;
+
+INSERT_UPDATE Principal2WriteableCatalogVersionRelation;source(uid)[unique=true];target(catalog(id),version)[unique=true]
+;cmsmanagergroup;apparel-ukContentCatalog:Online;
+;cmsmanagergroup;apparel-ukContentCatalog:Staged;
+;cmsmanagergroup;apparel-deContentCatalog:Online;
+;cmsmanagergroup;apparel-deContentCatalog:Staged;

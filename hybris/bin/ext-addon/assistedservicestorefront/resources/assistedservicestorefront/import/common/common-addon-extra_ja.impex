@@ -1,0 +1,7 @@
+# ******************************This file is generated - please do not edit it. It will be regenerated after every build.********************************#
+
+# Language
+$lang=ja
+
+UPDATE CustomerList;uid[unique=true];locname[lang=$lang]
+ ;myRecentCustomerSessions;"最近の顧客セッション"

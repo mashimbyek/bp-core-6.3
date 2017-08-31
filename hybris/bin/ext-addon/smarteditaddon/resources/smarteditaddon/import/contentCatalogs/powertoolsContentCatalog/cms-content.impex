@@ -1,0 +1,8 @@
+INSERT_UPDATE Principal2ReadableCatalogVersionRelation;source(uid)[unique=true];target(catalog(id),version)[unique=true]
+;cmsmanagergroup;powertoolsContentCatalog:Online;
+;cmsmanagergroup;powertoolsContentCatalog:Staged;
+
+INSERT_UPDATE Principal2WriteableCatalogVersionRelation;source(uid)[unique=true];target(catalog(id),version)[unique=true]
+;cmsmanagergroup;powertoolsContentCatalog:Online;
+;cmsmanagergroup;powertoolsContentCatalog:Staged;
+;

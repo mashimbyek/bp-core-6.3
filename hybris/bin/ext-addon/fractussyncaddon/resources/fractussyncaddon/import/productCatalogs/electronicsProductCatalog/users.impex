@@ -1,0 +1,10 @@
+# Macros / Replacement Parameter definitions
+$defaultPassword=password
+
+INSERT_UPDATE UserGroup;UID[unique=true];groups(uid)[mode=append]
+;yaascustomergroup;employeegroup
+
+# Customers
+INSERT_UPDATE Customer;groups(uid);uid[unique=true];name;password[default=$defaultPassword];customerId
+;"yaascustomergroup";"yaascustomer1@yaastest.com";"Kenneth Reviewer";;"yaascustomer1@yaastest.com";
+;"yaascustomergroup";"yaascustomer2@yaastest.com";"Yaas Reviewer";;"yaascustomer2@yaastest.com";

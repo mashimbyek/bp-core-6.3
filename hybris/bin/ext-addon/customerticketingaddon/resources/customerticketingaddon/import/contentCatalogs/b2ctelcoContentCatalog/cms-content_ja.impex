@@ -1,0 +1,22 @@
+# ******************************This file is generated - please do not edit it. It will be regenerated after every build.********************************#
+
+$contentCatalog=b2ctelcoContentCatalog
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
+
+# Language
+$lang=ja
+
+# Content Pages
+UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];title[lang=$lang]
+ ;;add-support-ticket;"サポートチケットの追加"
+ ;;support-tickets;"サポートチケットの一覧"
+ ;;update-support-ticket;"サポートチケットの更新"
+
+# CMS Navigation Nodes
+UPDATE CMSNavigationNode;$contentCV[unique=true];uid[unique=true];title[lang=$lang]
+ ;;AccountSupportTicketHistoryNavNode;"サポートチケット"
+
+# CMS Link Components
+UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];linkName[lang=$lang]
+ ;;AccountSupportTicketHistoryLink;"サポート チケット"
+ ;;AccountViewSupportTicketHistoryLink;"サポートチケットの管理"

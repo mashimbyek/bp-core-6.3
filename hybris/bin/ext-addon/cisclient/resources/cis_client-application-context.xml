@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  /*
+   * [y] hybris Platform
+   *
+   * Copyright (c) 2017 hybris AG    * All rights reserved.
+   *
+   * This software is the confidential and proprietary information of hybris
+   * ("Confidential Information"). You shall not disclose such Confidential
+   * Information and shall use it only in accordance with the terms of the
+   * license agreement you entered into with hybris.
+   *
+   *
+   */
+  -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+
+
+	<!-- Provides a platform aware current locale information -->
+<!--
+	<bean id="cisLocaleDecorator"
+		class="com.hybris.platform.coreplus.commons.decorators.LocaleDecorator" />
+-->
+
+	<util:list id="cisClientRestCallDecorators">
+		<bean
+			class="com.hybris.cis.client.rest.common.tenant.DynamicTenantRestCallDecorator" />
+
+	</util:list>
+
+	<util:list id="cisClientRestResponseHandlers">
+		<ref bean="cisRestClientExceptionHandler" />
+	</util:list>
+
+	<bean id="hybrisCommonsResolver" class="com.hybris.charon.conf.HybrisCommonsResolver">
+		<constructor-arg value="cis"/>
+		<property name="applicationProperties" ref="applicationProperties"/>
+	</bean>
+
+	<import resource="classpath:/hybris-cis-rest-common.xml"/>
+
+	<import resource="avs/cisAvs-client-spring.xml" />
+    <import resource="shipping/cisShipping-client-spring.xml" />
+	<import resource="avs/cisAvs-client-spring.xml" />
+    <import resource="geolocation/cisGeolocation-client-spring.xml" />
+	<import resource="tax/cisTax-client-spring.xml" />
+    <import resource="fraud/cisFraud-client-spring.xml" />
+    <import resource="payment/cisPayment-client-spring.xml" />
+</beans>

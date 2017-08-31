@@ -1,0 +1,13 @@
+INSERT_UPDATE Principal2ReadableCatalogVersionRelation;source(uid)[unique=true];target(catalog(id),version)[unique=true]
+;cmsmanagergroup;powertoolsProductCatalog:Online;
+;cmsmanagergroup;powertoolsProductCatalog:Staged;
+
+INSERT_UPDATE Principal2WriteableCatalogVersionRelation;source(uid)[unique=true];target(catalog(id),version)[unique=true];language(isocode)[unique=true];
+;cmsmanagergroup;powertoolsProductCatalog:Online;ja;
+;cmsmanagergroup;powertoolsProductCatalog:Online;en;
+;cmsmanagergroup;powertoolsProductCatalog:Online;de;
+;cmsmanagergroup;powertoolsProductCatalog:Online;zh;
+;cmsmanagergroup;powertoolsProductCatalog:Staged;ja;
+;cmsmanagergroup;powertoolsProductCatalog:Staged;en;
+;cmsmanagergroup;powertoolsProductCatalog:Staged;de;
+;cmsmanagergroup;powertoolsProductCatalog:Staged;zh;

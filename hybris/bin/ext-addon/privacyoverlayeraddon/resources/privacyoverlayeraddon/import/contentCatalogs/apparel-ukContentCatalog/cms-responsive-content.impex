@@ -1,0 +1,34 @@
+$contentCatalog=apparel-ukContentCatalog
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
+
+$lang=en
+
+
+INSERT_UPDATE PrivacyOverlayComponent;$contentCV[unique=true];uid[unique=true];name;
+;;PrivacyOverlayComponent;Privacy Overlay Component;PrivacyOverlayComponent;;
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;cmsComponents(uid,$contentCV)[mode=append]
+;;PlaceholderContentSlot;true;PrivacyOverlayComponent
+
+UPDATE PrivacyOverlayComponent;uid[unique=true];content[lang=$lang];acceptText[lang=$lang];declineButton;$contentCV[unique=true]
+;PrivacyOverlayComponent;"We use cookies to make using our websites and services easy and meaningful for you, and to better understand how they are used by our customers. By using our websites and services, you are agreeing to our Privacy Statement.";"X";false;
+
+INSERT_UPDATE ConsentReferenceLinkComponent;$contentCV[unique=true];uid[unique=true];name;url;&linkRef;&componentRef;target(code)[default='sameWindow'];linkName[lang=$lang]
+;;ForgetMeLink;ForgetMeLink;"https://profile.yaas.io/#!/opt-out/{tenant}/{consent-reference}";ForgetMeLink;ForgetMeLink;newWindow;"Forget Me"
+
+INSERT_UPDATE CMSNavigationNode;uid[unique=true];$contentCV[unique=true];name;&nodeRef;children(uid,$contentCV)[mode=append];links(&linkRef)
+;HybrisNavNode;;Hybris Pages;HybrisNavNode;ForgetMeNavNode
+
+# children of above navigation nodes #
+INSERT_UPDATE CMSNavigationNode;uid[unique=true];$contentCV[unique=true];name;&nodeRef;children(uid,$contentCV);links(&linkRef);
+;ForgetMeNavNode;;Forget Me Page;ForgetMeNavNode
+
+# entries of the above navigation nodes ##
+INSERT_UPDATE CMSNavigationEntry;uid[unique=true];$contentCV[unique=true];name;navigationNode(&nodeRef);item(ConsentReferenceLinkComponent.uid,ConsentReferenceLinkComponent.$contentCV);
+;ForgetMeNavNodeEntry;;Forget Me Navigation Node Entry;ForgetMeNavNode;ForgetMeLink;
+
+INSERT_UPDATE CMSNavigationNode;uid[unique=true];$contentCV[unique=true];links(&linkRef)[mode=append];&nodeRef
+;HybrisNavNode;;ForgetMeLink;HybrisNavNode
+
+INSERT_UPDATE CMSNavigationNode;uid[unique=true];$contentCV[unique=true];&nodeRef;children(uid,$contentCV)
+;FooterNavNode;;FooterNavNode;AcceleratorNavNode,HybrisNavNode,FollowUsNavNode

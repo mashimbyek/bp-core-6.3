@@ -1,0 +1,7 @@
+# ******************************This file is generated - please do not edit it. It will be regenerated after every build.********************************#
+
+# Language
+$lang=de
+
+UPDATE CustomerList;uid[unique=true];locname[lang=$lang]
+ ;myRecentCustomerSessions;"Meine letzten Kundensitzungen"

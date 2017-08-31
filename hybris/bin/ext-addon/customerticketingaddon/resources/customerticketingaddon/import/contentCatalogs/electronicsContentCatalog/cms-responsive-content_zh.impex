@@ -1,0 +1,21 @@
+# ******************************This file is generated - please do not edit it. It will be regenerated after every build.********************************#
+
+$contentCatalog=electronicsContentCatalog
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
+
+# Language
+$lang=zh
+
+# Content Pages
+UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];title[lang=$lang]
+ ;;add-support-ticket;"添加支持票证"
+ ;;support-tickets;"支持票证列表"
+ ;;update-support-ticket;"更新支持票证"
+
+# CMS Navigation Nodes
+UPDATE CMSNavigationNode;$contentCV[unique=true];uid[unique=true];title[lang=$lang]
+ ;;SupportTicketNavNode;"支持票证"
+
+# CMS Link Components
+UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];linkName[lang=$lang]
+ ;;AccountSupportTicketHistoryLink;"支持票证"

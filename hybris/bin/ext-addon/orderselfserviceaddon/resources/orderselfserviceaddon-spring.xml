@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ [y] hybris Platform
+
+ Copyright (c) 2017 SAP SE or an SAP affiliate company.
+ All rights reserved.
+
+ This software is the confidential and proprietary information of SAP
+ ("Confidential Information"). You shall not disclose such Confidential
+ Information and shall use it only in accordance with the terms of the
+ license agreement you entered into with SAP.
+-->
+
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context.xsd
+           http://www.springframework.org/schema/util
+           http://www.springframework.org/schema/util/spring-util.xsd">
+           
+    <context:annotation-config/> 
+
+	<bean id="orderselfserviceaddonCoreDataImportedEventListener" parent="abstractCoreDataImportedEventListener">
+		<property name="supportedChannels">
+			<list value-type="de.hybris.platform.commerceservices.enums.SiteChannel">
+				<value>B2C</value>
+				<!--
+								<value>B2B</value>
+				-->
+			</list>
+		</property>
+		<property name="addonExtensionMetadata">
+			<bean class="de.hybris.platform.addonsupport.data.AddonExtensionMetadata">
+				<property name="suffixChannel" value="false"/>
+				<property name="baseExtensionName" value="orderselfserviceaddon"/>
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="orderselfserviceaddonSampleDataEventListener" parent="abstractGenericAddOnSampleDataEventListener"  >
+		<property name="extensionName" value="orderselfserviceaddon" />
+	</bean>
+
+
+
+
+	<alias name="defaultOrderCancelFacade" alias="orderCancelFacade"/>
+	<bean id="defaultOrderCancelFacade" class="de.hybris.platform.orderselfserviceaddon.facades.impl.DefaultOrderCancelFacade" >
+		<property name="orderCancelService" ref="orderCancelService"/>
+		<property name="userService" ref="userService"/>
+		<property name="orderService" ref="orderService"/>
+		<property name="customerAccountService" ref="customerAccountService"/>
+		<property name="baseStoreService" ref="baseStoreService"/>
+		<property name="orderCancelRecordEntryConverter" ref="orderCancelRecordEntryConverter"/>
+	</bean>
+
+
+	<alias name="defaultOrderCancelRecordEntryConverter" alias="orderCancelRecordEntryConverter"/>
+	<bean id="defaultOrderCancelRecordEntryConverter" parent="abstractPopulatingConverter">
+		<property name="targetClass" value="de.hybris.platform.orderselfserviceaddon.ordercancel.OrderCancelRecordEntryData"/>
+		<property name="populators">
+			<list>
+				<ref bean="orderCancelRecordEntryPopulator"/>
+			</list>
+		</property>
+	</bean>
+
+
+	<alias name="defaultOrderCancelRecordEntryPopulator" alias="orderCancelRecordEntryPopulator"/>
+	<bean id="defaultOrderCancelRecordEntryPopulator"
+	      class="de.hybris.platform.orderselfserviceaddon.converters.populator.order.OrderCancelRecordEntryPopulator">
+	</bean>
+
+
+	<alias name="defaultOrderCancelPopulator" alias="orderCancelPopulator"/>
+	<bean id="defaultOrderCancelPopulator" class="de.hybris.platform.orderselfserviceaddon.converters.populator.order.OrderCancelPopulator">
+			<property name="orderCancelService" ref="orderCancelService"/>
+			<property name="userService" ref="userService"/>
+			<property name="cancelableEntriesStrategy" ref="cancelableEntriesStrategy"/>
+	</bean>
+
+	<bean parent="modifyPopulatorList">
+		<property name="list" ref="orderConverter"/>
+		<property name="add"  ref="orderCancelPopulator"/>
+	</bean>
+
+	<alias name="defaultOrderReturnPopulator" alias="orderReturnPopulator"/>
+	<bean id="defaultOrderReturnPopulator" class="de.hybris.platform.orderselfserviceaddon.converters.populator.order.OrderReturnPopulator">
+		<property name="returnService" ref="returnService"/>
+	</bean>
+
+	<alias name="defaultReturnableConsignmentStatusList" alias="returnableConsignmentStatusList"/>
+	<util:list id="defaultReturnableConsignmentStatusList" value-type="de.hybris.platform.basecommerce.enums.ConsignmentStatus">
+		<value>SHIPPED</value>
+	</util:list>
+
+	<bean parent="modifyPopulatorList">
+		<property name="list" ref="orderConverter"/>
+		<property name="add"  ref="orderReturnPopulator"/>
+	</bean>
+
+</beans>

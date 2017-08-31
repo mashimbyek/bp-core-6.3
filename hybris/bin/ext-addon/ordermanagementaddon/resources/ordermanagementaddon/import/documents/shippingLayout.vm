@@ -1,0 +1,101 @@
+##messageSource=classpath:/ordermanagementaddon/messages/document-shippinglabel_$lang.properties
+<html>
+<head>
+	<style type='text/css'>@media screen, print {
+		table {
+			width: 96%;
+			margin: 25px 10px 0;
+		}
+
+		th {
+			padding: 5px 5px 5px 15px;
+			background-color: #ccc;
+			font-weight: bold;
+			border: 1px solid #aaa;
+			text-align: left;
+		}
+
+		td {
+			padding: 5px 0 5px 15px;
+		}
+
+		td.title {
+            vertical-align: top;
+            text-align: right;
+            font-weight: bold;
+        }
+	}</style>
+</head>
+<body>
+<table>
+    <tr>
+        <td colspan="3">
+			${ctx.cmsSlotContents.SiteLogo}
+        </td>
+    </tr>
+    <tr>
+        <td align="center" valign="middle">
+            <a href="${ctx.baseUrl}" style="display:block; margin-top:10px;margin-bottom:10px;">${ctx.cmsSlotContents.TopContent}</a>
+        </td>
+    </tr>
+    <tr>
+		#foreach($packInfo in $ctx.consignment.packaginginfos)
+			<table>
+				<tr>
+					<td colspan="2">
+						<h1>Mock Priority Mail</h1>
+					</td>
+				</tr>
+    			<tr>
+        			<td colspan="2">${ctx.date}</td>
+        			<td colspan="2">Page $foreach.count of $ctx.consignment.packaginginfos.size()</td>
+    			</tr>
+    			<tr>
+        			<td colspan="4">$!{ctx.messages.trackingNumber} $!{ctx.consignment.trackingID}</td>
+    			</tr>
+				<tr>
+					<td colspan="3" class="title">$!{ctx.messages.packInfo}</td>
+					<td>
+						$!{ctx.messages.packInfoWidth} $!{packInfo.width}<br/>
+						$!{ctx.messages.packInfoHeight} $!{packInfo.height}<br/>
+						$!{ctx.messages.packInfoLength} $!{packInfo.length}
+					</td>
+				</tr>
+				<tr>
+					<td class="title">From</td>
+					<td colspan="3">
+            			$!{ctx.consignment.deliveryPointOfService.address.firstname} $!{ctx.consignment.deliveryPointOfService.address.lastname}<br/>
+            			$!{ctx.consignment.deliveryPointOfService.address.line1} $!{ctx.consignment.deliveryPointOfService.address.line2}<br/>
+            			$!{ctx.consignment.deliveryPointOfService.address.town}, $!{ctx.consignment.deliveryPointOfService.address.region} $!{ctx.consignment.deliveryPointOfService.address.postalcode}<br/>
+						$!{ctx.consignment.deliveryPointOfService.address.country.name}
+
+					</td>
+				</tr>
+				<tr>
+					<td class="title">Ship To</td>
+					<td colspan=3>
+            			$!{ctx.consignment.shippingAddress.firstname} $!{ctx.consignment.shippingAddress.lastname}<br/>
+            			$!{ctx.consignment.shippingAddress.streetname}<br/>
+            			$!{ctx.consignment.shippingAddress.town}, $!{ctx.consignment.shippingAddress.region.name} $!{ctx.consignment.shippingAddress.postalcode}<br/>
+						$!{ctx.consignment.shippingAddress.country.name}
+        			</td>
+				</tr>
+				<tr>
+					<td colspan=4>
+						<p style="text-align:center;">
+                   			<img src="${ctx.mediaBaseUrl}$!{ctx.getBarcodeMediaImageURL($ctx.consignment)}" /></td>
+						</p>
+					</td>
+				</tr>
+			</table>
+			<hr>
+		#end
+    </tr>
+    <tr>
+        <td align="center" valign="middle">
+            <a href="${ctx.baseUrl}" style="display:block; margin-top:10px;margin-bottom:10px;">${ctx.cmsSlotContents.BottomContent}</a>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

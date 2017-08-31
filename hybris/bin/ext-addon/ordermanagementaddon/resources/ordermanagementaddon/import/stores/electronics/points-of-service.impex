@@ -1,0 +1,19 @@
+# -----------------------------------------------------------------------
+# [y] hybris Platform
+#
+# Copyright (c) 2017 SAP SE or an SAP affiliate company.
+# All rights reserved.
+#
+# This software is the confidential and proprietary information of SAP
+# ("Confidential Information"). You shall not disclose such Confidential
+# Information and shall use it only in accordance with the terms of the
+# license agreement you entered into with SAP.
+# -----------------------------------------------------------------------
+# ImpEx for Electronics Store
+
+INSERT_UPDATE PoS2WarehouseRel;source(name)[unique=true];target(code)[unique=true]
+;Nakano;external_Nakano_warehouse
+;Shinbashi;external_Shinbashi_warehouse
+;Koto;external_Koto_warehouse
+;Misato;external_Misato_warehouse
+;Matsudo;external_Matsudo_warehouse

@@ -1,0 +1,23 @@
+<!--
+ [y] hybris Platform
+
+ Copyright (c) 2017 SAP SE or an SAP affiliate company.  All rights reserved.
+
+ This software is the confidential and proprietary information of SAP
+ ("Confidential Information"). You shall not disclose such Confidential
+ Information and shall use it only in accordance with the terms of the
+ license agreement you entered into with SAP.
+-->
+
+<properties xmlns:xs="http://www.w3.org/2001/XMLSchema"
+            xmlns:oxf="http://www.orbeon.com/oxf/processors"
+            xmlns:xi="http://www.w3.org/2001/XInclude">
+
+    <xi:include href="oxf:/config/properties-common.xml"/>
+    <xi:include href="oxf:/config/properties-orbeon.xml"/>
+    <xi:include href="oxf:/config/properties-yforms.xml"/>
+    <xi:include href="oxf:/config/properties-insurance.xml"/>
+
+	<property as="xs:boolean" name="oxf.xforms.show-error-dialog" value="false"/>
+</properties>
+

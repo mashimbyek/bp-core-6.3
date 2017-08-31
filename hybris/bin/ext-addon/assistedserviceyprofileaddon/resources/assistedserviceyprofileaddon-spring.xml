@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ [y] hybris Platform
+
+ Copyright (c) 2017 SAP SE or an SAP affiliate company.
+ All rights reserved.
+
+ This software is the confidential and proprietary information of SAP
+ ("Confidential Information"). You shall not disclose such Confidential
+ Information and shall use it only in accordance with the terms of the
+ license agreement you entered into with SAP.
+-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:aop="http://www.springframework.org/schema/aop"
+	   xmlns:context="http://www.springframework.org/schema/context" xmlns:util="http://www.springframework.org/schema/util"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/aop
+           http://www.springframework.org/schema/aop/spring-aop.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+           
+    <context:annotation-config/> 
+
+	<bean id="assistedserviceyprofileaddonCoreDataImportedEventListener" parent="abstractCoreDataImportedEventListener">
+		<property name="supportedChannels">
+			<list value-type="de.hybris.platform.commerceservices.enums.SiteChannel">
+				<value>B2C</value>
+				<!--
+								<value>B2B</value>
+				-->
+			</list>
+		</property>
+		<property name="addonExtensionMetadata">
+			<bean class="de.hybris.platform.addonsupport.data.AddonExtensionMetadata">
+				<property name="suffixChannel" value="false"/>
+				<property name="baseExtensionName" value="assistedserviceyprofileaddon"/>
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="assistedserviceyprofileaddonSampleDataEventListener" parent="abstractGenericAddOnSampleDataEventListener"  >
+		<property name="extensionName" value="assistedserviceyprofileaddon" />
+	</bean>
+
+    <!-- Product Affinity fragment -->
+    
+	<bean id="productAffinityFragment" class="de.hybris.platform.assistedservicefacades.customer360.Fragment">
+		<property name="id" value="productAffinityFragment"/>
+		<property name="title" value="text.customer360.yprofile.product.recent"/>
+		<property name="properties">
+		    <map>
+		        <entry key="listSize" value="6"/>
+		    </map> 
+		</property>
+	</bean>
+
+	<bean depends-on="customer360ModelProvidersMap" parent="mapMergeDirective">
+		<property name="key" value="productAffinityFragment"/>
+		<property name="value" ref="productAffinityProvider" />
+	</bean>
+	
+	<bean id="customerOverviewFragmentsWithProductAffinity" depends-on="customerOverviewFragments" parent="listMergeDirective" >
+		<property name="add" ref="productAffinityFragment" />
+		<property name="beforeBeanNames">
+			<list>
+				<value>customerCartFragment</value>
+			</list>
+		</property>
+	</bean>
+	
+    <!-- Product Affinity fragment ends -->
+  
+    <!-- Category Affinity section -->
+    
+	<bean id="categoryAffinityFragment" class="de.hybris.platform.assistedservicefacades.customer360.Fragment">
+		<property name="id" value="categoryAffinityFragment"/>
+		<property name="properties">
+		    <map>
+		        <entry key="listSize" value="6"/>
+		    </map> 
+		</property>
+	</bean>
+
+	<bean depends-on="customer360ModelProvidersMap" parent="mapMergeDirective">
+		<property name="key" value="categoryAffinityFragment"/>
+		<property name="value" ref="categoryAffinityProvider" />
+	</bean>
+
+  	<!-- Category Affinity section ends -->
+
+	<!-- Categories and Brands Section -->
+	<bean id="categoriesAndBrandsFragment" class="de.hybris.platform.assistedservicefacades.customer360.Fragment">
+		<property name="id" value="categoriesAndBrandsFragment"/>
+		<property name="title" value="text.customer360.yprofile.categoryAndBrands"/>
+		<property name="properties">
+			<map>
+				<entry key="listSize" value="6"/>
+			</map>
+		</property>
+	</bean>
+
+	<bean depends-on="customer360ModelProvidersMap" parent="mapMergeDirective">
+		<property name="key" value="categoriesAndBrandsFragment"/>
+		<property name="value" ref="categoryAffinityProvider" />
+	</bean>
+	<!-- Categories and Brands section ends -->
+
+	<!-- Adding the new Categories and Brands Fragment to Customer Overview Section customerOverviewFragments -->
+	<bean id="customerOverviewFragmentsMergeDirectiveWithCategoriesAndBrands" depends-on="customerOverviewFragments" parent="listMergeDirective" >
+		<property name="add" ref="categoriesAndBrandsFragment" />
+		<property name="beforeBeanNames">
+			<list>
+				<value>customerCartFragment</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- Categories and Brands Section Ends -->
+
+	<!-- Keyword Search Affinity section -->
+
+	<bean id="keywordSearchAffinityFragment" class="de.hybris.platform.assistedservicefacades.customer360.Fragment">
+		<property name="id" value="keywordSearchAffinityFragment"/>
+		<property name="title" value="text.customer360.yprofile.search.recent"/>
+		<property name="properties">
+		    <map>
+		        <entry key="listSize" value="6"/>
+		    </map> 
+		</property>
+	</bean>
+
+	<bean depends-on="customer360ModelProvidersMap" parent="mapMergeDirective">
+		<property name="key" value="keywordSearchAffinityFragment"/>
+		<property name="value" ref="keywordSearchAffinityProvider" />
+	</bean>
+	
+	<!-- Adds the search affinity fragment to Customer Overview Section customerOverviewFragments defined in ASM addon -->
+	<bean id="customerOverviewFragmentsWithLKeywordSearchAffinity" depends-on="customerOverviewFragments" parent="listMergeDirective" >
+		<property name="add" ref="keywordSearchAffinityFragment" />
+		<property name="beforeBeanNames">
+			<list>
+				<value>customerCartFragment</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- Keyword Search Affinity section ends-->
+	
+	
+	
+	<!-- <Customer Favorites Section>  -->
+	<bean id="customerFavoritesSection" class="de.hybris.platform.assistedservicefacades.customer360.Section">
+		<property name="title" value="text.customer360.customer_favorites"/>
+		<property name="id" value="customerFavoritesSection"/>
+		<property name="fragments" ref="customerFavoritesFragments"/>
+	</bean>
+
+	<bean id="defaultCustomer360CustomerFavoritesSectionMergeDirective" depends-on="customer360Sections, defaultCustomer360CustomerOverviewSectionMergeDirective, defaultCustomer360CustomerDetailsSectionMergeDirective, defaultCustomer360CustomerActivitySectionMergeDirective, defaultCustomer360FeedbackSectionMergeDirective" parent="listMergeDirective" >
+		<property name="add" ref="customerFavoritesSection" />
+		<property name="afterBeanNames">
+			<list>
+				<value>feedbackSection</value>
+			</list>
+		</property>
+	</bean>
+	
+	<util:list id="customerFavoritesFragments" value-type="de.hybris.platform.assistedservicefacades.customer360.Fragment">
+		<ref bean="productAffinityFavoritesFragment"/>
+		<ref bean="categoriesAndBrandsFavoritesFragment"/>
+	</util:list>
+	
+	<bean id="productAffinityFavoritesFragment" class="de.hybris.platform.assistedservicefacades.customer360.Fragment">
+		<property name="id" value="productAffinityFavoritesFragment"/>
+		<property name="title" value="text.customer360.yprofile.product.top"/>
+		<property name="properties">
+		    <map>
+		        <entry key="listSize" value="12"/>
+		    </map> 
+		</property>
+	</bean>
+
+	<bean depends-on="customer360ModelProvidersMap" parent="mapMergeDirective">
+		<property name="key" value="productAffinityFavoritesFragment"/>
+		<property name="value" ref="productAffinityProvider" />
+	</bean>
+	
+	<bean id="categoriesAndBrandsFavoritesFragment" class="de.hybris.platform.assistedservicefacades.customer360.Fragment">
+		<property name="id" value="categoriesAndBrandsFavoritesFragment"/>
+		<property name="title" value="text.customer360.yprofile.top.categoryAndBrands"/>
+		<property name="properties">
+			<map>
+				<entry key="listSize" value="6"/>
+			</map>
+		</property>
+	</bean>
+
+	<bean depends-on="customer360ModelProvidersMap" parent="mapMergeDirective">
+		<property name="key" value="categoriesAndBrandsFavoritesFragment"/>
+		<property name="value" ref="categoryAffinityProvider" />
+	</bean>
+	
+	
+		<!-- <Customer Favorites Section End>  -->
+</beans>
+

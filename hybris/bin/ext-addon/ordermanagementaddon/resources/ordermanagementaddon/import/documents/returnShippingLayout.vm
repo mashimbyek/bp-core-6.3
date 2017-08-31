@@ -1,0 +1,86 @@
+##messageSource=classpath:/ordermanagementaddon/messages/document-returnshippinglabel_$lang.properties
+<html>
+<head>
+	<style type='text/css'>@media screen, print {
+		table {
+			width: 96%;
+			margin: 25px 10px 0;
+		}
+
+		th {
+			padding: 5px 5px 5px 15px;
+			background-color: #ccc;
+			font-weight: bold;
+			border: 1px solid #aaa;
+			text-align: left;
+		}
+
+		td {
+			padding: 5px 0 5px 15px;
+		}
+
+		td.title {
+            vertical-align: top;
+            text-align: right;
+            font-weight: bold;
+        }
+	}</style>
+</head>
+<body>
+<table>
+    <tr>
+        <td colspan="3">
+			${ctx.cmsSlotContents.SiteLogo}
+        </td>
+    </tr>
+    <tr>
+        <td align="center" valign="middle">
+            <a href="${ctx.baseUrl}" style="display:block; margin-top:10px;margin-bottom:10px;">${ctx.cmsSlotContents.TopContent}</a>
+        </td>
+    </tr>
+    <tr>
+		<table>
+			<tr>
+				<td colspan="2">
+					<h1>Mock Priority Mail</h1>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">${ctx.date}</td>
+			</tr>
+			<tr>
+				<td class="title">From</td>
+				<td colspan=3>
+					$!{ctx.returnRequest.order.deliveryAddress.firstname} $!{ctx.returnRequest.order.deliveryAddress.lastname}<br/>
+					$!{ctx.returnRequest.order.deliveryAddress.streetname} $!{ctx.returnRequest.order.deliveryAddress.streetNumber}<br/>
+					$!{ctx.returnRequest.order.deliveryAddress.town}, $!{ctx.returnRequest.order.deliveryAddress.region.name} $!{ctx.returnRequest.order.deliveryAddress.postalcode}<br/>
+					$!{ctx.returnRequest.order.deliveryAddress.country.name}
+				</td>
+			</tr>
+			<tr>
+				<td class="title">Ship To</td>
+				<td colspan="3">
+					$!{ctx.returnAddress.firstname} $!{ctx.returnAddress.lastname}<br/>
+					$!{ctx.returnAddress.line1} $!{ctx.returnAddress.line2}<br/>
+					$!{ctx.returnAddress.town}, $!{ctx.returnAddress.region} $!{ctx.returnAddress.postalcode}<br/>
+					$!{ctx.returnAddress.country.name}
+				</td>
+			</tr>
+			<tr>
+				<td colspan=4>
+					<p style="text-align:center;">
+                        <img src="${ctx.mediaBaseUrl}$!{ctx.getBarcodeMediaImageURL($ctx.returnRequest)}" /></td>
+					</p>
+				</td>
+			</tr>
+		</table>
+		<hr>
+    </tr>
+    <tr>
+        <td align="center" valign="middle">
+            <a href="${ctx.baseUrl}" style="display:block; margin-top:10px;margin-bottom:10px;">${ctx.cmsSlotContents.BottomContent}</a>
+        </td>
+    </tr>
+</table>
+</body>
+</html>
