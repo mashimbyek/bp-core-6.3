@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry exported="true" kind="con" path="GROOVY_DSL_SUPPORT"/>
+	<classpathentry exported="true" kind="var" path="M2_REPO/org/apache/commons/commons-lang3/3.1/commons-lang3-3.1.jar"/>
+	<classpathentry exported="true" kind="var" path="M2_REPO/com/sun/jersey/jersey-core/1.9/jersey-core-1.9.jar"/>
+	<classpathentry exported="true" kind="var" path="M2_REPO/com/sun/jersey/jersey-server/1.9/jersey-server-1.9.jar"/>
+	<classpathentry exported="true" kind="var" path="M2_REPO/com/sun/jersey/jersey-client/1.19/jersey-client-1.19.jar"/>
+	<classpathentry exported="true" kind="var" path="M2_REPO/org/codehaus/jackson/jackson-jaxrs/1.9.3/jackson-jaxrs-1.9.3.jar"/>
+	<classpathentry kind="var" path="M2_REPO/log4j/log4j/1.2.17/log4j-1.2.17.jar"/>
+	<classpathentry kind="var" path="M2_REPO/de/hybris/platform/platform-module/5.9.9.9-RC3/platform-module-5.9.9.9-RC3.zip"/>
+	<classpathentry kind="var" path="HYBRIS_PLATFORM/ext/core/bin/coreserver.jar"/>
+	<classpathentry kind="var" path="HYBRIS_PLATFORM/bootstrap/bin/ybootstrap.jar"/>
+	<classpathentry kind="var" path="DATAHUB_UI"/>
+	<classpathentry kind="var" path="DATAHUB_UI/datahub-ui-core/build/libs/datahub-ui-core-5.9.9.9-RC2-SNAPSHOT.jar"/>
+	<classpathentry kind="var" path="HYBRIS_PLATFORM/bootstrap/modelclasses"/>
+	<classpathentry kind="var" path="M2_REPO/org/springframework/spring-core/4.2.4.RELEASE/spring-core-4.2.4.RELEASE.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/springframework/spring-beans/4.2.4.RELEASE/spring-beans-4.2.4.RELEASE.jar"/>
+	<classpathentry kind="output" path="eclipsebin/notused"/>
+
+	<classpathentry exported="false" kind="src" path="/platform" />
+	<classpathentry exported="true" kind="src" path="/backoffice" />
+	<classpathentry exported="true" kind="lib" path="lib/commons-lang3-3.1.jar" />
+	<classpathentry exported="true" kind="lib" path="lib/datahub-api-6.3.0.0-RC2.jar" />
+	<classpathentry exported="true" kind="lib" path="lib/datahub-dto-6.3.0.0-RC2.jar" />
+	<classpathentry exported="true" kind="lib" path="lib/datahub-entity-model-6.3.0.0-RC2.jar" />
+	<classpathentry exported="true" kind="lib" path="lib/datahub-rest-client-6.3.0.0-RC2.jar" />
+	<classpathentry exported="true" kind="lib" path="lib/jackson-jaxrs-1.9.13.jar" />
+	<classpathentry exported="true" kind="lib" path="lib/jersey-client-1.18.jar" />
+	<classpathentry exported="true" kind="lib" path="lib/jersey-core-1.18.jar" />
+	<classpathentry exported="true" kind="lib" path="lib/jersey-server-1.18.jar" />
+	<classpathentry exported="true" kind="lib" path="lib/lucene-analyzers-common-4.6.1.jar" />
+	<classpathentry exported="true" kind="lib" path="lib/lucene-core-4.6.1.jar" />
+	<classpathentry exported="true" kind="lib" path="lib/lucene-queryparser-4.6.1.jar" />
+	<classpathentry exported="true" kind="lib" path="bin/datahubbackofficeserver.jar" >
+		<attributes>
+			<attribute name="javadoc_location" value="https://download.hybris.com/api/6.0.0"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry exported="true" kind="lib" path="resources" />
+	<classpathentry exported="true" output="eclipsebin/classes" kind="src" path="testsrc" />
+				
+</classpath>
+				

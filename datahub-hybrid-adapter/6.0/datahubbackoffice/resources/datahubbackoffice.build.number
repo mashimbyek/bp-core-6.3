@@ -1,0 +1,11 @@
+#Ant properties
+#Fri Mar 10 14:30:40 CET 2017
+builddate=20170310 1430
+description=datahubbackoffice
+group.id=de.hybris.platform
+module.name=platform-module
+name=datahubbackoffice
+releasedate=20160213 0023
+vendor=hybris
+version=6.0.0.0-SNAPSHOT
+version.api=6.0.0
