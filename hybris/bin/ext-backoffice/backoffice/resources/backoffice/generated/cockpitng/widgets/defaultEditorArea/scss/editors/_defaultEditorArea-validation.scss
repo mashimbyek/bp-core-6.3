@@ -1,0 +1,224 @@
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/cockpitng/cng/scss/cockpitng-globals.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/scss/backoffice-variables.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/backoffice/scss/backoffice-variables.scss'; 
+
+@import "../support/_defaultEditorArea-mixins.scss";/*================================
+    Editor-Area: Tabs
+================================*/
+// Defines Tabs in the Tab-Panel of the Editor-Area
+
+// Status: basic style and variables/mixins added, checked, verified
+// ToDo: results-popup (refinement as variables)
+
+
+
+/*====== Validation-Result Popup ======*/
+//add variables & check
+.ye-validation {
+    &-results {
+        &-popup {
+            margin-left: -45px;
+            margin-top: 7px;
+            //box-shadow: 0 0 4px rgba(0, 0, 0, 0.35);
+            box-shadow: 0px 0px 12px 1px rgba(127, 144, 164, 0.23);
+            border: 1px solid #acacac;
+            overflow: visible;
+
+            &:before{
+                position: absolute;
+                content: '';
+                top: -14px;
+                right: 18px;
+                width: 0;
+                height: 0;
+                border: 8px solid transparent;
+                border-width: 8px 10px;
+                border-bottom-color: #fff;
+                z-index: 5;
+            }
+            &:after{
+                position: absolute;
+                content: '';
+                top: -14px;
+                right: 19px;
+                width: 0;
+                height: 0;
+                border: 9px solid transparent;
+                border-width: 7px 9px;
+                border-bottom-color: #384d66;
+                opacity: 0.7;
+            }
+            .z-window-header{
+                background: none;
+                font-size: 12px;
+                font-weight: bold;
+                padding: 6px 5px 6px 10px;
+                .z-window-close{
+                    background: none;
+                    color: inherit;
+                }
+            }
+            .z-window-content {
+                .z-vlayout-inner {
+                    padding-bottom: 0 !important;
+
+                    &:after{
+                        content: '';
+                        display: block;
+                        clear: both;
+                    }
+                }
+            }
+            .z-vlayout-inner button {
+                &.y-btn-primary {
+                    float: right;
+                    margin: 10px;
+                    background: none;
+                    color: $grey__default--500;
+                }
+                &.ye-validation-results-confirm {
+                    color: $orange__default--300;
+                }
+            }
+            .z-window-content > .z-vlayout .z-listcell {
+                border-color: #b2b9c5;
+            }
+            .z-window-content > .z-vlayout div.z-listcell-content {
+                padding:5px 10px;
+                line-height: 20px;
+                white-space: normal;
+            }
+            .ye-validation {
+                &-warn,
+                &-info,
+                &-error {
+                    .z-listcell-content:before {
+                        float: left;
+                        @include _validation-icon(2px 5px 3px 0);
+                    }
+                }
+            }
+        }
+        &-list {
+            width: 250px;
+            max-height: 350px;
+            overflow: auto;
+            background: #fff;
+            border-left: none;
+            border-right: none;
+            border-top: 1px solid #acacac;
+            border-bottom: 1px solid #acacac;
+
+            .ye-validation-results-list-item {
+                padding-left: 36px;
+            }
+        }
+    }
+    &-exclamation-icon {
+        float:right;
+        cursor: pointer;
+        background-attachment: scroll;
+        background-clip: border-box;
+        background-color: rgba(0, 0, 0, 0);
+        background-image: url("images/icon_validation_sprite.png");
+        background-origin: padding-box;
+        background-repeat: no-repeat;
+        background-size: auto auto;
+        background-position: 32px 32px;    
+    }
+    //
+}
+
+//Generel Defaults (over all Validation-types)
+.ye-validation {
+    &-info, &-warn, &-error {
+        .yw-loceditor-caption .z-label:after {
+            position: absolute;
+            @include _validation-icon();
+            right: 0;
+        }
+        
+        .ye-validation-none, .ye-validation-none.yw-loceditor-row {
+            input, input.z-textbox, .z-longbox, .z-intbox, .z-decimalbox {
+                border-color: $editor-area__box--border-color;
+                background: none;
+                color: $editor-area__input-field--color;
+                &:focus {
+                    border-color: $editor-area__box--focus-color;
+                    background: none;
+                }
+            }
+            .z-bandbox-input:focus + .z-bandbox-button {
+                border-color: $editor-area__box--focus-color;
+            }
+        }
+    }
+
+}
+
+@include _addValidationTypeDefaults (error, $validation__error--color, $validation__error--bg-color, 2);
+@include _addValidationTypeDefaults (warn, $validation__warn--color, $validation__warn--bg-color, 1);
+@include _addValidationTypeDefaults (info, $validation__info--color, $validation__info--bg-color);
+
+.yw-loceditor{
+    &.ye-com_hybris_cockpitng_editor_localized {
+        .yw-loceditor-caption .z-label:after {
+            display: none;
+        }
+    }
+    &-dynamic-content {
+        .yw-loceditor-row input.z-textbox {
+            background: inherit;
+            color: $editor-area__input-field--color;
+        }
+    }
+}
+
+//yw-editorarea-overrides
+.yw-editorarea {
+    &-label-container {
+         // check if removable
+        &.ye-validation-warn, 
+        &.ye-validation-error, 
+        &.ye-validation-info {
+            float: left;
+        }
+        .ye-validation-exclamation-icon {
+            float: right;
+        }
+    }
+    &-tabbox-tabpanels-tabpanel-groupbox-attrcell {
+        > .yw-editorarea-label-container.ye-validation-warn,
+        > .yw-editorarea-label-container.ye-validation-error,
+        > .yw-editorarea-label-container.ye-validation-info {
+            float: none;
+        }
+        [class*="ye-validation-"] {
+            position: relative;
+        }
+        .yw-editorarea-tabbox-tabpanels-tabpanel-groupbox-ed-editor[class*="ye-validation-"] {
+            .ye-com_hybris_cockpitng_editor_defaultenum, 
+            .ye-com_hybris_cockpitng_editor_defaultdate {
+                input{
+                    border-right: 0;
+                }
+            }
+            .ye-com_hybris_cockpitng_editor_defaulttime, 
+            .ye-com_hybris_cockpitng_editor_defaultdate {
+                span, .z-datebox .z-datebox-input:focus + .z-datebox-button {
+                    border-left: 0;
+                }
+            }
+            > .ye-validation-panel.ye-localized > .ye-validation-exclamation-icon {
+                position:absolute;
+                right: 0;
+                top: 0;
+            }
+        }
+    }
+    // render-error
+    &-editor-render-error {
+        margin-left: 5px;
+        border: 1px solid $validation__error--color;
+    }
+}

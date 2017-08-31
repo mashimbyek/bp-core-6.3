@@ -1,0 +1,23 @@
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/cockpitng/cng/scss/cockpitng-globals.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/scss/backoffice-variables.scss'; 
+
+
+
+.ya-de_hybris_platform_solrfacetsearchbackoffice_action_indexeroperations {
+    &:hover {
+        background: $white none repeat scroll 0 0;
+        color: $blue__default;
+        transition: background-color 0.3s ease 0s;
+    }
+
+    .z-hbox-separator {
+        display: none;
+    }
+
+    .cng-action-text {
+        padding-right: 5px;
+        padding-top: 3px;
+        padding-bottom: 0;
+        line-height: 24px;
+    }
+}

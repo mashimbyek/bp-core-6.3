@@ -1,0 +1,192 @@
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/cockpitng/cng/scss/cockpitng-globals.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/scss/backoffice-variables.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/backoffice/scss/backoffice-variables.scss'; 
+
+@import "support/_create-variables.scss";/*================================
+    Create Button
+================================*/
+// Styling of the Create Button � visible on different Widgets
+// Status: indented, variables partly assigne
+// Todo: Check appiarences & modify (especially in selector-popups)
+
+
+
+// Toolbar
+// ====================
+//
+
+.ya-create-type-selector-popup {
+    /* TREE */
+    .z-popup-cnt > .z-tree {
+        border: none;
+
+        > .z-tree-body {
+            width: 100%!important;
+        }
+        tr.z-treerow td {
+            border: medium none;
+            padding: 5px 0;
+        }
+        tr.ye-create-type-selector {
+            &-lvl-1 {
+                background: #eaedf1;
+            }
+            &-lvl-2 {
+                background: #d7dde4;
+            }
+            &-lvl-3 {
+                background: #c6ced9;
+            }
+            &-lvl-4 {
+                background: #b7c1cf;
+            }
+        }
+        tr.z-treerow {
+            &-over {
+                background: #a6b3c4;
+            }
+            &-seld {
+                background: #085abc;
+            }
+            &-over-seld {
+                background: #085abc;
+            }
+            &-seld div.z-treecell-cnt,
+            &-over-seld div.z-treecell-cnt {
+                color: #fff;
+            }
+        }
+    }
+
+    /* ICONS */
+    .z-popup-cnt > .z-tree {
+        .z-tree-ico {
+            background-image: url("icons/icon_func_toggle_sprite.png");
+
+            &.z-tree-last-close,
+            &.z-tree-root-close {
+                background-position: 0 0;
+            }
+        }
+        tr.z-treerow-seld .z-tree-ico {
+            background-position: $create__create-new-button--caret-icon-size $create__create-new-button--caret-icon-size;
+
+            &.z-tree-last-close,
+            &.z-tree-root-close {
+                background-position: $create__create-new-button--caret-icon-size 0;
+            }
+        }
+    }
+}
+
+/* SELECTBUTTON */
+a.ya-create-type-selector-button {
+    &.z-toolbarbutton {
+        width: $create__create-new-button--caret-button--width;
+        height: $create__create-new-button--height;
+        display: table-cell;
+        vertical-align: middle;
+        text-align: center;
+        position: relative;
+    }
+
+    .z-toolbarbutton-content {
+        width: $create__create-new-button--caret-icon-size;
+        height: $create__create-new-button--caret-icon-size;
+        background: url("icons/icon_func_toggle_sprite.png") center no-repeat;
+        background-position: 0 (-$create__create-new-button--caret-icon-size);
+        position: absolute;
+        top: 50%;
+        margin-top: -$create__create-new-button--caret-icon-size/2;
+        left: 50%;
+        margin-left: -$create__create-new-button--caret-icon-size/2;
+        display: inline-block;
+    }
+
+    &.z-toolbarbutton {
+        &:hover {
+            .z-toolbarbutton-content {
+                background-position: (-$create__create-new-button--caret-icon-size) (-$create__create-new-button--caret-icon-size);
+            }
+        }
+    }
+
+    &-opened.z-toolbarbutton {
+        &,
+        &:hover,
+        &:focus {
+            background-color: $create__create-new-button-opened--bg-color;
+            border: $create__create-new-button-opened--border;
+            box-shadow: $create__create-new-button-opened--box-shadow;
+
+            .z-toolbarbutton-content {
+                background-position: (-$create__create-new-button--caret-icon-size) (-$create__create-new-button--caret-icon-size * 2);
+            }
+        }
+    }
+
+    &[disabled],
+    &[disabled]:hover,
+    &[disabled]:focus {
+        background-color: transparent!important;
+    }
+}
+
+.ya-create-container {
+    border: $create__create-new-button--border;
+    background-color: $create__create-new-button--bg-color;
+    display: table;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+    .cng-action-text {
+        display: inline-block;
+        color: $black__blueish--100;
+        vertical-align: middle;
+
+        .z-label {
+            margin-right: 5px;
+        }
+    }
+
+    //todo: check if parent (&) is needed here!?
+    &.cng-action-disabled .cng-action-text {
+        font-style: italic;
+    }
+
+    .y-toolbar & .z-hbox-sep {
+        display: none;
+    }
+}
+
+/* ADD BUTTON */
+.ya-com_hybris_cockpitng_action_create {
+    display: table-cell;
+
+    &:hover{
+        color: $create__create-new-button--hover-color;
+        background: $create__create-new-button--hover-bg-color;
+        transition: background-color .3s;
+    }
+}
+
+/* DISABLE STATE */
+.ya-create-type-selector-button.z-button-os-disd,
+.ya-com_hybris_cockpitng_action_create.cng-action-disabled {
+    background-color:transparent!important;
+}
+
+.ya-create-type-selector-button.z-button-os-disd {
+    background-position: 4px -13px!important;
+}
+
+.ya-create-type-no-visible-subtypes {
+    display: block;
+    font-style: italic;
+    padding: $create__create-no-subtype-popup--padding;
+    color: $create__create-no-subtype-popup--color;
+}

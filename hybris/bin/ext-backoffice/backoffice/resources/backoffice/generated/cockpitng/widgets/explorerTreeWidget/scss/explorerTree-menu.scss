@@ -1,0 +1,243 @@
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/cockpitng/cng/scss/cockpitng-globals.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/scss/backoffice-variables.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/backoffice/scss/backoffice-variables.scss'; 
+
+@import "support/_explorerTree-mixins.scss";/*================================
+    Explorer Tree
+================================*/
+// Modifications on z-Tree components (and their contents)
+
+// Status:
+// - all necessary changes added
+// ToDo: clean up code from ARROWS to end of file
+
+
+
+// Explorer Tree
+// ====================
+// General styling
+
+.yw-explorerTree {
+
+  &-widget {
+    .yw-explorerTree {
+      height: 100%;
+      background-color: $explorertree__default--bg-color;
+      border: 0 none;
+      overflow-y: auto;
+
+      &.z-vfiletree {
+        background: none;
+        overflow: auto;
+      }
+
+      .yw-treeCellInner .z-label {
+        display: block;
+      }
+
+      .z-treechildren .z-treecell-content {
+        display: table;
+        padding: $explorertree__item--padding;
+      }
+    }
+  }
+
+  .z-treecell-content {
+    .yw-treeCellInner .z-label {
+      padding: $explorertree__item-label--padding;
+      word-wrap: break-word;
+    }
+  }
+
+  .z-vfiletree-icon {
+    display: table-cell;
+    color: $explorertree__tree-icons--color;
+  }
+
+  .z-treerow {
+    background-color: $explorertree__row--bg-color;
+    transition: background-color .15s;
+
+    .z-treecell {
+      padding-top: $explorertree__row--padding-y - 1px;
+      padding-bottom: $explorertree__row--padding-y;
+      padding-right: 0;
+      border: none;
+      background: transparent;
+    }
+
+    &:hover > .z-treecell {
+      background-color: $explorertree__treerow-hover--bg-color;
+    }
+  }
+
+  // Explorer Treerow States
+  // ====================
+  // Font & Icon colors
+
+  @include rowStateColor("z-treerow", $explorertree__treerow-default--color);
+  @include rowStateColor("z-treerow:hover", $explorertree__treerow-hover--color);
+  //@include rowStateColor("yw-opened", $explorertree__treerow-opened--color);
+  @include rowStateColor("yw-highlighted", $explorertree__treerow-highlighted--color);
+  @include rowStateColor("yw-selected", $explorertree__treerow-selected--color);
+  @include rowStateColor("yw-selected:hover", $explorertree__treerow-selected--color);
+  //@include rowStateColor("z-treerow-selected", $explorertree__treerow-selected--color);
+  //@include rowStateColor("z-treerow-selected:hover", $explorertree__treerow-selected--color);
+  @include rowStateColor("z-treerow-focus", $explorertree__treerow-focus--color);
+  @include rowStateColor("z-treerow-focus:hover", $explorertree__treerow-focus--color);
+
+  // ICON SPRITES FOR TREE
+  // ====================
+  //
+
+  .y-tree-icon {
+    float: left;
+    height: $explorertree__item-icon--size;
+    left: -(floor($explorertree__item-icon--size/2));
+    margin-right: $explorertree__item-icon--margin-right;
+    margin-top: $explorertree__item-icon--margin-top;
+    min-height: $explorertree__item-icon--size;
+    position: absolute;
+    width: $explorertree__item-icon--size;
+  }
+
+  .z-treerow:hover [class^="y-tree-icon"] {
+    background-position: 0 (-1 * $explorertree__item-icon--size);
+  }
+
+  .yw-selected,
+  .yw-selected:hover {
+    [class^="y-tree-icon"] {
+      background-position: 0 (-2 * $explorertree__item-icon--size);
+    }
+  }
+
+  .z-treerow-focus,
+  .z-treerow-focus:hover {
+    [class^="y-tree-icon"] {
+      background-position: 0 (-3 * $explorertree__item-icon--size);
+    }
+  }
+
+  // ARROWS
+  // ====================
+  //
+
+  /*
+  .y-navigable-node {
+    span.z-vfiletree {
+      &-ico  {
+        background: url("images/icon_func_toggle_sprite.png") no-repeat $explorertree__item-toggle-icon-closed--bg-pos;
+      }
+
+      &-root-open,
+      &-tee-open,
+      &-last-open{
+        background-position: $explorertree__item-toggle-icon-open--bg-pos;
+      }
+    }
+
+    .z-treerow-selected & {
+      span.z-vfiletree{
+        &-ico {
+          background-position: $explorertree__item-toggle-icon-closed--bg-pos;
+        }
+        &-root-open,
+        &-tee-open,
+        &-last-open{
+          background-position: $explorertree__item-toggle-icon-open--bg-pos;
+        }
+      }
+    }
+  }
+  */
+
+  .yw-navigationNode {
+    &-level1 {
+      background-color: $explorertree__row-l1--bg-color;
+    }
+    &-level2 {
+      background: $explorertree__row-l2--bg-color;
+    }
+    &-level3 {
+      background: $explorertree__row-l3--bg-color;
+    }
+  }
+
+  .z-vfiletree-spacer {
+    width: $explorertree__item-indent-spacer--width;
+    min-width: $explorertree__item-indent-spacer--width;
+    display: table-cell;
+  }
+
+  .z-vfiletree-body {
+    width: 100% !important;
+    background: none;
+
+    & > table {
+      border-spacing: 0;
+    }
+  }
+
+  /* check / test if necessary */
+  span.z-vfiletree {
+    &-tee, &-last {
+      background-image: none;
+    }
+  }
+
+  .yw-treeCellInner {
+    display: inline-table;
+    position: relative;
+  }
+}
+
+@if $explorertree__override-splitter-styling {
+  .yw-com_hybris_backoffice_perspectiveContainer .z-tabpanels .yw-layoutregion.z-west {
+    .z-south{
+      &-splitter {
+        &-button {
+          &:hover {
+            background: transparent;
+            color: $explorertree__default--bg-color;
+          }
+        }
+
+        &:hover {
+          background-color: rgba($explorertree__default-hover--color, .75);
+
+          .z-south-splitter-button {
+            color: $explorertree__default--bg-color;
+          }
+        }
+      }
+
+      &-icon[class*="icon-caret"] {
+        line-height: 11px;
+      }
+    }
+  }
+}
+
+// explorer Tree related defintions
+// ====================
+//
+
+span.z-vfiletree-ico,
+span.z-vfiletree-firstspacer {
+  background: none;
+}
+
+.yw-no-permission-label {
+  opacity: 0.3;
+  cursor: not-allowed !important;
+
+  > td {
+    cursor: not-allowed;
+  }
+}
+
+.yw-navigationNode-cannot-access {
+  opacity: 0.5;
+  font-style: italic;
+}

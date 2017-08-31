@@ -1,0 +1,122 @@
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/cockpitng/cng/scss/cockpitng-globals.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/scss/backoffice-variables.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/backoffice/scss/backoffice-variables.scss'; 
+
+@import "../support/_cockpit-variables.scss";/*================================
+    Cockpit Toolbar
+================================*/
+// Definitions of Tabs, Tabpanel
+
+// Status: variables added, indented, styled partly
+// ToDo: proceed, check, verify, use pseudoclass for general button-styling (see comment)
+
+
+
+
+/*====== ICONS FOR TOOLBAR ======*/
+
+/* TODO USE PSEUDOCLASS FOR GENERAL BUTTON STYLE
+[class^="y-icon-"],
+[class*=" y-icon-"]{
+
+ }
+ */
+//check if is this toolbar-only definition
+.y-icon {
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+}
+
+/*===== TOOLBAR GENERAL ======*/
+
+/*===== z-TOOLBAR ======*/
+.z-toolbar {
+    background-color: $grey__light--300;
+    border-bottom: none;
+    padding: 0px;
+    min-height: 32px;
+    .z-button {
+        border: none;
+        margin: 0 !important;
+        padding: 6px 10px;
+        background: none;
+    }
+}
+
+/*===== y-TOOLBAR ======*/
+
+.y-toolbar {
+    overflow: hidden;
+
+    .z-label.number-of-items-label {
+        padding-left: 10px;
+        line-height: $toolbar__vertical-centering-base--height;
+    }
+
+    .z-paging {
+        border: none;
+
+        &-input, &-text {
+            margin-top: 0;
+        }
+    }
+
+    &-leftslot {
+        float: left;
+    }
+
+    &-rightslot {
+        float: right;
+    }
+
+    .z-hbox-separator {
+        width: 2px !important;
+        background-color: #EAEDF1;
+    }
+}
+
+/*===== STATUS BAR ======*/
+
+.y-statusbar {
+    background: $toolbar-defaults__statusbar--bg-color;
+}
+
+
+/*===== TOOLBAR BUTTON ======*/
+
+.z-toolbarbutton {
+    border: none;
+}
+
+.z-toolbarbutton:hover {
+    background-color: $white; //#6f7c91;
+    box-shadow: none;
+    border: none;
+}
+
+.y-toolbar .z-toolbarbutton {
+    display: block;
+    float: left;
+
+    &:hover {
+        background-color: $white;
+    }
+}
+
+.y-toolbar .z-toolbarbutton,
+.y-toolbar .z-toolbarbutton .z-toolbarbutton-body,
+.y-toolbar .z-toolbarbutton .z-toolbarbutton-body .z-toolbarbutton-content {
+    margin: 0;
+    padding: 0;
+}
+
+.y-toolbar .z-toolbarbutton:hover,
+.y-toolbar .z-toolbarbutton:hover .z-toolbarbutton-body {
+    border: none;
+}
+
+.z-toolbarbutton-content,
+.z-toolbarbutton:hover .z-toolbarbutton-content {
+    color: $black__blueish--100;
+}

@@ -1,0 +1,97 @@
+/*================================
+    Catalog Selector Menu Button
+================================*/
+.yw-catalog-selector button.z-button {
+  width: 100%;
+  height: 100%;
+  max-width: 400px;
+  min-height: 48px;
+  font-size: 14px;
+  font-family: "Open Sans", sans-serif;
+  color: #ffffff;
+  background: none;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0 20px;
+  text-overflow: ellipsis;
+  overflow: hidden; }
+  .yw-catalog-selector button.z-button:hover, .yw-catalog-selector button.z-button:focus, .yw-catalog-selector button.z-button:active {
+    background-color: #32a0ec; }
+
+/*================================
+    Catalog Selector Popup
+================================*/
+.yw-catalog-selector-popup {
+  max-width: 20%;
+  border: none;
+  border-radius: 0;
+  overflow: auto; }
+  .yw-catalog-selector-popup .z-popup-content {
+    padding: 0; }
+  .yw-catalog-selector-popup .z-tree {
+    border: none; }
+  .yw-catalog-selector-popup .z-treerow {
+    display: block;
+    padding: 17px 20px;
+    border-top: 1px solid #dce1e8; }
+    .yw-catalog-selector-popup .z-treerow:hover .z-treecell-text {
+      color: #0486e0; }
+    .yw-catalog-selector-popup .z-treerow .z-treecell {
+      background: none; }
+      .yw-catalog-selector-popup .z-treerow .z-treecell .z-treecell-content {
+        padding: 0;
+        color: #7f90a4;
+        line-height: normal;
+        position: static; }
+        .yw-catalog-selector-popup .z-treerow .z-treecell .z-treecell-content .z-treecell-text {
+          display: inline-block;
+          font-size: 14px;
+          font-family: "Open Sans", sans-serif; }
+        .yw-catalog-selector-popup .z-treerow .z-treecell .z-treecell-content .z-tree-icon {
+          width: 15px;
+          height: 15px;
+          text-align: left; }
+        .yw-catalog-selector-popup .z-treerow .z-treecell .z-treecell-content .z-tree-line {
+          height: auto; }
+    .yw-catalog-selector-popup .z-treerow.z-treerow-selected .z-treecell-text {
+      color: #0486e0; }
+    .yw-catalog-selector-popup .z-treerow.z-treerow-selected:hover .z-treecell-text {
+      color: #0486e0; }
+  .yw-catalog-selector-popup .z-icon-caret-right,
+  .yw-catalog-selector-popup .z-icon-caret-down {
+    width: 25px;
+    height: 15px;
+    vertical-align: middle; }
+    .yw-catalog-selector-popup .z-icon-caret-right:before,
+    .yw-catalog-selector-popup .z-icon-caret-down:before {
+      color: #8f9ba9; }
+  .yw-catalog-selector-popup .yw-treerow-catalog .z-tree-line.z-tree-spacer, .yw-catalog-selector-popup .yw-treerow-catalogVersion .z-tree-line.z-tree-spacer, .yw-catalog-selector-popup .yw-treerow-all .z-tree-line.z-tree-spacer {
+    display: none; }
+  .yw-catalog-selector-popup .yw-treerow-catalog + .yw-treerow-catalogVersion,
+  .yw-catalog-selector-popup .yw-treerow-catalogVersion + .yw-treerow-catalogVersion {
+    border-top: none;
+    padding-top: 0px; }
+  .yw-catalog-selector-popup .yw-treerow-catalogVersion {
+    margin-left: 25px; }
+    .yw-catalog-selector-popup .yw-treerow-catalogVersion .z-treecell-text {
+      padding-left: 15px; }
+  .yw-catalog-selector-popup .yw-treerow-catalog.z-treerow-selected .z-treecell-text {
+    padding-left: 15px; }
+  .yw-catalog-selector-popup .yw-treerow-catalog.z-treerow-selected .z-treecell-text:before, .yw-catalog-selector-popup .yw-treerow-catalogVersion.z-treerow-selected .z-treecell-text:before {
+    content: "\f00c";
+    font-family: FontAwesome;
+    color: #0486e0;
+    text-indent: -15px;
+    display: inline-block; }
+  .yw-catalog-selector-popup .z-treerow-checkable {
+    display: none; }
+  .yw-catalog-selector-popup .yw-treerow-all {
+    background-color: #f6f8fa; }
+    .yw-catalog-selector-popup .yw-treerow-all .z-treecell-content .z-treecell-text {
+      padding-left: 15px;
+      background-image: url("images/icon_catalog_all_infinity.png");
+      background-position: left center;
+      background-repeat: no-repeat;
+      background-size: 14px 8px; }
+    .yw-catalog-selector-popup .yw-treerow-all.z-treerow-selected .z-treecell-content .z-treecell-text {
+      background-image: url("images/icon_catalog_all_infinity--active.png"); }

@@ -1,0 +1,77 @@
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/cockpitng/cng/scss/cockpitng-globals.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/scss/backoffice-variables.scss'; 
+
+@import "../../../defaultReferenceEditor/scss/support/defaultreferenceeditor-variables.scss";//_default-extendedmultireferenceeditor-variables
+
+
+
+//$default-multi-reference-editor__header--bg-color: false;
+$default-multi-reference-editor__list-cell--padding-x: $container-spacing-default__base;
+
+$default-multi-reference-editor__header-content--padding: 0 $default-multi-reference-editor__list-cell--padding-x 0 0;
+//padding changed due to having the first cell added as blank in the row - for row-status
+$default-multi-reference-editor__header-content--line-height: $editor-defaults__inline-box--height;
+$default-multi-reference-editor__header-sort-icon--font-size: $font-size__small;
+$default-multi-reference-editor__header-sort-icon--left: $container-spacing-default__half; //
+$default-multi-reference-editor__header-sort-icon--color: false;
+
+$default-multi-reference-editor__list-cell--font-size: $editor-area__input-field--font-size;
+$default-multi-reference-editor__list-cell--line-height: $editor-area__input-field--line-height;
+
+$default-multi-reference-editor__list-cell--line-height-calc: $default-multi-reference-editor__list-cell--font-size * 1.4; // for calculation when displayed as inline-element (where effect of line-height is limited)
+@if $default-multi-reference-editor__list-cell--line-height > $default-multi-reference-editor__list-cell--line-height-calc {
+	$default-multi-reference-editor__list-cell--line-height-calc : $default-multi-reference-editor__list-cell--line-height;
+}
+$default-multi-reference-editor__list-cell--padding-y: floor(($editor-defaults__inline-box--height - 3*$default-reference-editor__box--border-width - $default-multi-reference-editor__list-cell--line-height-calc)/2);
+$default-multi-reference-editor__list-cell--padding: $default-multi-reference-editor__list-cell--padding-y $default-multi-reference-editor__list-cell--padding-x $default-multi-reference-editor__list-cell--padding-y 0;
+
+$default-multi-reference-editor__list-cell-inline-date-editor--max-width: 250px;
+$default-multi-reference-editor__list-cell-content--hover-color: $blue__default;
+$default-multi-reference-editor__list-cell--height: $editor-defaults__inline-box--height;
+
+$default-multi-reference-editor__list-cell-edit-icon--size: 15px;
+$default-multi-reference-editor__list-cell-edit-icon--right: -( $default-multi-reference-editor__list-cell-edit-icon--size + 8px);
+
+$default-multi-reference-editor__list-item-actiondots-icon--size: 24px;
+$default-multi-reference-editor__list-item-actiondots-button--margin-x: floor(($editor-defaults__inline-box--height - $default-multi-reference-editor__list-item-actiondots-icon--size)/2);
+
+$default-multi-reference-editor__inline-popup--bg-color: $white;
+//$default-multi-reference-editor__inline-popup--border-radius: 0;
+$default-multi-reference-editor__inline-popup--border-color: $grey__default--1000;//$default-reference-editor__list-tree-cell--border-color; 
+$default-multi-reference-editor__inline-popup--width: 160px;
+$default-multi-reference-editor__inline-popup-pointer--size: 15px;
+$default-multi-reference-editor__inline-popup-pointer-right-side--left: $default-multi-reference-editor__inline-popup--width - $default-reference-editor__box--border-width * 2;
+//$default-multi-reference-editor__inline-popup--width - ($default-multi-reference-editor__list-item-actiondots-icon--size/2);
+$default-multi-reference-editor__inline-popup-pointer-right-side--top: ceil($default-multi-reference-editor__inline-popup-pointer--size/2);
+$default-multi-reference-editor__inline-popup-pointer-bottom-side--left: 50%;
+$default-multi-reference-editor__inline-popup-pointer-bottom-side--margin-left: -($default-reference-editor__box--border-width * 2 + $default-multi-reference-editor__inline-popup-pointer--size);
+
+
+$default-multi-reference-editor__inline-popup--margin-top: -($editor-defaults__inline-box--height);
+$default-multi-reference-editor__inline-popup--margin-left: -$default-reference-editor__list-item-button-box--width + 3px;
+$default-multi-reference-editor__inline-popup-shadow--color: $black;
+$default-multi-reference-editor__inline-popup-shadow--color-alpha: 0.2;
+
+$default-multi-reference-editor__inline-edit-complex-popup--width: 300px;
+$default-multi-reference-editor__inline-edit-complex-popup-center--max-height: 200px;
+$default-multi-reference-editor__inline-edit-complex-popup-body--padding-x: $container-spacing-default__half;
+$default-multi-reference-editor__inline-edit-complex-popup-body--padding-y: $container-spacing-default__half;
+
+$default-multi-reference-editor__inline-edit-complex-popup-footer--min-height: $editor-defaults__inline-box--height;
+$default-multi-reference-editor__inline-edit-complex-popup-footer--padding: $default-multi-reference-editor__inline-edit-complex-popup-body--padding-y $default-multi-reference-editor__inline-edit-complex-popup-body--padding-x;
+
+$default-multi-reference-editor__inline-edit-complex-popup-footer-button--size: $editor-defaults__inline-box--height;
+$default-multi-reference-editor__inline-edit-complex-popup-footer-button-icon--font-size: $font-size__base;
+$default-multi-reference-editor__inline-edit-complex-popup-footer-button-icon--margin-top: -$default-multi-reference-editor__inline-edit-complex-popup-footer-button-icon--font-size/2;
+
+$default-multi-reference-editor__inline-edit-complex-popup-delimit--border: $default-reference-editor__box--border-width solid $editor-area__box--border-color;
+
+$default-multi-reference-editor__inline-edit-boolean-wrapper--margin: 0 0 -5px;
+
+$default-multi-reference-editor__inline-row-status--border-left-width: 4px;
+$default-multi-reference-editor__inline-row-status-content--width: 25px;
+
+$default-multi-reference-editor__inline-row-status-edited--border-color: $validation__info--color;
+$default-multi-reference-editor__inline-row-status-invalid--border-color: $validation__error--color;
+
+$default-multi-reference-editor__list-default-content--color: $black__blueish--100;

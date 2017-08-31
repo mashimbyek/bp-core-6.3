@@ -1,0 +1,122 @@
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/cockpitng/cng/scss/cockpitng-globals.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/scss/backoffice-variables.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/backoffice/scss/backoffice-variables.scss'; 
+
+//_default-extendedmultireferenceeditor-buttons
+.ye-com_hybris_cockpitng_editor_extendedmultireferenceeditor {
+
+    .yw-global-save {
+        $extendedmultireference__global-save-icon--bg-image: url("images/globalsave.png");
+        @mixin _yw-global-save-icon () {
+            width: 16px;
+            height: 16px;
+            background-repeat: no-repeat;
+        }
+
+        @include _yw-global-save-icon();
+        background: $extendedmultireference__global-save-icon--bg-image 0 -64px;
+
+        &-active {
+            @include _yw-global-save-icon();
+            background: $extendedmultireference__global-save-icon--bg-image 0 0px;
+            &:hover {
+                background: $extendedmultireference__global-save-icon--bg-image 0 -16px;
+                cursor: pointer;
+            }
+        }
+
+        &-active-click {
+            @include _yw-global-save-icon();
+            background: $extendedmultireference__global-save-icon--bg-image 0 -48px;
+            &:hover {
+                cursor: pointer;
+            }
+        }
+    }
+
+    //as bg-image
+    td.ye-actiondots {
+        padding-right: 0 !important;
+
+        > div.z-listcell-content {
+            background: url("images/dots.png") 0 0;
+            background-image: url("images/dots.png");
+            background-repeat: no-repeat;
+            height: $default-multi-reference-editor__list-item-actiondots-icon--size;
+            width: $default-multi-reference-editor__list-item-actiondots-icon--size;
+            display: inline-block;
+            padding: 0;
+            float: right;
+            margin-right: $default-multi-reference-editor__list-item-actiondots-button--margin-x;
+        }
+        &:last-child {
+            text-align: right;
+        }
+        &:hover {
+            > div.z-listcell-content {
+                // background: url("images/dots.png") 0 
+                background-position: 0 (-$default-multi-reference-editor__list-item-actiondots-icon--size);
+                background-repeat: no-repeat;
+                height: $default-multi-reference-editor__list-item-actiondots-icon--size;
+                width: $default-multi-reference-editor__list-item-actiondots-icon--size;
+            }
+        }
+        &-focus > div.z-listcell-content {
+            background-position: 0 (-2* $default-multi-reference-editor__list-item-actiondots-icon--size);
+        }
+        &-active > div.z-listcell-content {
+            background-position: 0 (-2* $default-multi-reference-editor__list-item-actiondots-icon--size);
+        }
+        &-disabled {
+            &, &:hover > div.z-listcell-content {
+                background-position: 0 (-3* $default-multi-reference-editor__list-item-actiondots-icon--size);
+            }
+        }
+    }
+//as awsome-font
+/*
+    td.ye-actiondots {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+
+        > div.z-listcell-content {
+            position: relative;
+            display: inline-block;
+            color: $black;
+            height: 100%;
+            width: 100%;
+            
+            &:after {
+                content: $ellipsis-v--content;
+                font-family: $font-family-fontawesome;
+                font-size: inherit;
+                position: absolute;
+                text-align: center;
+                height: 100%;
+                width: 100%;
+                display: block;
+                color: inherit;
+            }
+        }
+        &:last-child {
+            text-align: right;
+        }
+        &:hover {
+            > div.z-listcell-content {
+                color: $blue__default;
+            }
+        }
+        &.ye-actiondots{
+            &-focus > div.z-listcell-content {
+                color: $blue__default;
+            }
+            &-active > div.z-listcell-content {
+                color: $blue__default;
+            }
+            &-disabled > div.z-listcell-content {
+                color: $blue__default;
+            }
+        }
+    }
+*/
+}

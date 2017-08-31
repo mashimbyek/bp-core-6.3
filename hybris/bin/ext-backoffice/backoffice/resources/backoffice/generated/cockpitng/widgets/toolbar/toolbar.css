@@ -1,0 +1,10 @@
+.yw-toolbar-horizontal {
+  width: 100%; }
+
+.yw-toolbar-horizontal .yw-toolbar-content .yw-toolbar-before,
+.yw-toolbar-horizontal .yw-toolbar-content .yw-toolbar-actions,
+.yw-toolbar-horizontal .yw-toolbar-content .yw-toolbar-after {
+  display: inline-block; }
+
+.yw-toolbar-horizontal .yw-toolbar-content .yw-toolbar-actions {
+  vertical-align: middle; }

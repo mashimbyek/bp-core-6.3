@@ -1,0 +1,231 @@
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/cockpitng/cng/scss/cockpitng-globals.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/scss/backoffice-variables.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/backoffice/scss/backoffice-variables.scss'; 
+
+@import "../support/_cockpit-variables.scss";/*================================
+    z-Components
+================================*/
+// Different changes on z-Components
+
+// Status: Variables partly applied, duplicate defintions uncommented
+// ToDo: Split/Move Components (if necessary /appropriate), add final variables (according to it's upcoming definition in _cockpit-variables.scss)
+
+
+
+/*====== timezone ======*/
+.z-datebox-timezone select {
+    line-height: 1;
+    height: 30px;
+    font-size: 12px;
+    background: #fff;
+    color: #555555;
+    border: 1px solid white;
+    padding: 0 7px;
+    width: 100%;
+}
+
+.z-combobox-input:focus, .z-bandbox-input:focus, .z-datebox-input:focus, .z-spinner-input:focus, .z-doublespinner-input:focus {
+    //border-color: #66afe9;
+    //outline: 0;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+.z-combobox-invalid, .z-bandbox-invalid, .z-datebox-invalid, .z-timebox-invalid, .z-spinner-invalid, .z-doublespinner-invalid {
+    border-color: $validation__error--color !important;
+}
+
+.z-messagebox-question {
+    background-image: url("images/icon_dialog_question_default.png");
+    background-position: center;
+}
+
+/*====== combobox/bandbox-button ======*/
+
+//everything related to z-combobox and z-bandbox in _cockpit-box-defaults.scss
+
+.z-combobox .z-combobox-button {
+//    display: table-cell;
+    /*width: 1%;*/
+    /*vertical-align: middle;
+    white-space: nowrap;
+    padding: 0 14px;*/
+    //    border: 1px solid $editor-defaults__box--border-color;
+    //background-color: #fff;
+}
+.z-bandbox .z-bandbox-button,
+.z-combobox .z-combobox-button {
+    //display: table-cell;
+    //border: 1px solid $editor-defaults__box--border-color;
+    /*width: 1%;
+    vertical-align: middle;
+    white-space: nowrap;
+    padding: 0 14px;
+    background: url("images/icon_func_bandbox_search_sprite.png") no-repeat 0 0;*/
+    //&:hover{
+    //    background-color: $editor-defaults__box--hover-bg-color;
+    //    background-position: -28px 0;
+    //}
+    //&:active {
+    //    background-position: -56px 0;
+    //}
+}
+//
+//.z-combobox .z-combobox-button.z-combobox-disabled,
+//.z-bandbox .z-bandbox-button.z-bandbox-disabled,
+//.z-bandbox-input[disabled] {
+//    border-color: $border-color-inactive !important;
+//}
+
+.z-combobox .z-combobox-button.z-combobox-disabled,
+.z-bandbox .z-bandbox-button.z-bandbox-disabled,
+.z-bandbox-button[disabled] {
+    background-color: $editor-defaults__input-box-disabled--bg-color !important;
+    i[class*="-icon"] {
+        background: none !important;
+        &:before {
+            color: $editor-defaults__input-box-disabled--color;
+        }
+    }
+}
+
+.z-combobox-disabled *, .z-bandbox-disabled *, .z-datebox-disabled *, .z-timebox-disabled *, .z-spinner-disabled *, .z-doublespinner-disabled * {
+    background-color: $editor-defaults__input-box-disabled--bg-color !important;
+}
+
+input[disabled] {
+    + .z-combobox-button:hover, 
+    + .z-bandbox-button:hover, 
+    + .z-datebox-button:hover, 
+    + .z-timebox-button:hover, 
+    + .z-spinner-button:hover, 
+    + .z-doublespinner-button:hover, 
+    + .z-combobox-button:active, 
+    + .z-bandbox-button:active, 
+    + .z-datebox-button:active, 
+    + .z-timebox-button:active, 
+    + .z-spinner-button:active, 
+    + .z-doublespinner-button:active,
+    + .z-datebox-button:hover {
+        border-color: $editor-defaults__input-box-disabled--border-color;
+    }
+}
+
+/*====== timebox/spinner-button ======*/
+.z-timebox-button, .z-spinner-button, .z-doublespinner-button {
+    > a:hover {
+        background: #a6b3c4;
+        color: #fff;
+    }
+    &:hover > i {
+        border-top: #3c4c66;
+    }
+}
+
+.invisibleWidgetChildren {
+    display: none;
+}
+
+
+/*====== Notifyer Entries ======*/
+
+.notifierEntry {
+    .progressCancel {
+        margin-top: 2px;
+        background-image: url(images/icon_system_close_available_i.png);
+        background-position: 0 2px;
+        background-repeat: no-repeat;
+        width: 12px;
+        height: 10px;
+        .z-toolbarbutton-content {
+            height: 10px;
+        }
+    }
+}
+
+/*====== Content-Splitter ======*/
+
+.splitterChildrenContainer {
+    width: 100%;
+    height: 100%;
+}
+
+.splitterChildrenContainer_split {
+    visibility: hidden;
+}
+
+.splitterChildrenContainer .z-splitter-vertical-outer-td,
+.splitterChildrenContainer .z-splitter-horizontal-outer {
+    background: none;
+}
+
+.z-splitter-vertical-outer-td:HOVER .splitterChildrenContainer_split,
+.z-splitter-horizontal-outer:HOVER .splitterChildrenContainer_split {
+    visibility: visible;
+}
+
+
+/*====== Render-Status Display ======*/
+
+.cng-busy {
+    background-color: $window__popup--bg-color;
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    opacity: 0.9;
+    filter: alpha(opacity=90);
+}
+
+.cng-busy > .z-renderdefer {
+    left: 50%;
+    position: relative;
+    margin-left: -8px;
+}
+
+
+/*====== Loading Indicator ======*/
+.z-temp *{
+    background-color: transparent;
+}
+.z-temp .z-loading, .z-loading{
+    background-color: $editor-defaults__loading--bg-color;
+    &-indicator{
+        font-size: $editor-defaults__loading--font-size;
+        color: $editor-defaults__loading--color;
+    }
+}
+.z-loading{
+    cursor: wait;
+    white-space: nowrap;
+    padding: 0;
+    top: 40% !important;
+    right: 50% !important;
+    left: auto !important;
+    font-size: $editor-defaults__loading--font-size;
+    color: $editor-defaults__loading--color;
+    border: none;
+    &-indicator {
+        padding: $editor-defaults__loading-indicator--padding;
+        text-transform: capitalize;
+        white-space: nowrap;
+        border: none;
+    }
+    &-icon{
+        background-image: url(images/loading-spinner.gif);
+        width: $editor-defaults__loading-icon--size;
+        height: $editor-defaults__loading-icon--size;
+        position: static !important;
+        margin: 0 auto;
+        margin-bottom: $editor-defaults__loading--margin-y;
+    }
+}
+
+.z-apply-loading-icon, .z-renderdefer{
+    background-image: url(images/icon_loading_indicator_default.gif);
+}
+
+/*====== input field defintions ======//
+.z-textbox, .z-decimalbox, .z-intbox, .z-longbox, .z-doublebox, .z-bandbox-input, .z-combobox-input, .z-textbox-focus, .z-combobox-inp, .z-timebox-input {
+    line-height: $editor-defaults__input-field--line-height;
+    height: $editor-defaults__box--height;
+    padding-left: $editor-defaults__input-field--text-indent;
+}*/

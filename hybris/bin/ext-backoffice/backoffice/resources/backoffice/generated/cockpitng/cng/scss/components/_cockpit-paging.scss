@@ -1,0 +1,143 @@
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/cockpitng/cng/scss/cockpitng-globals.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/scss/backoffice-variables.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/backoffice/scss/backoffice-variables.scss'; 
+
+@import "../support/_cockpit-mixins.scss";/*================================
+    z-Paging
+================================*/
+// Defintions of the z-Paging-Element (Navigation)
+
+// Status:
+// - indented
+// ToDo: all
+
+
+
+.z-paging {
+    height: auto; //$editor-defaults__pagin--height;
+    padding: $editor-defaults__pagin--padding;
+    background-color: $editor-defaults__pagin--bg-color;
+
+    &-info {
+        height: auto;
+        font-size: $editor-defaults__pagin--font-size;
+        line-height: $editor-defaults__pagin-info--line-height;
+    }
+
+    &-input, &-text {
+        font-size: $editor-defaults__pagin--font-size;
+        text-align: $editor-defaults__pagin-input-text--text-align;
+    }
+
+    &-input {
+        width: $editor-defaults__pagin-input--width;
+        height: $editor-defaults__pagin-input--height;
+        border-color: $editor-defaults__pagin-input--border-color;
+        padding: $editor-defaults__pagin-input--padding;
+        margin-left: $editor-defaults__pagin-input--margin-left;
+    }
+
+    &-text {
+        line-height: $editor-defaults__pagin-text--line-height;
+        margin: $editor-defaults__pagin-text--margin;
+        vertical-align: middle;
+    }
+
+    &-button {
+        min-width: $editor-defaults__pagin-item--min-width;
+        height: auto; //$editor-defaults__pagin-item--height;
+        font-size: $editor-defaults__pagin--font-size;
+        line-height: 28px;
+        padding: 0 5px;
+        margin-right: 2px;
+        border: none;
+        vertical-align: middle;
+        background: $editor-defaults__pagin-button--default;
+
+        &:hover,
+        &:focus {
+            background: $editor-defaults__pagin-button--hover;
+            color: $blue__default;
+            box-shadow: none;
+        }
+
+        &[disabled],
+        &[disabled]:hover {
+            background: $editor-defaults__pagin-button--disabled;
+            opacity: $editor-defaults__pagin-button-opacity;
+            
+            .z-paging-icon, .z-paging-icon:hover {
+                background-color: $editor-defaults__pagin-button-icon--bg-color;
+            }
+        }
+        
+        
+        .z-paging-icon[class*="z-icon-angle-"]:before {
+            content: "";
+        }
+    }
+
+    //todo: replace values with variables
+    &-first {
+        &, &[disabled], &[disabled]:hover {
+            background-position: -1px -70px;
+        }
+        &:hover {
+            background-position: -25px -70px;
+        }
+    }
+    
+    &-previous{
+        &, &[disabled], &[disabled]:hover {
+            background-position: -1px -22px;
+        }
+        &:hover {
+            background-position: -25px -22px;
+        }
+    }
+    
+    &-next, &-next[disabled]:hover {
+        background-position: -1px 2px;
+    }
+    &-next:hover {
+        background-position: -25px 2px;
+    }
+    &-last, &-last[disabled]:hover {
+        background-position: -1px -45px;
+    }
+    &-last:hover {
+        background-position: -25px -45px;
+    }
+    &-selected {
+        &,
+        &:hover,
+        &:active {
+            color: $editor-defaults__pagin-selected--color;
+            background-color: $white;
+        }
+    }
+}
+
+//todo: check some old code that starts here
+/* zk7-revised-TODO */
+div.z-paging-os-cnt{
+    &-l {
+        background: #6f7c91;
+        margin: 2px;
+    }
+    &-selected-l {
+        background: #3c4c66;
+        margin: 2px;
+    }
+}
+
+.z-paging-os {
+    div.z-paging-os-cnt-l .z-paging-os-cnt {
+        color: #fff;
+    }
+
+    .z-paging-os-selected:hover {
+        color: #fff;
+        font-weight: bold;
+    }
+}

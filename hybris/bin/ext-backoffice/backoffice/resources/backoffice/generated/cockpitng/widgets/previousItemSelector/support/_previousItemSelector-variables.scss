@@ -1,0 +1,36 @@
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/cockpitng/cng/scss/cockpitng-globals.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/scss/backoffice-variables.scss'; 
+
+/*================================
+    Previous Item selector Button
+================================*/
+// Styling of the Previous Item selector Button
+// Status:
+// - all ok
+
+
+
+$previousItemSelector__button--bg-color: (
+        default: transparent,
+        hover: $white,
+        disabled: transparent
+);
+$previousItemSelector__button--bg-image: (
+        default: url("icons/icon_action_prev_default.png"),
+        hover: url("icons/icon_action_prev_hover.png"),
+        disabled: url("icons/icon_action_prev_disabled.png")
+);
+$previousItemSelector__button--bg:
+        map-get($previousItemSelector__button--bg-color, default)
+        map-get($previousItemSelector__button--bg-image, default)
+        no-repeat;
+$previousItemSelector__button-hover--bg:
+        map-get($previousItemSelector__button--bg-color, hover)
+        map-get($previousItemSelector__button--bg-image, hover)
+        no-repeat;
+$previousItemSelector__button-disabled--bg:
+        map-get($previousItemSelector__button--bg-color, disabled)
+        map-get($previousItemSelector__button--bg-image, disabled)
+        no-repeat;
+$previousItemSelector__button-disabled--opacity: 1;
+$previousItemSelector__button--size: 30px 28px;

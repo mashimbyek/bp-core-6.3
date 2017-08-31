@@ -1,0 +1,70 @@
+/*================================
+    Systembar Variables
+================================*/
+/*================================
+    Systembar Mixins
+================================*/
+/*================================
+    QuickLocaleToggle Popup (Systembar)
+================================*/
+.yw-quickToggleLocale {
+  border: none; }
+  .yw-quickToggleLocale .z-popup-content {
+    padding: 0; }
+    .yw-quickToggleLocale .z-popup-content > .z-label, .yw-quickToggleLocale .z-popup-content > .z-div > .z-label {
+      display: none !important; }
+  .yw-quickToggleLocale .z-popup-cl {
+    border-top: none; }
+  .yw-quickToggleLocale .z-listbox {
+    border: none; }
+  .yw-quickToggleLocale .z-listitem {
+    background-color: #32a0ec; }
+    .yw-quickToggleLocale .z-listitem:hover {
+      background-color: #32a0ec; }
+    .yw-quickToggleLocale .z-listitem .z-listcell {
+      padding: 8px 10px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      border-bottom: none;
+      background: none; }
+      .yw-quickToggleLocale .z-listitem .z-listcell:hover {
+        background-color: #84c6f4; }
+      .yw-quickToggleLocale .z-listitem .z-listcell-content {
+        padding: 5px; }
+    .yw-quickToggleLocale .z-listitem .z-listcell-content,
+    .yw-quickToggleLocale .z-listitem .z-listcell-content .z-label,
+    .yw-quickToggleLocale .z-listitem:hover .z-listcell-content {
+      color: #ffffff;
+      font-weight: normal;
+      font-size: 14px;
+      font-family: "Open Sans", sans-serif; }
+    .yw-quickToggleLocale .z-listitem.z-listitem-selected {
+      background-color: #32a0ec; }
+      .yw-quickToggleLocale .z-listitem.z-listitem-selected:hover {
+        background-color: #32a0ec; }
+      .yw-quickToggleLocale .z-listitem.z-listitem-selected .z-listcell {
+        background-color: #5bb3f0; }
+        .yw-quickToggleLocale .z-listitem.z-listitem-selected .z-listcell:hover {
+          background-color: #84c6f4; }
+    .yw-quickToggleLocale .z-listitem .z-listcell .z-listitem-checkable .z-listitem-icon.z-icon-check {
+      display: inline-block;
+      position: relative;
+      vertical-align: middle;
+      top: 0;
+      padding-top: 0;
+      margin-top: -5px;
+      color: rgba(255, 255, 255, 0.5);
+      font-weight: normal;
+      font-size: 16px;
+      font-family: "FontAwesome", sans-serif; }
+    .yw-quickToggleLocale .z-listitem.z-listitem-selected .z-listcell .z-listitem-checkable .z-listitem-icon.z-icon-check {
+      color: #ffffff; }
+  .yw-quickToggleLocale-cl {
+    width: 100%;
+    padding: 8px 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background: #32a0ec; }
+  .yw-quickToggleLocale-cl .yw-quickToggleLocale-cl-value,
+  .yw-quickToggleLocale-cl .yw-quickToggleLocale-cl-label {
+    display: inline-block;
+    padding: 5px;
+    color: #ffffff; }

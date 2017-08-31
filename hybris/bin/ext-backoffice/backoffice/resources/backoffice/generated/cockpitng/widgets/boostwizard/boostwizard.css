@@ -1,0 +1,59 @@
+/*
+ * [y] hybris Platform
+ *
+ * Copyright (c) 2000-2016 SAP SE or an SAP affiliate company.
+ * All rights reserved.
+ *
+ * This software is the confidential and proprietary information of SAP
+ * ("Confidential Information"). You shall not disclose such Confidential
+ * Information and shall use it only in accordance with the terms of the
+ * license agreement you entered into with SAP.
+ */
+.yw-boostwizard-content tr.z-grid-odd td.z-row-inner,
+.yw-boostwizard-content tr.z-grid-odd .z-cell, .yw-boostwizard-content tr.z-grid-odd,
+.yw-boostwizard-content div.z-grid tr.z-row td.z-row-inner,
+.yw-boostwizard-content div.z-grid tr.z-row td.z-cell {
+  background: transparent;
+  border: none; }
+
+.yw-boostwizard-content tr.z-row .z-select {
+  width: 100%;
+  margin-top: -5px; }
+
+.yw-boostwizard-content tr.z-row .yw-boostwizard-label {
+  padding-top: 10px;
+  display: inline-block; }
+
+.yw-boostwizard-content .z-grid {
+  width: auto !important; }
+
+.yw-boostwizard-content .z-grid-body {
+  width: auto !important;
+  padding-left: 10px;
+  padding-right: 10px; }
+
+.yw-boostwizard-content .yw-boostwizard-warning {
+  min-height: 50px; }
+
+.yw-boostwizard-content .yw-boostwizard-warningbutton-column {
+  width: 30px; }
+
+.yw-boostwizard-content .yw-boostwizard-slider {
+  display: inline-block; }
+
+.yw-boostwizard-content .yw-boostwizard-slider-position {
+  margin-left: 15px;
+  top: -15px;
+  position: relative; }
+
+.yw-boostwizard-content .yw-newboostrule-notification {
+  width: 100%;
+  position: absolute;
+  z-index: 1700;
+  height: auto !important; }
+
+.yw-boostwizard-content.z-vlayout {
+  overflow-y: auto; }
+
+.yw-boostwizard-button {
+  padding: 0 10px 10px; }

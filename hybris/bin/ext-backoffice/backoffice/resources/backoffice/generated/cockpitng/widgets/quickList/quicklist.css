@@ -1,0 +1,82 @@
+/*================================
+    Quick List Widget Variables
+================================*/
+/*================================
+    Quick List Widget Styles
+================================*/
+.yw-quicklist {
+  height: 100%;
+  color: #151c22;
+  background: #eaedf1; }
+  .yw-quicklist .yw-main-container {
+    height: 100%;
+    overflow: auto;
+    padding: 0 20px 50px; }
+  .yw-quicklist .yw-info-container {
+    text-align: right;
+    font-weight: bold;
+    padding: 15px 20px 5px; }
+  .yw-quicklist-tile {
+    line-height: 16px;
+    padding: 15px 0;
+    border-bottom: 1px solid #d5d8dc; }
+    .yw-quicklist-tile:after {
+      content: "";
+      display: block;
+      clear: both; }
+  .yw-quicklist-hyperlink:hover, .yw-quicklist-tile-title:hover {
+    text-decoration: underline;
+    cursor: pointer;
+    color: #0486e0; }
+  .yw-quicklist-tile-title {
+    max-height: 50px;
+    font-weight: bold;
+    margin-bottom: 10px; }
+  .yw-quicklist-tile-thumbnail {
+    max-width: 30%;
+    vertical-align: top;
+    display: inline-block; }
+  .yw-quicklist-tile-subtitle-container {
+    max-width: 70%;
+    vertical-align: top;
+    padding-left: 15px;
+    display: inline-block; }
+  .yw-quicklist-tile-subtitle {
+    max-height: 50px;
+    font-size: 12px; }
+  .yw-quicklist-tile-title, .yw-quicklist-tile-subtitle {
+    display: block;
+    display: -webkit-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical; }
+  .yw-quicklist .ye-delete-btn {
+    width: 32 32px;
+    height: 32px;
+    min-height: 32px;
+    color: #3f5876;
+    background-color: transparent;
+    float: right; }
+    .yw-quicklist .ye-delete-btn:hover {
+      background-color: transparent;
+      color: #0486e0; }
+
+.ye-quicklist-remove-btn {
+  width: 32px;
+  height: 32px;
+  min-height: 32px;
+  background-image: url("icons/icon_remove.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 28px 28px;
+  background-color: transparent;
+  float: right; }
+  .ye-quicklist-remove-btn:hover, .ye-quicklist-remove-btn:active, .ye-quicklist-remove-btn:focus {
+    background-image: url("icons/icon_remove.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 28px 28px;
+    background-color: transparent;
+    border-bottom: 1px solid #0486e0; }

@@ -1,0 +1,195 @@
+.oms-widget-atpformula-table {
+  padding-right: 20px; }
+
+.atpformulas-header {
+  margin-bottom: 5px; }
+
+.atpformulas-row > div:nth-child(3) {
+  padding-left: 22px; }
+
+.atpformulabuilderheaderactions > span {
+  width: 85px; }
+
+.atpformulabuilderheaderactions > span,
+.atpformulabuilderheadervariables > span {
+  font-size: 16px;
+  font-weight: bold;
+  height: 30px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  padding-right: 10px;
+  color: #151c22; }
+
+.oms-widget-atpformula-table .z-vlayout-inner:nth-child(3) .atpformulas-row {
+  border-top: 1px solid #e5e9ed; }
+
+.yw-editorarea-tabbox-tabpanels-tabpanel-groupbox-ed .atpformulas-row {
+  border-bottom: 1px solid #e5e9ed; }
+  .yw-editorarea-tabbox-tabpanels-tabpanel-groupbox-ed .atpformulas-row button.addvariableatpformula, .yw-editorarea-tabbox-tabpanels-tabpanel-groupbox-ed .atpformulas-row button.subvariableatpformula {
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: transparent; }
+  .yw-editorarea-tabbox-tabpanels-tabpanel-groupbox-ed .atpformulas-row button.addvariableatpformula {
+    background-image: url("images/icon_action_add.png"); }
+  .yw-editorarea-tabbox-tabpanels-tabpanel-groupbox-ed .atpformulas-row button.subvariableatpformula {
+    background-image: url("images/icon_action_sub.png"); }
+  .yw-editorarea-tabbox-tabpanels-tabpanel-groupbox-ed .atpformulas-row div.clearvariableatpformula {
+    background-image: url("images/icon_action_remove.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: transparent;
+    height: 36px;
+    width: 36px; }
+    .yw-editorarea-tabbox-tabpanels-tabpanel-groupbox-ed .atpformulas-row div.clearvariableatpformula:hover {
+      cursor: pointer; }
+  .yw-editorarea-tabbox-tabpanels-tabpanel-groupbox-ed .atpformulas-row .atpformulas-variables, .yw-editorarea-tabbox-tabpanels-tabpanel-groupbox-ed .atpformulas-row .atpformulas-variables__cancel {
+    height: 34px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    width: calc(100% - 120px);
+    margin-bottom: 0; }
+  .yw-editorarea-tabbox-tabpanels-tabpanel-groupbox-ed .atpformulas-row > div:first-child, .yw-editorarea-tabbox-tabpanels-tabpanel-groupbox-ed .atpformulas-row > div:nth-child(2), .yw-editorarea-tabbox-tabpanels-tabpanel-groupbox-ed .atpformulas-row > div:nth-child(3) {
+    float: left; }
+  .yw-editorarea-tabbox-tabpanels-tabpanel-groupbox-ed .atpformulas-row > div:last-child {
+    float: right; }
+  .yw-editorarea-tabbox-tabpanels-tabpanel-groupbox-ed .atpformulas-row > div:first-child, .yw-editorarea-tabbox-tabpanels-tabpanel-groupbox-ed .atpformulas-row > div:nth-child(2), .yw-editorarea-tabbox-tabpanels-tabpanel-groupbox-ed .atpformulas-row > div:last-child {
+    margin-top: 2px;
+    margin-bottom: 2px; }
+
+.atpformulas-variables__cancel {
+  color: #151c22; }
+
+.atpformulas-variables {
+  color: #818ea2; }
+
+.atpformulas-row .ye-default-reference-editor-remove-button.ye-default_remove_formula {
+  position: initial;
+  display: inline-block;
+  margin-top: 0px; }
+
+.y-toolbar-leftslot .cng-action-group td.z-hbox-separator {
+  margin-left: -2px;
+  display: inline-block;
+  height: 32px; }
+
+.y-toolbar-leftslot .cng-action-group .cng-action {
+  margin-right: 2px; }
+  .y-toolbar-leftslot .cng-action-group .cng-action td.z-hbox-separator {
+    margin: 0;
+    height: auto; }
+
+.y-toolbar-leftslot .cng-action.cng-action-disabled {
+  position: relative;
+  padding: 0;
+  margin: 0; }
+  .y-toolbar-leftslot .cng-action.cng-action-disabled:hover {
+    background: none; }
+  .y-toolbar-leftslot .cng-action.cng-action-disabled tr {
+    display: none; }
+
+.cng-action .z-hbox-separator {
+  background-color: inherit; }
+
+button.z-button.declineitem {
+  background-image: url("images/icon_action_decline_default.png");
+  background-color: #FFFFFF;
+  width: 30px;
+  border: 1px solid #C0C0C0;
+  background-position: center; }
+  button.z-button.declineitem:hover {
+    background-image: url("images/icon_action_decline_hover.png");
+    background-color: #085ABC; }
+
+button.z-button.edititem {
+  background-image: url("images/icon_action_edit_default.png");
+  background-color: #FFFFFF;
+  width: 20px;
+  border: 1px solid #C0C0C0;
+  background-position: center;
+  background-repeat: no-repeat; }
+  button.z-button.edititem:hover {
+    background-image: url("images/icon_action_edit_hover.png");
+    background-color: #085ABC; }
+  button.z-button.edititem.disabled {
+    background-image: url("images/icon_action_edit_disabled.png"); }
+    button.z-button.edititem.disabled:hover {
+      background-color: #F6F6F6;
+      border: 1px solid #DFDFDF; }
+
+.y-editor-area-attributes-cnt-max .z-groupbox-content .z-hbox, .y-editor-area-attributes-cnt-max.z-groupbox-content table {
+  width: 100%; }
+
+.y-toolbar-leftslot .cng-action-group .ya-de_hybris_platform_warehousingbackoffice_actions_printpickslipaction.cng-action:not(.cng-action-disabled),
+.y-toolbar-leftslot .cng-action-group .ya-de_hybris_platform_warehousingbackoffice_actions_printpackaction.cng-action:not(.cng-action-disabled),
+.y-toolbar-leftslot .cng-action-group .ya-de_hybris_platform_warehousingbackoffice_actions_printshippinglabelaction.cng-action:not(.cng-action-disabled),
+.y-toolbar-leftslot .cng-action-group .ya-de_hybris_platform_warehousingbackoffice_actions_shipaction.cng-action:not(.cng-action-disabled),
+.y-toolbar-leftslot .cng-action-group .ya-de_hybris_platform_warehousingbackoffice_actions_confirmpickupaction.cng-action:not(.cng-action-disabled),
+.y-toolbar-leftslot .cng-action-group .ya-de_hybris_platform_warehousingbackoffice_actions_reallocateaction.cng-action:not(.cng-action-disabled),
+.y-toolbar-leftslot .cng-action-group .ya-de_hybris_platform_warehousingbackoffice_actions_returns_acceptgoods.cng-action:not(.cng-action-disabled),
+.y-toolbar-leftslot .cng-action-group .ya-de_hybris_platform_warehousingbackoffice_actions_returns_cancelreturnaction.cng-action:not(.cng-action-disabled),
+.y-toolbar-leftslot .cng-action-group .ya-de_hybris_platform_warehousingbackoffice_actions_exportforms.cng-action:not(.cng-action-disabled),
+.y-toolbar-leftslot .cng-action-group .ya-de_hybris_platform_warehousingbackoffice_actions_stock_adjustment.cng-action:not(.cng-action-disabled),
+.y-toolbar-leftslot .cng-action-group .ya-de_hybris_platform_warehousingbackoffice_actions_internaltransfer_accept:not(.cng-action-disabled),
+.y-toolbar-leftslot .cng-action-group .ya-de_hybris_platform_warehousingbackoffice_actions_internaltransfer_reject:not(.cng-action-disabled),
+.y-toolbar-leftslot .cng-action-group .ya-de_hybris_platform_warehousingbackoffice_actions_asn_accept.cng-action:not(.cng-action-disabled),
+.y-toolbar-leftslot .cng-action-group .ya-de_hybris_platform_warehousingbackoffice_actions_asn_reject.cng-action:not(.cng-action-disabled) {
+  padding: 2px 10px; }
+  .y-toolbar-leftslot .cng-action-group .ya-de_hybris_platform_warehousingbackoffice_actions_printpickslipaction.cng-action:not(.cng-action-disabled) tr,
+  .y-toolbar-leftslot .cng-action-group .ya-de_hybris_platform_warehousingbackoffice_actions_printpackaction.cng-action:not(.cng-action-disabled) tr,
+  .y-toolbar-leftslot .cng-action-group .ya-de_hybris_platform_warehousingbackoffice_actions_printshippinglabelaction.cng-action:not(.cng-action-disabled) tr,
+  .y-toolbar-leftslot .cng-action-group .ya-de_hybris_platform_warehousingbackoffice_actions_shipaction.cng-action:not(.cng-action-disabled) tr,
+  .y-toolbar-leftslot .cng-action-group .ya-de_hybris_platform_warehousingbackoffice_actions_confirmpickupaction.cng-action:not(.cng-action-disabled) tr,
+  .y-toolbar-leftslot .cng-action-group .ya-de_hybris_platform_warehousingbackoffice_actions_reallocateaction.cng-action:not(.cng-action-disabled) tr,
+  .y-toolbar-leftslot .cng-action-group .ya-de_hybris_platform_warehousingbackoffice_actions_returns_acceptgoods.cng-action:not(.cng-action-disabled) tr,
+  .y-toolbar-leftslot .cng-action-group .ya-de_hybris_platform_warehousingbackoffice_actions_returns_cancelreturnaction.cng-action:not(.cng-action-disabled) tr,
+  .y-toolbar-leftslot .cng-action-group .ya-de_hybris_platform_warehousingbackoffice_actions_exportforms.cng-action:not(.cng-action-disabled) tr,
+  .y-toolbar-leftslot .cng-action-group .ya-de_hybris_platform_warehousingbackoffice_actions_stock_adjustment.cng-action:not(.cng-action-disabled) tr,
+  .y-toolbar-leftslot .cng-action-group .ya-de_hybris_platform_warehousingbackoffice_actions_internaltransfer_accept:not(.cng-action-disabled) tr,
+  .y-toolbar-leftslot .cng-action-group .ya-de_hybris_platform_warehousingbackoffice_actions_internaltransfer_reject:not(.cng-action-disabled) tr,
+  .y-toolbar-leftslot .cng-action-group .ya-de_hybris_platform_warehousingbackoffice_actions_asn_accept.cng-action:not(.cng-action-disabled) tr,
+  .y-toolbar-leftslot .cng-action-group .ya-de_hybris_platform_warehousingbackoffice_actions_asn_reject.cng-action:not(.cng-action-disabled) tr {
+    vertical-align: middle; }
+
+.y-toolbar-leftslot .cng-action-group .ya-de_hybris_platform_warehousingbackoffice_actions_shipaction:hover,
+.y-toolbar-leftslot .cng-action-group .ya-de_hybris_platform_warehousingbackoffice_actions_printpickslipaction:hover,
+.y-toolbar-leftslot .cng-action-group .ya-de_hybris_platform_warehousingbackoffice_actions_printpackaction:hover,
+.y-toolbar-leftslot .cng-action-group .ya-de_hybris_platform_warehousingbackoffice_actions_printshippinglabelaction:hover,
+.y-toolbar-leftslot .cng-action-group .ya-de_hybris_platform_warehousingbackoffice_actions_confirmpickupaction:hover,
+.y-toolbar-leftslot .cng-action-group .ya-de_hybris_platform_warehousingbackoffice_actions_reallocateaction:hover,
+.y-toolbar-leftslot .cng-action-group .ya-de_hybris_platform_warehousingbackoffice_actions_returns_acceptgoods:hover,
+.y-toolbar-leftslot .cng-action-group .ya-de_hybris_platform_warehousingbackoffice_actions_returns_cancelreturnaction:hover,
+.y-toolbar-leftslot .cng-action-group .ya-de_hybris_platform_warehousingbackoffice_actions_stock_adjustment:hover,
+.y-toolbar-leftslot .cng-action-group .ya-de_hybris_platform_warehousingbackoffice_actions_asn_accept:hover,
+.y-toolbar-leftslot .cng-action-group .ya-de_hybris_platform_warehousingbackoffice_actions_asn_reject:hover,
+.y-toolbar-leftslot .cng-action-group .ya-de_hybris_platform_warehousingbackoffice_actions_internaltransfer_reject:hover,
+.y-toolbar-leftslot .cng-action-group .ya-de_hybris_platform_warehousingbackoffice_actions_internaltransfer_accept:hover,
+.y-toolbar-leftslot .cng-action-group .ya-de_hybris_platform_warehousingbackoffice_actions_exportforms:hover {
+  background: #ffffff;
+  color: #32a0ec;
+  -webkit-transition: background-color 0.3s ease 0s;
+  transition: background-color 0.3s ease 0s; }
+
+.y-toolbar-leftslot .cng-action-group .ya-de_hybris_platform_warehousingbackoffice_actions_shipaction.cng-action-disabled:hover,
+.y-toolbar-leftslot .cng-action-group .ya-de_hybris_platform_warehousingbackoffice_actions_printpickslipaction.cng-action-disabled:hover,
+.y-toolbar-leftslot .cng-action-group .ya-de_hybris_platform_warehousingbackoffice_actions_printpackaction.cng-action-disabled:hover,
+.y-toolbar-leftslot .cng-action-group .ya-de_hybris_platform_warehousingbackoffice_actions_printshippinglabelaction.cng-action-disabled:hover,
+.y-toolbar-leftslot .cng-action-group .ya-de_hybris_platform_warehousingbackoffice_actions_confirmpickupaction.cng-action-disabled:hover,
+.y-toolbar-leftslot .cng-action-group .ya-de_hybris_platform_warehousingbackoffice_actions_reallocateaction.cng-action-disabled:hover,
+.y-toolbar-leftslot .cng-action-group .ya-de_hybris_platform_warehousingbackoffice_actions_returns_acceptgoods.cng-action-disabled:hover,
+.y-toolbar-leftslot .cng-action-group .ya-de_hybris_platform_warehousingbackoffice_actions_returns_cancelreturnaction.cng-action-disabled:hover,
+.y-toolbar-leftslot .cng-action-group .ya-de_hybris_platform_warehousingbackoffice_actions_stock_adjustment.cng-action-disabled:hover,
+.y-toolbar-leftslot .cng-action-group .ya-de_hybris_platform_warehousingbackoffice_actions_asn_accept.cng-action-disabled:hover,
+.y-toolbar-leftslot .cng-action-group .ya-de_hybris_platform_warehousingbackoffice_actions_asn_reject.cng-action-disabled:hover,
+.y-toolbar-leftslot .cng-action-group .ya-de_hybris_platform_warehousingbackoffice_actions_internaltransfer_reject.cng-action-disabled:hover,
+.y-toolbar-leftslot .cng-action-group .ya-de_hybris_platform_warehousingbackoffice_actions_internaltransfer_accept.cng-action-disabled:hover,
+.y-toolbar-leftslot .cng-action-group .ya-de_hybris_platform_warehousingbackoffice_actions_exportforms.cng-action-disabled:hover {
+  color: inherit;
+  background: none; }

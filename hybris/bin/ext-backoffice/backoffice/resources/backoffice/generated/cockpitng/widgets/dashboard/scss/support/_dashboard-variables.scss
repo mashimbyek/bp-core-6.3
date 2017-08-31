@@ -1,0 +1,28 @@
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/cockpitng/cng/scss/cockpitng-globals.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/scss/backoffice-variables.scss'; 
+
+/*================================
+    Dashboard Charts
+================================*/
+// Defined Variables for Dashboard Charts
+
+// Status:
+// - all necessary changes added
+
+
+
+$dashboard__draggable-slot--bckg-color: rgba($blue__default, 0.3);
+$dashboard__draggable-slot--border-color: $grey__light--300;
+$dashboard--bckg-color: $grey__light--300;
+$dashboard__draggable-slot-ghost--bckg-color: $blue__default;
+$dashboard__draggable-slot-ghost--border-height: $editor-defaults__input-field--border-width;
+$dashboard__info-value--font-size: $font-size__h1;
+$dashboard__dashboard-header--color: $blue__dark--700;
+$dashboard__dashboard-slot--padding: 10px;
+$dashboard__dashboard-slot-draggable-icon--size: 27px;
+$dashboard__dashboard-slot-draggable--width: 100%;
+$dashboard__dashboard-slot-draggable--height: 6px;
+$dashboard__dashboard-slot-draggable--z-index: 2;
+$dashboard__dashboard-title-border--position-top: 60px;
+$dashboard__draggable-slot-ghost--height: $dashboard__dashboard-title-border--position-top;
+$dashboard__dashboard--padding-right: 10px;

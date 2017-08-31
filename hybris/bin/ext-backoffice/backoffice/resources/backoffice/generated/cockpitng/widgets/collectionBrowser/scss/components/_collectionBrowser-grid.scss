@@ -1,0 +1,111 @@
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/cockpitng/cng/scss/cockpitng-globals.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/scss/backoffice-variables.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/backoffice/scss/backoffice-variables.scss'; 
+
+@import "../support/_collectionBrowser-variables.scss";/*================================
+    Collection Browser - Grid
+================================*/
+// Grid-Styling for Collection Browser
+
+// Status:
+// - indented, variables assigned partially
+
+
+
+.yw-grid-view{
+    &-container {
+        width: 100%;
+        height: 100%;
+        padding: $collection-browser__grid--padding;
+        display: block;
+        overflow: auto;
+    }
+
+    &-tile {
+        width: $collection-browser__grid-tile--width;
+        height: $collection-browser__grid-tile--height;
+        margin: $collection-browser__grid-tile--margin;
+        max-height: $collection-browser__grid-tile--height;
+        float: left;
+        text-align: center;
+        border: $collection-browser__grid-tile--border;
+        position: relative;
+        background-color: $collection-browser__grid-tile--bg-color;
+        box-shadow: $collection-browser__grid-tile--shadow;
+        transition: $collection-browser__grid-tile--transition;
+        overflow: hidden;
+        
+        &:hover,
+        &.yw-selected{
+            box-shadow: $collection-browser__grid-tile--hover-shadow;
+        }
+        &.yw-selected {
+            &:before {
+                content: $collection-browser__grid-tile-selected-check-icon--content;
+                width: $collection-browser__grid-tile-selected-check-icon--size;
+                height: $collection-browser__grid-tile-selected-check-icon--size;
+                position: absolute;
+                font: normal normal normal $collection-browser__grid-tile-selected-check-icon--font-size/1 $collection-browser__grid-tile-selected-check-icon--font-family;
+                color: $collection-browser__grid-tile-selected--color;
+                left: $collection-browser__grid-tile-selected--icon-indent;
+                top: $collection-browser__grid-tile-selected--icon-indent;
+                z-index: 1;
+            }
+        }
+        .yw-grid-view-tile-thumbnail {
+            height: auto;
+            width: auto;
+            max-width: $collection-browser__grid-tile-image--max-width;
+            max-height: $collection-browser__grid-tile-image--max-height;
+            margin: 0 auto;
+            display: inline-block;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            margin-top: $collection-browser__grid-tile-image--margin-top;
+        }
+        .z-label {
+            width: 100%;
+            height:  $collection-browser__grid-tile-label--height;
+            display: block;
+            // multiline-ellipsis for webkit only
+            display: -webkit-box;
+            -webkit-line-clamp: $collection-browser__grid-tile-label--line-clamp;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: $collection-browser__grid-tile-label--color;
+            font-size: $collection-browser__grid-tile-label--font-size;
+            font-weight: bold;
+            line-height: $collection-browser__grid-tile-label--line-height;
+            text-align: left;
+            word-wrap: $collection-browser__grid-tile-label--word-wrap;
+            padding: $collection-browser__grid-tile--padding;
+            border-top: $collection-browser__grid-tile--border;
+            position: absolute;
+            bottom: $collection-browser__grid-tile-label--bottom;
+            background-color: $collection-browser__grid-tile--bg-color;
+        }
+    }
+}
+
+// Fix for status-bar miss-positioning in grid-view layout
+// - only valid for IE9+ FF3.5+, Chrome4+, Safari3.2+, Opera10.1+
+.yw-com_hybris_cockpitng_collectionBrowser > .z-vlayout > .z-vlayout-inner:last-child {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+.y-statusbar {
+    z-index: 100;
+}
+
+@media screen and (min-width: 800px) and (max-width: 840px) {
+    @include _single-row-tile();
+}
+
+@media screen and (max-width: ($collection-browser__grid-tile--width * 2 + $collection-browser__grid--padding-x * 4 + $collection-browser__grid-collapse-addition--space )) {
+    @include _single-row-tile();
+}

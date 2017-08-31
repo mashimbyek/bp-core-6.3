@@ -1,0 +1,15 @@
+/*================================
+    Previous Item selector Button
+================================*/
+/*================================
+    Previous Item selector Button
+================================*/
+button.z-button.yw-previousItemSelector {
+  width: 30px;
+  height: 28px;
+  background: transparent url("icons/icon_action_prev_default.png") no-repeat; }
+  button.z-button.yw-previousItemSelector:hover {
+    background: #ffffff url("icons/icon_action_prev_hover.png") no-repeat; }
+  button.z-button.yw-previousItemSelector[disabled="disabled"], button.z-button.yw-previousItemSelector[disabled="disabled"]:hover {
+    background: transparent url("icons/icon_action_prev_disabled.png") no-repeat;
+    opacity: 1; }

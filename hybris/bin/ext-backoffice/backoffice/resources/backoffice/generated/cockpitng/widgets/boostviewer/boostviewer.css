@@ -1,0 +1,28 @@
+button.y-icon-remove.z-button {
+  min-height: 16px;
+  width: 16px;
+  padding: 0px;
+  height: 16px;
+  background: url("images/icon_circle_delete_sprite_16.png") no-repeat 0 0 transparent; }
+
+button.y-icon-remove:hover {
+  background-position: 0 -48px;
+  background-color: transparent !important; }
+
+button.y-icon-remove:active {
+  background-position: 0 -32px;
+  background-color: transparent !important; }
+
+button.y-icon-remove:disabled {
+  background-position: 0 -64px;
+  background-color: transparent !important; }
+
+.yw-boostviewer-rules-boost div.z-listcell-content {
+  color: #0486e0;
+  font-weight: bold; }
+
+.yw-boostviewer-description {
+  padding: 10px; }
+
+.yw-boostviewer-content {
+  overflow: hidden; }

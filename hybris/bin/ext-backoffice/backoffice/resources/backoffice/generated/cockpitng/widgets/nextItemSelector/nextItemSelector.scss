@@ -1,0 +1,30 @@
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/cockpitng/cng/scss/cockpitng-globals.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/scss/backoffice-variables.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/backoffice/scss/backoffice-variables.scss'; 
+
+@import "support/_nextItemSelector-variables.scss";/*================================
+    Next Item selector Button
+================================*/
+// Styling of the Next Item selector Button
+// Status:
+// - all ok
+
+
+
+button.z-button {
+    &.yw-nextItemSelector {
+        width: nth($nextItemSelector__button--size, 1);
+        height: nth($nextItemSelector__button--size, 2);
+        background: $nextItemSelector__button--bg;
+
+        &:hover {
+            background: $nextItemSelector__button-hover--bg;
+        }
+
+        &[disabled="disabled"],
+        &[disabled="disabled"]:hover {
+            background: $nextItemSelector__button-disabled--bg;
+            opacity: $nextItemSelector__button-disabled--opacity;
+        }
+    }
+}

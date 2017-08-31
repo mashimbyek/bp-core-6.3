@@ -1,0 +1,15 @@
+/*================================
+    Next Item selector Button
+================================*/
+/*================================
+    Next Item selector Button
+================================*/
+button.z-button.yw-nextItemSelector {
+  width: 30px;
+  height: 28px;
+  background: transparent url("icons/icon_action_next_default.png") no-repeat; }
+  button.z-button.yw-nextItemSelector:hover {
+    background: #ffffff url("icons/icon_action_next_hover.png") no-repeat; }
+  button.z-button.yw-nextItemSelector[disabled="disabled"], button.z-button.yw-nextItemSelector[disabled="disabled"]:hover {
+    background: transparent url("icons/icon_action_next_disabled.png") no-repeat;
+    opacity: 1; }

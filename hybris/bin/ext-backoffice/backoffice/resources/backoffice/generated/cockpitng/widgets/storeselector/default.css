@@ -1,0 +1,7 @@
+.yw-catalogversion-button.z-button,
+.yw-catalogversion-button.z-button-os {
+  width: 16px;
+  height: 16px;
+  background-image: url("images/catalogversions.png");
+  background-repeat: no-repeat;
+  background-color: transparent; }

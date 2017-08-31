@@ -1,0 +1,93 @@
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/cockpitng/cng/scss/cockpitng-globals.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/scss/backoffice-variables.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/backoffice/scss/backoffice-variables.scss'; 
+
+@import "scss/support/_systembar-mixins.scss";/*================================
+    Systembar (General)
+================================*/
+// Defined Styling relevant for Systembar
+
+// Status:
+// - all necessary changes added
+// - code optimized and clean in major percentage
+
+
+
+@mixin _systembarClearBefore () {
+    &:after {
+        content: "";
+        display: block;
+        clear: both;
+    }
+}
+
+.yw-systemBarContainer {
+    background-color: $systembar--container--bg-color;
+
+    @include _systembarClearBefore;
+
+    .yw-statusToolbar {
+        @include _systembarClearBefore;
+
+        &-left{
+            float: $systembar__toolbar-part-left--float;
+        }
+
+        &-center{
+            width: $systembar__toolbar-part-center--width;
+            height: $systembar__toolbar-part-center--height;
+            position: $systembar__toolbar-part-center--position;
+            text-align: $systembar__toolbar-part-center--text-align;
+        }
+
+        &-right{
+            float: $systembar__toolbar-part-right--float;
+            text-align: $systembar__toolbar-part-right--text-align;
+        }
+
+        .yw-logoContainer {
+            width: $systembar__logo-container--width;
+            height: $systembar__logo-container--height;
+            background: {
+                image: $systembar__logo-container--image-url;
+                repeat: $systembar__logo-container--image-repeat;
+                position: $systembar__logo-container--image-position;
+                size: $systembar__logo-container--image-size;
+            }
+            margin: $systembar__toolbar-logo--margin;
+            display: inline-block;
+            vertical-align: top;
+
+            @media (max-width: 699px) {
+                width: $systembar__logo-container--width__screen-m;
+            }
+        }
+
+        .yw-perspectiveChooser {
+            display: inline-block;
+            vertical-align: top;
+        }
+
+        .yw-systemItemsContainer {
+            line-height: $systembar__system-items-container--line-height;
+            display: inline-block;
+            vertical-align: top;
+        }
+
+        .z-toolbarbutton {
+            width: $systembar__toolbar-button--width;
+            height: $systembar__toolbar-button--height;
+            line-height: $systembar__toolbar-button--line-height;
+            text-align: $systembar__toolbar-button--text-align;
+            vertical-align: top;
+
+            &:hover, &:focus, &:active {
+                background-color: $systembar__container-hover--bg-color;
+            }
+        }
+
+        .widget_cnt {
+            display: inline-block;
+        }
+    }
+}

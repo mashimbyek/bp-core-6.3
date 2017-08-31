@@ -1,0 +1,23 @@
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/cockpitng/cng/scss/cockpitng-globals.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/scss/backoffice-variables.scss'; 
+
+
+
+$facetcontainer__default--bg-color: $blue__dark--100;
+$facetcontainer__default--color: $white;
+$facetcontainer__selected--color: $blue__default;
+$facetcontainer__default-hover--color: $blue__greyish--200;
+
+$facetcontainer__row--padding-y: 8px;
+
+
+$facetcontainer__row--bg-color: darken($black__blueish--100, 3%);
+$facetcontainer__row-l2--bg-color: darken($black__blueish--100, 6%);
+$facetcontainer__row-l3--bg-color: darken($black__blueish--100, 9%);
+$facetcontainer__row-l4--bg-color: darken($black__blueish--100, 12%);
+
+$facetcontainer__treerow-hover--color: $facetcontainer__default-hover--color;
+$facetcontainer__treerow-hover--bg-color: $black__blueish--200;
+$facetcontainer__treerow-hover--bg-color-2: lighten($facetcontainer__treerow-hover--bg-color, 3%);
+$facetcontainer__treerow-selected--bg-color: $black__blueish--200;
+$facetcontainer__treerow-selected--color: $facetcontainer__selected--color;

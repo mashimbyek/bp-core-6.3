@@ -1,0 +1,31 @@
+/*================================
+    Catalog Selector Menu Button
+================================*/
+// Relevant Changes applied to the Locale-Toggle Popup and RoleChooser Popup
+
+// Status:
+// - ...
+
+@import "support/_catalogSelector-variables.scss";
+
+.yw-catalog-selector {
+  button.z-button {
+    width: $catalogSelector__button--width;
+    height: $catalogSelector__button--height;
+    max-width: $catalogSelector__button--max-width;
+    min-height: $catalogSelector__button--min-height;
+    font-size: $catalogSelector__button--font-size;
+    font-family: $catalogSelector__button--font-family;
+    color: $catalogSelector__button--font-color;
+    background: none;
+    border-left: $catalogSelector__button--border;
+    border-right: $catalogSelector__button--border;
+    padding: $catalogSelector__button--padding;
+    text-overflow: ellipsis;
+    overflow: hidden;
+
+    &:hover, &:focus, &:active {
+      background-color: $catalogSelector__button-hover--bg-color;
+    }
+  }
+}

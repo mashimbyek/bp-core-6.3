@@ -1,0 +1,63 @@
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/cockpitng/cng/scss/cockpitng-globals.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/scss/backoffice-variables.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/backoffice/scss/backoffice-variables.scss'; 
+
+@import "scss/support/multilayout-variables";/*================================
+    Multi Layout Widget
+================================*/
+
+
+
+.yw-multilayoutwidget {
+  background-color: $multilayout__widget--bg-color;
+
+  .yw-firstLayout,
+  .yw-secondLayout {
+    height: $multilayout__widget-layout--height;
+  }
+
+  .yw-hlayout {
+    padding: $multilayout__widget-hlayout--padding;
+
+    .z-toolbarbutton {
+      border: $multilayout__widget-toolbarbutton--border;
+      padding: $multilayout__widget-toolbarbutton--padding;
+
+      &:hover {
+        border: $multilayout__widget-toolbarbutton--border;
+        padding: $multilayout__widget-toolbarbutton--padding;
+        background-color: $multilayout__widget-toolbarbutton--bg-color;
+      }
+    }
+
+    .z-toolbarbutton-body {
+      border: $multilayout__widget-toolbarbutton-body--border;
+      padding: $multilayout__widget-toolbarbutton-body--padding;
+    }
+
+    .z-toolbarbutton-content {
+      padding: $multilayout__widget-toolbarbutton-content--padding;
+    }
+
+    .yw-firstLayout,
+    .yw-secondLayout,
+    .yw-thirdLayout {
+      width: $multilayout__widget-button-layout--width;
+      height: $multilayout__widget-button-layout--height;
+      background-repeat: no-repeat;
+      vertical-align: top;
+    }
+
+    @include multilayout-bg-image();
+    @include multilayout-bg-image(second);
+    @include multilayout-bg-image(third);
+  }
+}
+
+.yw-thirdLayout-vlayout-admin .z-vlayout-inner{
+  height: $multilayout__widget-admin-layout--height;
+}
+
+.yw-multilayoutwidget-common-north {
+  max-height: $multilayout__widget-common-north--maxheight;
+}

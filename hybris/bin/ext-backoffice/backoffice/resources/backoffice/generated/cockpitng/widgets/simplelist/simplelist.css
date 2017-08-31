@@ -1,0 +1,57 @@
+.yw-simplelist-listbox {
+  height: 100%; }
+
+.yw-simplelist-gridcontainer {
+  width: 100%;
+  overflow: auto;
+  background: #ebecee; }
+
+.yw-simplelist-griditem {
+  position: relative; }
+
+.yw-simplelist-gridcontainer .yw-simplelist-griditem {
+  height: 300px;
+  margin: 10px 1% 0;
+  width: 29%;
+  padding: 1%;
+  max-width: 250px;
+  min-width: 150px;
+  border: 1px solid #ccc;
+  float: left;
+  cursor: pointer;
+  background: #fff;
+  box-shadow: 0px 0px 5px #c2c2c4;
+  overflow: hidden; }
+
+div.yw-simplelist-imgcontainer {
+  float: left;
+  margin-left: 1%;
+  margin-right: 2%; }
+
+.yw-simplelist-griditem div.yw-simplelist-imgcontainer {
+  float: none;
+  margin-left: 2%;
+  margin-right: 2%;
+  width: 96%;
+  margin-bottom: 5px; }
+
+div.yw-simplelist-imgcontainer img {
+  border: 1px solid #A2A7B8;
+  max-width: 100px; }
+
+.yw-simplelist-labelcontainer {
+  float: left;
+  margin-left: 1%; }
+
+div.yw-simplelist-label {
+  width: 100%;
+  padding: 3px 0; }
+
+.yw-simplelist-label .z-label {
+  font-family: 'Roboto', Arial, sans-serif;
+  font-size: 17px;
+  font-weight: 300; }
+
+.yw-fallBackImg {
+  background: url("images/imageNotAvailable.png");
+  width: 32px; }

@@ -1,0 +1,27 @@
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/cockpitng/cng/scss/cockpitng-globals.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/scss/backoffice-variables.scss'; 
+
+/*================================
+    Create Button Variables
+================================*/
+// Variables for the Create Button
+// Status:
+// - all ok
+
+
+
+$create__create-new-button--border-width: 1px;
+$create__create-new-button--border: $create__create-new-button--border-width solid $grey__default--800;
+$create__create-new-button--bg-color: $white;
+$create__create-new-button--hover-bg-color: $white;
+$create__create-new-button--hover-color: $white;
+$create__create-new-button--height: $toolbar__vertical-centering-base--height;
+$create__create-new-button--caret-icon-size: 18px;
+$create__create-new-button--caret-button--width: $create__create-new-button--height - 2px;
+$create__create-no-subtype-popup--padding: 8px 5px;
+$create__create-no-subtype-popup--color: $grey__default--800;
+
+$create__create-new-button-opened--bg-color: #b3daf6;
+$create__create-new-button-opened--border-color: $blue__light--500;
+$create__create-new-button-opened--border: 1px solid $create__create-new-button-opened--border-color;
+$create__create-new-button-opened--box-shadow: -1px 1px 3px 0px rgba($black, 0.1);

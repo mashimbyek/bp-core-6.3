@@ -1,0 +1,19 @@
+/*================================
+    Catalog Selector Menu Button
+================================*/
+.yw-catalog-selector button.z-button {
+  width: 100%;
+  height: 100%;
+  max-width: 400px;
+  min-height: 48px;
+  font-size: 14px;
+  font-family: "Open Sans", sans-serif;
+  color: #ffffff;
+  background: none;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0 20px;
+  text-overflow: ellipsis;
+  overflow: hidden; }
+  .yw-catalog-selector button.z-button:hover, .yw-catalog-selector button.z-button:focus, .yw-catalog-selector button.z-button:active {
+    background-color: #32a0ec; }

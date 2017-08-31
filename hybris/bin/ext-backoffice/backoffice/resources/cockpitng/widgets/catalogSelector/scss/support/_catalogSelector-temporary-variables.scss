@@ -1,0 +1,126 @@
+// new color in variables $grey__default--1000: #8f9ba9; $grey__light--1100: #dce1e8; $grey__light--1200: #f6f8fa;
+//ToDo: this variable file will be deleted and import cases will be replaced with cockpitng-globals.scss
+
+// Color
+// =====================
+//White
+$white: #ffffff;
+
+//Light Grey
+$grey__light--100: #eeeeee;
+$grey__light--200: #f2f2f2;
+$grey__light--400: #b7bdc8;
+$grey__light--500: #EAEDF1;
+$grey__light--600: #f7f7f7;
+$grey__light--700: #bdc6d2;
+$grey__light--800: #d7d7d7;
+$grey__light--900: #ebebeb;
+$grey__light--1000: #bfbfbf;
+$grey__light--1100: #dce1e8;
+$grey__light--1200: #f6f8fa;
+
+//Default Grey
+$grey__default: #CCCCCC;
+$grey__default--100: #eef2f6;
+$grey__default--200: #7d899c;
+$grey__default--300: #e3e3e3;
+$grey__default--400: #81878c;
+$grey__default--500: #7f90a4;
+$grey__default--600: #818ea2;
+$grey__default--700: #dbdbdb;
+$grey__default--800: #b7b7b7;
+$grey__default--900: #acacac;
+$grey__default--1000: #8f9ba9;
+
+//Dark Grey
+$grey__dark--100: #999;
+$grey__dark--200: #888;
+$grey__dark--500: #787878;
+$grey__dark--600: #464e56;
+$grey__dark--700: #303030;
+
+//Light Blue
+$blue__light: #e1f3ff;
+$blue__light--100: #d5eeff;
+$blue__light--200: #c6e0f2;
+$blue__light--300: #eaf1f6;
+$blue__light--500: #69c2ff;
+
+//Default Blue
+$blue__default: #0486e0; //#049bdb;
+$blue__default--100: #32a0ec;
+$blue__default--300: #085abc;
+$blue__default--400: #0586e0;
+$blue__default--600: #043263;
+
+//Dark Blue
+$blue__dark: #384d66;
+$blue__dark--100: #27394f;
+$blue__dark--300: #3f5876;
+$blue__dark--400: #55667a;
+$blue__dark--500: #62768d;
+$blue__dark--600: #6b8098;
+
+// Blue (Greyish)
+
+$blue__greyish--200: #a6b3c4;
+$blue__greyish--300: #9da8b6;
+$blue__greyish--400: #7f90a5;
+$blue__greyish--500: #8192a6;
+$blue__greyish--600: #66afe9;
+$blue__greyish--700: #3c4c66;
+
+//Light Yellow
+$yellow__light: #fef1d3;
+
+//Yellow
+$yellow__default: #FCDF2B;
+$yellow__default--100: #e2c713;
+$yellow__default--200: #e6ca1f;
+$yellow__default--300: #ffe533;
+$yellow__default--400: #cfb611;
+$yellow__default--500: #ffeec6;
+$yellow__default--600: #fbbb21;
+
+//Default Orange
+$orange__default: #ff9914;
+$orange__default--100: #fef0ec;
+$orange__default--200: #f16b46;
+$orange__default--300: #ff3b30;
+
+//Light Red
+$red__light--100: #ffdfdd;
+
+//Default Red
+$red__default: #8B0000;
+
+//Blueish Black
+$black__blueish--100: #151c22;
+$black__blueish--200: #1e2830;
+
+//Black
+$black: #000000;
+$black--100: rgba(0, 0, 0, 0.35);
+
+// Typography
+// ====================
+$font-size__base:          14px;
+$font-size__small:         ceil(($font-size__base * 0.85)); // ~12px
+$font-size__semi-base:     ceil(($font-size__base * 0.93)); // ~13px
+$font-size__medium:        ceil(($font-size__base * 1.14)); // ~16px
+$font-size__large:         ceil(($font-size__base * 1.36)); // ~19px
+
+$font-size__h1:            floor(($font-size__base * 2.1)); // ~29px
+$font-size__h2:            floor(($font-size__base * 1.86)); // ~26px
+$font-size__h3:            ceil(($font-size__base * 1.5)); // ~21px
+$font-size__h4:            ceil(($font-size__base * 1.25)); // ~18px
+$font-size__h5:            $font-size__base;
+$font-size__h6:            ceil(($font-size__base * 0.85)); // ~12px
+
+$font-family-opensans: 'Open Sans', sans-serif;
+
+// Generic
+$boxes--border__thin: 1px;
+$editor-defaults__input-field--border-radius: 0;
+$editor-defaults__input-field--border-width: $boxes--border__thin;
+$editor-defaults__inline-box--height: 40px;

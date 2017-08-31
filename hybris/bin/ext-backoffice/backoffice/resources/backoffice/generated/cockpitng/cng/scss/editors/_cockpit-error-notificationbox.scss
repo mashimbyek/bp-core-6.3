@@ -1,0 +1,161 @@
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/cockpitng/cng/scss/cockpitng-globals.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/scss/backoffice-variables.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/backoffice/scss/backoffice-variables.scss'; 
+
+@import "../support/_cockpit-mixins.scss";/*================================
+    Validation- / Error- / Notification-Boxes
+================================*/
+// Layout & Coloring for Validation, Error & Notification-Boxes or Popups
+
+// Status: unchanged
+// ToDo: check, create & add all variables-defintions
+//     --  split file if appropriate
+
+
+
+.ye-editor-validation-popup {
+    overflow: visible;
+    margin-top: -6px;
+    margin-left: 10px;
+    
+    &:before {
+        position: absolute;
+        content: '';
+        bottom: -17px;
+        right: 12px;
+        width: 0;
+        height: 0;
+        border: 9px solid transparent;
+        border-width: 9px;
+        border-top-color: #fff;
+        border-left: 9px solid transparent;
+        border-right: 9px solid transparent;
+        border-top: 9px solid #fff;
+        z-index: 5;
+    }
+    &:after {
+        position: absolute;
+        content: '';
+        bottom: -18px;
+        width: 0;
+        right: 12px;
+        height: 0;
+        border: 9px solid transparent;
+        opacity: 0.7;
+        border-left: 9px solid transparent;
+        border-right: 9px solid transparent;
+        border-top: 9px solid #384d66;
+    }
+    &-content .z-label {
+        position: relative;
+        top: 3px;
+
+    }
+}
+
+.z-window-content .ye-editor-validation-popup-content {
+    .z-label {
+        top: 0;
+        display: block;
+        padding-left: 30px;
+    }
+    .z-vlayout-inner {
+        border-bottom: 1px solid #b7bdc8;
+        padding: 8px !important;
+    }
+
+    .z-vlayout-inner:last-child {
+        border-bottom: none;
+        margin-bottom: 0 !important;
+    }
+}
+
+.z-errorbox {
+    width: $notification-box-defaults__box--width;
+
+    > .z-errorbox-icon {
+        top: $notification-box-defaults__icon--top;
+    }
+}
+
+.z-notification {
+    &.z-notification-warning .z-notification {
+        &-icon.z-icon-exclamation{
+            &-triangle, &-circle {
+                top: $notification-box-defaults__icon--top;
+                margin-top: 0;
+            }
+        }
+    }
+    &-right  ~ .z-notification-close {
+        right: 5px;
+    }
+    .z-notification-pointer {
+        + .z-notification-icon {
+            left: $notification-box-defaults__icon--top;
+        }
+        ~ .z-notification-content {
+            width: $notification-box-defaults__notification-box--width;
+            font-size: $notification-box-defaults__icon--top;
+        }
+    }
+}
+
+//.z-errorbox > .z-errorbox-icon.z-icon-exclamation-triangle:before, //original
+.z-errorbox .z-errorbox,
+.z-notification.z-notification-warning .z-notification {
+    &-content {
+        background: $notification-box-defaults__box--bg-color;
+        padding: $notification-box-defaults__box--padding;
+        border-radius: $notification-box-defaults__box--border-radius;
+        border: $notification-box-defaults__box--border-width solid $notification-box-defaults__box--border-color;
+        box-shadow: $notification-box-defaults__box--box-shadow;
+    }
+    &-pointer {
+        border: none;
+        top: 50% !important;
+
+        &:after,
+        &:before {
+            width: 0;
+            height: 0;
+            content: '';
+            position: absolute;
+            top: 0;
+        }
+        &:before {
+            border: $notification-box-defaults__pointer-inner--border-width solid transparent;
+            margin-top: $notification-box-defaults__pointer-inner--margin-top;
+            z-index: $notification-box-defaults__pointer-inner--z-index;
+        }
+        &:after {
+            border: $notification-box-defaults__pointer-outer--border-width solid transparent;
+            margin-top: $notification-box-defaults__pointer-outer--margin-top;
+        }
+    }
+    &-icon {
+        &.z-icon-exclamation {
+            &-circle,
+            &-triangle {
+                &:before {
+                    content: '';
+                    width: $editor-defaults__icon--size;
+                    height: $editor-defaults__icon--size;
+                    background: url("images/icon_validation_sprite.png") no-repeat 0 (-4 * $editor-defaults__icon--size);
+                }
+            }
+        }
+    }
+}
+
+.z-errorbox .z-errorbox-pointer.z-errorbox,
+.z-notification-warning .z-notification-pointer.z-notification {
+    @include _add-error-notification-box-side-directional-pointers (left);
+    @include _add-error-notification-box-side-directional-pointers (right);
+}
+
+.z-notification-open .z-notification-close:hover,
+.z-errorbox-open .z-errorbox-close:hover {
+    color: $notification-box-defaults__box-close-icon--hover-color;
+    background: transparent;
+}

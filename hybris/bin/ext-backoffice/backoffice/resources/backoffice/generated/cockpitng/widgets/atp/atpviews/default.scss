@@ -1,0 +1,12 @@
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/cockpitng/cng/scss/cockpitng-globals.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/scss/backoffice-variables.scss'; 
+
+
+
+$oms-widget-atpview-gutter: 2*$container-spacing-default__third;
+
+.oms-widget-atpviews-label {
+    padding-left: $oms-widget-atpview-gutter;
+    padding-bottom: $oms-widget-atpview-gutter;
+    border: none;
+}

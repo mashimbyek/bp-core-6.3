@@ -1,0 +1,101 @@
+.yw-productlistview {
+  background-color: #eaedf1;
+  /*****************************************************************
+    ** GENERAL STYLES ADJUSTMENTS ******************
+    **************************************************/ }
+  .yw-productlistview .yw-com_hybris_cockpitng_textsearch {
+    padding-top: 16px; }
+  .yw-productlistview .yw-textsearch-single {
+    padding: 0 10px;
+    height: 42px;
+    width: 100%;
+    max-width: 800px;
+    position: relative; }
+    .yw-productlistview .yw-textsearch-single .yw-textsearch-searchbox {
+      background-position: 3px 50%;
+      background-repeat: no-repeat;
+      font-size: 14px;
+      line-height: 16px;
+      border-radius: none;
+      font-weight: 200;
+      padding-left: 5px;
+      height: 40px;
+      margin: 0;
+      width: calc(100% - 100px); }
+    .yw-productlistview .yw-textsearch-single .yw-buttons-container {
+      display: inline-block;
+      margin: 0;
+      height: 40px; }
+    .yw-productlistview .yw-textsearch-single button.z-button {
+      position: absolute;
+      right: 10px;
+      top: 0;
+      border-left-width: 1px; }
+  .yw-productlistview body.safari .yw-textsearch-single .yw-textsearch-searchbox {
+    height: 38px; }
+  .yw-productlistview tr.hero-product-separator td {
+    border-bottom: 5px solid #cccccc !important; }
+  .yw-productlistview div.z-listbox-body .z-listcell {
+    padding: 0;
+    border-bottom: 1px solid #f7f7f7;
+    border-left: none; }
+  .yw-productlistview .div.z-listbox-body .z-listcell img {
+    height: 73px; }
+  .yw-productlistview .z-button.hero-product-button-selected {
+    height: 16px;
+    min-height: 16px;
+    width: 16px;
+    background: url("images/icon_func_star_sprite.png") no-repeat scroll 0 0 transparent; }
+    .yw-productlistview .z-button.hero-product-button-selected:active {
+      box-shadow: none; }
+  .yw-productlistview .z-button.hero-product-button-unselected {
+    height: 16px;
+    min-height: 16px;
+    width: 16px;
+    background: url("images/icon_func_star_sprite.png") no-repeat scroll 0px -16px transparent; }
+    .yw-productlistview .z-button.hero-product-button-unselected:active {
+      box-shadow: none; }
+  .yw-productlistview .z-button.hero-product-up {
+    height: 16px;
+    min-height: 16px;
+    width: 16px;
+    background: url("images/icon_func_arrow_up.png") no-repeat scroll 0 0 transparent; }
+  .yw-productlistview .z-button.hero-product-down {
+    height: 16px;
+    min-height: 16px;
+    width: 16px;
+    background: url("images/icon_func_arrow_down.png") no-repeat scroll 0 0 transparent; }
+  .yw-productlistview .y-toolbar .z-paging,
+  .yw-productlistview .yw-pagesize-list {
+    float: left;
+    background: none; }
+  .yw-productlistview .yw-pagesize-list {
+    margin: 5px 0 0 0; }
+  .yw-productlistview .yw-productlistview-caption {
+    margin: 0 10px; }
+  .yw-productlistview .yw-listview-title-head {
+    font-weight: 500;
+    font-size: 14px;
+    color: #043263;
+    text-transform: uppercase; }
+  .yw-productlistview .yw-listview-title, .yw-productlistview .yw-listview-title-value {
+    font-weight: 500;
+    font-size: 14px;
+    color: #0486e0; }
+  .yw-productlistview .yw-listview-title-value {
+    font-style: italic; }
+  .yw-productlistview .y-toolbar {
+    margin: 5px 10px; }
+  .yw-productlistview .div.z-listbox-body .z-listcell img {
+    display: block;
+    margin: auto; }
+  .yw-productlistview .th:first-child {
+    width: 95px !important; }
+  .yw-productlistview .span[ytestid="helpText"] {
+    color: #085abc;
+    display: block;
+    font-size: 20px;
+    line-height: 120px;
+    margin-left: 12px;
+    min-width: 100%;
+    text-align: center; }

@@ -1,0 +1,374 @@
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/cockpitng/cng/scss/cockpitng-globals.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/scss/backoffice-variables.scss'; 
+
+@import "../support/_facetcontainer-variables.scss";
+
+.yw-facetcontainer-widget {
+    background-color: $facetcontainer__default--bg-color;
+    height: auto !important;
+    min-heigth: 100%;
+
+    .z-panel-head {
+        background: none repeat scroll 0 0 $facetcontainer__row--bg-color;
+        border: medium none;
+        cursor: pointer;
+    }
+
+    .z-listbox {
+        border-color: transparent;
+    }
+
+    .z-listitem {
+        background: $facetcontainer__row-l2--bg-color;
+        color: $facetcontainer__default--color;
+        font-size: 14px;
+
+        &-selected.z-listitem {
+            background: $facetcontainer__treerow-selected--bg-color;
+            .z-listcell-content {
+                color: $facetcontainer__treerow-selected--color;
+            }
+
+            &:hover {
+                background: $facetcontainer__treerow-hover--bg-color-2;
+            }
+        }
+
+        &:hover {
+            background: $facetcontainer__treerow-hover--bg-color;
+            & > .z-listcell > .z-listcell-content {
+                color: $facetcontainer__default-hover--color;
+            }
+        }
+        .z-listcell-content {
+            color: $facetcontainer__default--color;
+            font-size: 14px;
+        }
+    }
+
+    .visible-facet-panel,
+    .invisible-facet-panel {
+        margin-top: 1px;
+    }
+
+    .visible-facet-panel .z-panelchildren > .z-listbox {
+        border: none;
+    }
+
+    .z-panel-header {
+        color: $facetcontainer__default--color;
+        font-weight: normal;
+    }
+
+    .z-panel-header .z-caption {
+        white-space: normal;
+    }
+
+    .z-listbox-footer {
+        background: $facetcontainer__row-l3--bg-color;
+        border: none;
+
+        .z-toolbarbutton-content, .z-toolbarbutton:hover .z-toolbarbutton-content {
+            color: $facetcontainer__default--color;
+        }
+    }
+
+    /* FACETS */
+    .z-portalchildren-cnt .z-panel.z-caption-l:hover {
+        background: url("images/icon_handle_drag_default.png") center no-repeat;
+    }
+
+    .z-portalchildren-cnt .z-panel .z-panel-hl,
+    .z-portalchildren-cnt .z-panel .z-panel-hr,
+    .z-portalchildren-cnt .z-panel .z-panel-header {
+        background: #d3d9df;
+        color: #043263;
+    }
+
+    .z-portalchildren-cnt .z-panel .z-panel-hr {
+        background: #d3d9df url("images/icon_arrow_right.png?v4") right center no-repeat !important;
+    }
+
+    .z-portalchildren-cnt .z-panel .z-panel-hl {
+        border: 0;
+    }
+
+    .z-portalchildren-cnt .z-panel {
+        padding: 5px 5px 0;
+    }
+
+    .z-portalchildren-cnt .z-panelchildren div.z-listbox,
+    .z-portalchildren-cnt .z-panelchildren div.z-listbox-body .z-listcell {
+        border: none;
+    }
+
+    .z-panelchildren {
+        background: transparent;
+    }
+
+    .z-panelchildren .z-checkbox {
+        display: block;
+        line-height: 24px;
+        padding-left: 12px;
+        cursor: move;
+        position: relative;
+    }
+
+    .z-checkbox input {
+        position: absolute;
+        top: 50%;
+        margin-top: -7px;
+    }
+
+    .invisible-facet-panel {
+        opacity: 0.5;
+    }
+
+    /*
+        only for simple listing
+    */
+    .z-panelchildren .z-checkbox label {
+        font-size: 12px;
+        line-height: 24px;
+        padding-left: 23px;
+        display: block;
+    }
+
+    .z-panelchildren .z-checkbox:hover {
+        background: #085abc url("images/icon_handle_drag_white.png") 4px center no-repeat;
+        color: $facetcontainer__default-hover--color;
+    }
+
+    .z-checkbox label {
+        background: none;
+    }
+
+    .z-checkbox input:checked + label {
+        background: #085abc;
+        color: #FFF;
+    }
+
+    /*
+        simple listing end
+    */
+    .z-portalchildren-cnt .z-panel-hl {
+        height: 25px;
+        line-height: 25px;
+        overflow: hidden;
+    }
+
+    .z-portalchildren-cnt .z-panel-hl table td {
+        vertical-align: top;
+    }
+
+    .z-portalchildren-cnt .z-panel-hl table td.z-caption-l {
+        text-transform: capitalize;
+    }
+
+    .z-portalchildren-cnt .z-panel-header {
+        margin-top: -2px;
+    }
+
+    .z-portalchildren-cnt .z-toolbar-panel .z-toolbar-panel-start .z-toolbar-panel-cnt {
+        float: right;
+    }
+
+    .z-listheader-img,
+    .z-listitem-img-checkbox,
+    .z-listitem-img-radio,
+    .z-listgroup-img-checkbox,
+    .z-listgroup-img-radio,
+    .z-listgroupfoot-img {
+        background-image: url("images/check-sprite.png?v5");
+        height: 14px;
+        min-height: 14px;
+        width: 14px;
+    }
+
+    .z-listitem-seld {
+        background-position: 0 0;
+    }
+
+    .z-listitem-over-seld {
+        background-position: -42px;
+    }
+
+    div.facet-popup-button,
+    .z-toolbar-start,
+    .z-toolbar-panel .z-toolbar-panel-start .z-toolbar-panel-cnt {
+        white-space: nowrap;
+    }
+
+    .z-listheader-img-seld,
+    .z-listitem-seld > td > .z-listcell-cnt > .z-listitem-img-checkbox,
+    .z-listgroup-seld > td > .z-listcell-cnt > .z-listgroup-img-checkbox,
+    .z-listgroupfoot-seld > td > .z-listcell-cnt > .z-listgroupfoot-img-checkbox {
+        background-position: -14px 0;
+    }
+
+    .z-listheader-img-seld:hover,
+    .z-listitem-seld > td:hover > .z-listcell-cnt > .z-listitem-img-checkbox,
+    .z-listgroup-seld > td:hover > .z-listcell-cnt > .z-listgroup-img-checkbox,
+    .z-listgroupfoot-seld > td:hover > .z-listcell-cnt > .z-listgroupfoot-img-checkbox {
+        background-position: -14px 0;
+    }
+
+    div.z-toolbarbutton-cnt,
+    .z-toolbarbutton {
+        background: none !important;
+        border: 0 !important;
+        padding: 0;
+        margin: 0;
+    }
+
+    .z-toolbarbutton {
+        margin: 7px 0 0 0;
+        min-height: 16px;
+    }
+
+    div.z-toolbarbutton-body {
+        background: url("images/check-sprite.png?v5") -57px 0 no-repeat;
+    }
+
+    .z-listfooter .z-listfooter-cnt,
+    .z-listfooter .z-listfooter-cnt div.z-toolbarbutton-cnt {
+        padding: 0 0 0 20px;
+        width: 100px;
+        height: 15px;
+        line-height: 10px;
+        margin: -3px 0 0 0;
+        background-position: left center;
+    }
+
+    .z-listfooter .z-listfooter-cnt {
+        padding: 0;
+    }
+
+    .z-listfooter-cnt .z-toolbarbutton {
+        box-shadow: none;
+    }
+
+    .z-listfooter-cnt div.z-toolbarbutton-body,
+    .z-listfooter-cnt div.z-toolbarbutton-body:hover {
+        border: 0 !important;
+        width: 8px;
+        height: 8px;
+        padding: 0;
+        margin: 0;
+    }
+
+    /* WORKAROUND FOR FACETTSCROLL - REMOVE AFTER LAYOUT CONMPONENT UPDATE!!! */
+    .z-west-body {
+        overflow: auto !important;
+    }
+
+    div.facet-popup-button {
+        background: blue;
+        float: left;
+        display: inline;
+    }
+
+    .facet-toolbar-popup {
+        padding: 0 !important;
+        width: 35px;
+        background: #FFF;
+        box-shadow: 0 0 15px #888;
+    }
+
+    .facet-toolbar-popup .z-popup-cl {
+        border: 0;
+        margin: 0;
+        padding: 0;
+    }
+
+    .yw-facet-container-content .z-caption-content {
+        display: table;
+        line-height: 1;
+    }
+
+    .yw-facet-container-content .z-caption-content .z-label {
+        display: table-cell;
+        width: 100%;
+    }
+
+    .yw-facet-container-content .z-caption-content .z-toolbar {
+        display: table-cell;
+        width: 1%;
+        vertical-align: middle;
+    }
+
+    .invisible-facet-panel .toggle-facet-button,
+    .visible-facet-panel .toggle-facet-button,
+    .visible-facet-panel .facet-down-button,
+    .visible-facet-panel .facet-info-button,
+    .visible-facet-panel .facet-up-button {
+        padding: 0 0 0 2px;
+        margin: 0;
+        width: 19px;
+        height: 16px;
+        min-height: 16px;
+    }
+
+    /*.invisible-facet-panel .toggle-facet-button,
+    .invisible-facet-panel .toggle-facet-button:hover {
+        background: url("images/popup-icon-deactivate.png") center center no-repeat;
+    }*/
+
+    .z-toolbarbutton-content {
+        display: block;
+    }
+
+    .invisible-facet-panel .z-panel-header .z-toolbar .z-toolbarbutton-content {
+        width: 16px;
+        background: url(images/popup-icon-status-sprite.png) 0px -16px no-repeat;
+        margin-top: 7px;
+        height: 9px;
+        overflow: hidden;
+    }
+
+    .z-panel-body .z-listcell {
+        border: none;
+    }
+
+    .invisible-facet-panel + .z-panel-move-block,
+    .visible-facet-panel + .z-panel-move-block {
+        display: none;
+    }
+
+    .visible-facet-panel .toggle-facet-button .z-toolbarbutton-content {
+        width: 16px;
+        background: url(images/popup-icon-status-sprite.png) 0px 4px no-repeat;
+        margin-top: 3px;
+        height: 14px;
+        overflow: hidden;
+    }
+
+    .visible-facet-panel .facet-down-button .z-toolbarbutton-content {
+        width: 16px;
+        background: url(images/icon_facet_order_arrow_sprite.png) 0px -1px no-repeat;
+        margin-top: 3px;
+        height: 14px;
+
+        &:hover {
+            background: url(images/icon_facet_order_arrow_sprite.png) -18px -1px no-repeat;
+        }
+    }
+
+    .facet-info-button .z-toolbarbutton-content {
+        width: 16px;
+        background: url(images/icon_facet_order_info_default.png) center center no-repeat;
+        margin-top: -2px;
+        height: 14px;
+    }
+
+    .visible-facet-panel .facet-up-button .z-toolbarbutton-content {
+        width: 16px;
+        background: url(images/icon_facet_order_arrow_sprite.png) 0px -19px no-repeat;
+        margin-top: 3px;
+        height: 14px;
+
+        &:hover {
+            background: url(images/icon_facet_order_arrow_sprite.png) -18px -19px no-repeat;
+        }
+    }
+}

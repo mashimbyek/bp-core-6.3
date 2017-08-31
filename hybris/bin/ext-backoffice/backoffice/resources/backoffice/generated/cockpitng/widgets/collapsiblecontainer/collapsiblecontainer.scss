@@ -1,0 +1,258 @@
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/cockpitng/cng/scss/cockpitng-globals.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/scss/backoffice-variables.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/backoffice/scss/backoffice-variables.scss'; 
+
+/*================================
+    Collapsible-Container
+================================*/
+// Styling definitions for collapsible containers (lock, unlock-button, labels & positioning)
+
+// Status: converted to scss, variables assigned 
+// ToDo: check styling, remove comments, review
+
+
+//Container Defaults
+$collapsible-container__button--size: 16px;
+$collapsible-container__button--spacing: 5px;
+$collapsible-container__button--right: 0;//$container-spacing-default__base;
+$collapsible-container__button-disabled--opacity: .5;
+
+$collapsible-container__header--padding: $container-spacing-default__third $container-spacing-default__base;
+$collapsible-container__header--height: $editor-defaults__inline-box--height;
+$collapsible-container__header--border-color: $blue__dark--100;
+$collapsible-container__header--border-width: 5px;
+
+$collapsible-container__header-button--top: 50%;
+$collapsible-container__header-button--margin-top: -0.5 * $collapsible-container__button--size;
+$collapsible-container__editor-area-header-button--top: 5px;
+
+$collapsible-container__caption-label--color: $blue__default--600;
+$collapsible-container__caption-label--font-size: $font-size__medium;
+$collapsible-container__collapsed-state--bg-color: $white;
+
+$collapsible-container__header-search-limited-button--top: $editor-defaults__inline-box--height/2;
+
+$collapsible-container__locked-button--right: $collapsible-container__button--right + $collapsible-container__button--size + $collapsible-container__button--spacing;
+$collapsible-container__caption-content-container--padding-right: $collapsible-container__locked-button--right + $collapsible-container__button--size + $collapsible-container__button--right;
+.yw-collapsibleContainer {
+    &-caption {
+        > .z-center-header,
+        > .z-north-header,
+        > .z-south-header {
+            overflow: visible;
+            padding: $collapsible-container__header--padding;
+            min-height:$collapsible-container__header--height;
+            height: auto;
+            border: none;
+            background: none;
+
+            .yw-collapsed-down {
+                .z-button.yw-expandCollapse {
+                    background-position: (-1 * $collapsible-container__button--size) 0;
+                    
+                    &:hover {
+                        box-shadow: none;
+                    }
+                    &:hover, &:active {
+                        background-position: (-1 * $collapsible-container__button--size) (-1 * $collapsible-container__button--size);
+                    }
+                }
+            }
+            > [class$=-caption] {
+                width: auto !important;
+            }
+        }
+        > .z-south-header {
+           border-top: $collapsible-container__header--border-width solid $collapsible-container__header--border-color;
+           background-color: $collapsible-container__collapsed-state--bg-color;
+        }
+        > .z-caption-content{
+           overflow: hidden;
+        }
+        &.yw-collapsed-down {
+            > .z-center-header,
+            > .z-north-header {
+                .yw-expandCollapse{
+                    & {
+                        background-position: (-1 * $collapsible-container__button--size) 0;
+                    }
+                    &:hover {
+                        background-position: (-1 * $collapsible-container__button--size) (-3 * $collapsible-container__button--size);
+                    }
+                }
+            }
+            > .z-north-header {
+                background-color: $collapsible-container__collapsed-state--bg-color;
+            }
+        }
+
+        .z-caption-content {
+            text-align: left;
+        }
+        .z-north-capcnt,
+        .z-south-capcnt,
+        .z-west-capcnt,
+        .z-east-capcnt,
+        .z-center-capcnt{
+            height: auto;
+            min-height: 21px;
+        }
+    }
+    &-container{
+        overflow: auto;
+        clear: both;
+        width: 100%;
+        height: 100%;
+    }
+}
+
+.yw-caption-container span.z-label{
+    color: $collapsible-container__caption-label--color;
+    font-size: $collapsible-container__caption-label--font-size;
+    float: left;
+}
+
+button.yw-expandCollapse,
+.z-window-highlighted button.yw-expandCollapse {
+    position: absolute;
+    top: $collapsible-container__editor-area-header-button--top;
+    right: $collapsible-container__button--right;
+    width: $collapsible-container__button--size;
+    height: $collapsible-container__button--size;
+    min-height: $collapsible-container__button--size;
+    padding: 0;
+    background-image: url('images/icon_func_colapse_sprite.png') !important;
+    background-repeat: no-repeat;
+    background-position: 0 0;
+    background-color: transparent;
+    
+    &:focus,
+    &:hover,
+    &:active {
+        background-color: transparent;
+        color: inherit;
+        border-color: transparent;
+        box-shadow: none;
+    }
+    &:hover,
+    &:active {
+        background-position: 0 (-1 * $collapsible-container__button--size);
+    }
+}
+button.yw-collapsibleContainer {
+    &-locked, &-unlocked {
+        position: absolute;
+        top: $collapsible-container__editor-area-header-button--top;
+        right: $collapsible-container__locked-button--right;
+        width: $collapsible-container__button--size;
+        height: $collapsible-container__button--size;
+        min-height: $collapsible-container__button--size;
+        padding: 0;
+        background: none;
+        background-color: transparent;
+        background-position: center;
+        background-repeat: no-repeat;
+
+        &:hover, &:active, &:focus {
+            background-color: transparent;
+            box-shadow: none;
+        }
+    }
+    &-locked, &-locked:hover, &-locked:active {
+        background-image: url('images/icon_action_lock_colapse_active.png') !important;
+    }
+    &-unlocked, &-unlocked:hover, &-unlocked:active {
+        background-image: url('images/icon_action_lock_colapse_default.png') !important;
+    }
+}
+
+.yw-com_hybris_backoffice_perspectiveContainer .yw-collapsibleContainer-caption {
+    > .z-center-header,
+    > .z-north-header,
+    > .z-south-header {
+        .yw-caption-container {
+            position: relative;
+            
+            button.yw-expandCollapse, button.yw-collapsibleContainer-locked, button.yw-collapsibleContainer-unlocked {
+                top: $collapsible-container__header-button--top;
+                margin-top: $collapsible-container__header-button--margin-top;
+            }
+        }
+    }
+}
+
+button.yw-collapsibleContainer-locked:hover, button.yw-collapsibleContainer-locked:focus{
+    min-height: $collapsible-container__button--size;
+
+    background: url('images/icon_action_lock_colapse_active.png');
+    background-color: transparent;
+    box-shadow: none;
+}
+
+.yw-expandCollapse.z-button[disabled],
+.yw-expandCollapse.z-button[disabled]:hover,
+.yw-expandCollapse.z-button[disabled]:active {
+    opacity: $collapsible-container__button-disabled--opacity;
+    background-color: transparent !important;
+    background-position: 0px (-4 * $collapsible-container__button--size) !important;
+}
+
+.yw-collapsed-down .yw-expandCollapse.z-button[disabled],
+.yw-collapsed-down .yw-expandCollapse.z-button[disabled]:hover,
+.yw-collapsed-down .yw-expandCollapse.z-button[disabled]:active {
+    opacity: $collapsible-container__button-disabled--opacity;
+    background-color: transparent !important;
+    background-position: (-1 * $collapsible-container__button--size) (-4 * $collapsible-container__button--size) !important;
+}
+
+
+//window-resize-behaviour handling (mainly related to advancedsearch)
+.yw-collapsibleContainer-caption {
+    > .z-north-header,
+    > .z-center-header {
+        .yw-caption-container > .z-caption-content {
+            margin-right: $collapsible-container__caption-content-container--padding-right;
+
+            .yw-textsearch {
+                .yw-textsearch-searchbutton {
+                    float:left;
+                }
+            }
+
+            .yw-textsearch-searchbutton {
+                margin-left: -1px;
+                border-left-width: 1px !important;
+                display: inline-block;
+            }
+            .yw-search-mode-container {
+                display: inline;
+                float: left;
+                white-space: normal;
+            }
+            button.yw-toggle-advanced-search {
+                display: inline-block;
+            }
+        }
+    }
+    
+    > .z-north-header .yw-caption-container > .z-caption-content {
+        margin-right: 0;
+        
+        > button.yw-expandCollapse, > button.yw-collapsibleContainer-locked, > button.yw-collapsibleContainer-unlocked {
+            top: $collapsible-container__header-search-limited-button--top;
+
+        }
+    }
+
+    &.yw-collapsed-down.z-north {
+        > .z-north-header .yw-caption-container > .z-caption-content {
+            margin-right: $collapsible-container__caption-content-container--padding-right;
+
+            .yw-search-mode-container, 
+            .yw-textsearch.yw-toggle-open {
+                height: $collapsible-container__header--height;
+                overflow: hidden;
+            }
+        }
+    }
+}

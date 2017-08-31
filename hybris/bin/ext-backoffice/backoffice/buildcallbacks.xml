@@ -1,0 +1,501 @@
+<?xml version="1.0"?>
+<!--
+ [y] hybris Platform
+
+ Copyright (c) 2017 SAP SE or an SAP affiliate company.  All rights reserved.
+
+ This software is the confidential and proprietary information of SAP
+ ("Confidential Information"). You shall not disclose such Confidential
+ Information and shall use it only in accordance with the terms of the
+ license agreement you entered into with SAP.
+-->
+<project name="backoffice_buildcallbacks">
+
+	<property name="webFragmentsSrcDir" value="${ext.backoffice.path}/web/webroot/WEB-INF/web-fragments" />
+	<property name="backofficeLibDir" value="${ext.backoffice.path}/web/webroot/WEB-INF/lib" />
+	<property name="backofficeFragmentPattern" value="webfragment*_" />
+	<property name="backofficeCoreFragmentPrefix" value="webfragmentCore_" />
+
+	<target name="sasscompile" description="copies and compiles .scss files from extensions and jar files">
+		<copy_and_compile_sass_files />
+	</target>
+
+	<target name="sassclean" description="removes resources/backoffice/generated directory">
+		<remove_backoffice_sass_generated_directory />
+	</target>
+
+	<macrodef name="backoffice_after_clean">
+		<sequential>
+			<sequential>
+				<echo level="info" message="Deleting backoffice jars" />
+				<delete quiet="true">
+					<fileset dir="${ext.backoffice.path}/web/webroot/WEB-INF/lib">
+						<include name="*_bof.jar" />
+					</fileset>
+				</delete>
+
+				<echo level="info" message="Start copying rebel.xml configuration file" />
+				<copy todir="${ext.backoffice.path}/web/webroot/WEB-INF/classes">
+					<fileset dir="${ext.backoffice.path}/resources">
+						<include name="rebel.xml" />
+					</fileset>
+				</copy>
+				<backoffice_remove_web_fragments />
+			</sequential>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="remove_backoffice_sass_generated_directory">
+		<sequential>
+			<delete quiet="true" dir="${ext.backoffice.path}/resources/backoffice/generated" />
+		</sequential>
+	</macrodef>
+
+	<macrodef name="_before_build">
+		<sequential>
+			<if>
+				<equals arg1="${backoffice.sass.enabled}" arg2="true" />
+				<then>
+					<delete file="${ext.backoffice.path}${file.separator}sassExtensions" />
+				</then>
+			</if>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="backoffice_after_build_all_extensions">
+		<sequential>
+			<check_if_scss_has_been_changed />
+			<if>
+				<or>
+					<not>
+						<available file="${ext.backoffice.path}${file.separator}resources${file.separator}backoffice${file.separator}generated${file.separator}.sasscompiled" />
+					</not>
+					<equals arg1="${backoffice.sass.recompileFiles}" arg2="true" />
+				</or>
+				<then>
+					<copy_and_compile_sass_files />
+				</then>
+			</if>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="update_sass_compilation_timestamp">
+		<sequential>
+			<script language="javascript">
+				<![CDATA[
+					var fileSeparator = project.getProperty("file.separator");
+					var sassCompiledFile = new java.io.File(project.getProperty("ext.backoffice.path") + fileSeparator + "resources" + fileSeparator + "backoffice" + fileSeparator + "generated" + fileSeparator + ".sasscompiled");
+					if(!sassCompiledFile.exists())
+					{
+						sassCompiledFile.getParentFile().mkdirs();
+						sassCompiledFile.createNewFile();
+					}
+					var echo = project.createTask("echo");
+					echo.setMessage(new Date().getTime());
+					echo.setFile(sassCompiledFile);
+					echo.perform();
+				]]>
+			</script>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="check_if_scss_has_been_changed">
+		<sequential>
+			<if>
+				<available file="${ext.backoffice.path}${file.separator}sassExtensions" />
+				<then>
+					<loadfile property="registeredExtensions" srcfile="${ext.backoffice.path}${file.separator}sassExtensions" />
+					<script language="javascript">
+						<![CDATA[
+							project.setProperty("backoffice.sass.recompileFiles", false);
+							var fileSeparator = project.getProperty("file.separator");
+							var registeredExtensions = project.getProperty("registeredExtensions");
+							var lines = registeredExtensions.split(project.getProperty("line.separator"));
+							var sassCompiledFile = new java.io.File(project.getProperty("ext.backoffice.path") + fileSeparator + "resources" + fileSeparator + "backoffice" + fileSeparator + "generated" + fileSeparator + ".sasscompiled");
+
+							var checkRegisteredExtensions = function()
+							{
+								for (var i = 0; i < lines.length; ++i) {
+									var parts = lines[i].split(";");
+
+									var resources = parts[1];
+									var destination = parts[2];
+
+									if (!resources && !destination) {
+										resources = 'backoffice/resources';
+										destination = 'cockpitng';
+									}
+
+									if (parts[0])
+									{
+										var registeredExtensionResourcePath = project.getProperty("ext." + parts[0] + ".path") + fileSeparator + resources;
+										if (checkScssFilesInDirectory(registeredExtensionResourcePath))
+										{
+											setShouldRecompileScssVariable(true);
+											return true;
+										}
+									}
+								}
+								return false;
+							}
+
+							var checkBackofficeExtension = function()
+							{
+								if (checkScssFilesInDirectory(project.getProperty("ext.backoffice.path") + fileSeparator + "resources" + fileSeparator + "backoffice" + fileSeparator + "scss"))
+								{
+									setShouldRecompileScssVariable(true);
+									return true;
+								}
+								if (checkScssFilesInDirectory(project.getProperty("ext.backoffice.path") + fileSeparator + "resources" + fileSeparator + "cockpitng"))
+								{
+									setShouldRecompileScssVariable(true);
+									return true;
+								}
+							}
+
+							var checkAdditionalResourcesPath = function()
+							{
+								var additionalResources = project.getProperty("backoffice.cockpitng.additionalResourceLoader.path");
+								if (additionalResources)
+								{
+									var arrayOfResources = additionalResources.split(";");
+
+									for (var i = 0; i < arrayOfResources.length; ++i)
+									{
+										if (arrayOfResources[i] && checkScssFilesInDirectory(arrayOfResources[i]))
+										{
+											setShouldRecompileScssVariable(true);
+											return true;
+										}
+									}
+								}
+								return false;
+							}
+
+							var checkScssFilesInDirectory = function(directoryPath)
+							{
+								var dir = new java.io.File(directoryPath);
+								if (!dir.exists())
+								{
+									return false;
+								}
+
+								var fileset = project.createDataType("fileset");
+								fileset.setDir(dir);
+								fileset.setIncludes("**/*.scss");
+
+								var directoryScanner = fileset.getDirectoryScanner(project);
+								var foundScssFiles = directoryScanner.getIncludedFiles();
+								for (var i = 0; i < foundScssFiles.length; ++i)
+								{
+									 var foundScssFile = new java.io.File(directoryPath + fileSeparator + foundScssFiles[i]);
+									 if (foundScssFile.lastModified() > sassCompiledFile.lastModified())
+									 {
+										 return true;
+									 }
+								 }
+								 return false;
+							}
+
+							var setShouldRecompileScssVariable = function(value)
+							{
+								project.setProperty("backoffice.sass.recompileFiles", value);
+							}
+
+							if (!checkRegisteredExtensions())
+							{
+								if (!checkAdditionalResourcesPath())
+								{
+									checkBackofficeExtension();
+								}
+							}
+						]]>
+					</script>
+				</then>
+			</if>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="copy_and_compile_sass_files">
+		<sequential>
+			<if>
+				<and>
+					<equals arg1="${backoffice.sass.enabled}" arg2="true" />
+					<available file="${ext.npmancillary.path}${file.separator}resources${file.separator}npm${file.separator}node_modules" type="dir"/>
+				</and>
+				<then>
+					<update_sass_compilation_timestamp />
+					<backoffice_grunt_preparation />
+					<copy_sass_from_cockpit_ng />
+					<copy_sass_from_backoffice />
+					<copy_sass_from_registered_extensions />
+					<if>
+						<equals arg1="${backoffice.cockpitng.additionalResourceLoader.enabled}" arg2="true" />
+						<then>
+							<copy_sass_from_cockpitng_resources />
+						</then>
+					</if>
+					<compile_sass />
+				</then>
+			</if>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="backoffice_after_build">
+		<sequential>
+			<backoffice_remove_web_fragments />
+			<backoffice_create_web_fragments />
+		</sequential>
+	</macrodef>
+
+	<target name="widgetsxsddoc">
+		<callback extname="backoffice" target="widgetsxsddoc" />
+	</target>
+
+	<macrodef name="backoffice_widgetsxsddoc">
+		<sequential>
+			<mkdir dir="${ext.backoffice.path}/resources/doc" />
+			<tempfile property="temp.dir" destDir="${java.io.tmpdir}" prefix="xslt" />
+			<mkdir dir="${temp.dir}" />
+			<echo message="Generating widgets.xsd documentation..." />
+			<get src="http://www.hybris.com/schema/cockpitng/widgets.xsd" dest="${temp.dir}/widgets.xsd" verbose="false" usetimestamp="false" />
+			<xslt in="${temp.dir}/widgets.xsd" out="${ext.backoffice.path}/resources/doc/widgets-xsd.html" style="${platformhome}/resources/xsl/xsd-doc.xsl" force="true" />
+			<delete dir="${temp.dir}" />
+		</sequential>
+	</macrodef>
+
+	<macrodef name="backoffice_remove_web_fragments">
+		<sequential>
+			<if>
+				<available file="${backofficeLibDir}" type="dir" />
+				<then>
+					<delete includeemptydirs="true">
+						<fileset dir="${backofficeLibDir}" includes="**/${backofficeFragmentPattern}*.jar" />
+					</delete>
+				</then>
+			</if>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="backoffice_create_web_fragments">
+		<sequential>
+			<if>
+				<available file="${webFragmentsSrcDir}" />
+				<then>
+					<for param="dirPath">
+						<path>
+							<dirset dir="${webFragmentsSrcDir}">
+								<include name="*" />
+							</dirset>
+						</path>
+						<sequential>
+							<var name="dirName" unset="true" />
+							<basename property="dirName" file="@{dirPath}" />
+							<jar destfile="${backofficeLibDir}/${backofficeCoreFragmentPrefix}${dirName}.jar">
+								<metainf dir="@{dirPath}" includes="**/web-fragment.xml" />
+							</jar>
+						</sequential>
+					</for>
+				</then>
+			</if>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="copy_sass_from_registered_extensions">
+		<sequential>
+			<if>
+				<available file="${ext.backoffice.path}${file.separator}sassExtensions" />
+				<then>
+					<loadfile property="registeredExtensions" srcfile="${ext.backoffice.path}${file.separator}sassExtensions" />
+					<script language="javascript">
+						<![CDATA[
+							var registeredExtensions = project.getProperty("registeredExtensions");
+							var lines = registeredExtensions.split(project.getProperty("line.separator"));
+							for(var i = 0; i < lines.length; i++) {
+								var parts = lines[i].split(";");
+
+								var resources = parts[1];
+								var destination = parts[2];
+
+								if(!resources && !destination) {
+									resources = 'backoffice/resources';
+									destination = 'cockpitng';
+								}
+
+								// invoke macro
+								var task = project.createTask( 'backoffice_grunt_invocation' );
+								task.setDynamicAttribute( "phase", "copy_extension_sass" );
+								task.setDynamicAttribute( "extensionname", parts[0] || '' );
+								task.setDynamicAttribute( "resources", resources );
+								task.setDynamicAttribute( "destination", destination );
+								task.setDynamicAttribute( "sassextension", project.getProperty("backoffice.sass.preffered.extension"));
+								task.setDynamicAttribute( "sassvariablesfile", project.getProperty("backoffice.sass.preffered.variables.file"));
+								task.execute();
+							}
+						]]>
+					</script>
+				</then>
+			</if>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="copy_sass_from_cockpitng_resources">
+		<sequential>
+			<for list="${backoffice.cockpitng.additionalResourceLoader.path}" delimiter=";" param="path">
+				<sequential>
+					<backoffice_grunt_invocation phase="copy_cockpitng_from_sources_sass" resources="@{path}" sassextension="${backoffice.sass.preffered.extension}"
+						sassvariablesfile="${backoffice.sass.preffered.variables.file}" />
+				</sequential>
+			</for>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="compile_sass">
+		<sequential>
+			<backoffice_grunt_invocation phase="compile_sass" />
+		</sequential>
+	</macrodef>
+
+	<macrodef name="copy_sass_from_backoffice">
+		<sequential>
+			<backoffice_grunt_invocation phase="copy_backoffice_sass" extensionname="backoffice" sassextension="${backoffice.sass.preffered.extension}"
+				sassvariablesfile="${backoffice.sass.preffered.variables.file}" />
+		</sequential>
+	</macrodef>
+
+	<macrodef name="copy_sass_from_cockpit_ng">
+		<sequential>
+			<backoffice_grunt_invocation phase="copy_cockpitng_sass" extensionname="backoffice" sassextension="${backoffice.sass.preffered.extension}"
+				sassvariablesfile="${backoffice.sass.preffered.variables.file}" />
+		</sequential>
+	</macrodef>
+
+	<macrodef name="register_sass_extension">
+		<attribute name="extensionname" default="" />
+		<attribute name="resources" default="" />
+		<attribute name="destination" default="" />
+		<sequential>
+			<if>
+				<equals arg1="${backoffice.sass.enabled}" arg2="true" />
+				<then>
+					<echo file="${ext.backoffice.path}${file.separator}sassExtensions" append="true" message="@{extensionname};@{resources};@{destination}${line.separator}" />
+					<echo message="Registered @{extensionname} as SASS extensions" />
+				</then>
+			</if>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="backoffice_grunt_preparation">
+		<sequential>
+			<property environment="env" />
+			<detectOS />
+			<property file="${ext.npmancillary.path}/resources/ant/${os.family}.properties" />
+			<removeLink path="${ext.backoffice.path}${file.separator}node_modules" />
+			<createNodeModulesSymlink path="${ext.backoffice.path}" />
+			<cleanGruntBuildSymlinks />
+			<resetNpmPermissions />
+		</sequential>
+	</macrodef>
+
+	<macrodef name="backoffice_grunt_invocation">
+		<attribute name="phase" default="" />
+		<attribute name="resources" default="" />
+		<attribute name="extensionname" default="NOT_SET" />
+		<attribute name="destination" default="" />
+		<attribute name="sassextension" default="NOT_SET" />
+		<attribute name="sassvariablesfile" default="NOT_SET" />
+
+		<sequential>
+			<property environment="env" />
+			<detectOS />
+			<if>
+				<and>
+					<isset property="backoffice.sass.preffered.extension" />
+					<isset property="backoffice.sass.preffered.variables.file" />
+				</and>
+				<then>
+					<var name="backofficeSassVariableFile" value="${ext.@{sassextension}.path}${file.separator}@{sassvariablesfile}" />
+				</then>
+				<else>
+					<var name="backofficeSassVariableFile" value="NOT_SET" />
+				</else>
+			</if>
+
+			<var name="backofficeExtensionSassVariableFile" value="${ext.@{extensionname}.path}${file.separator}backoffice${file.separator}resources${file.separator}scss${file.separator}@{extensionname}-variables.scss" />
+
+			<echo message="Running grunt @{phase}" />
+			<var name="gruntExecutable" value="/.bin/grunt" />
+			<if>
+				<os family="windows" />
+				<then>
+					<mkdir dir="${ext.backoffice.path}${file.separator}node_modules${file.separator}.bin" />
+					<var name="gruntExecutable" value="\.bin\grunt.cmd" />
+				</then>
+			</if>
+			<exec dir="${ext.backoffice.path}" executable="${loc.NPM_BINARIES_HOME}${gruntExecutable}" failonerror="${failonerrorValue}">
+				<env key="PATH" value="${loc.EXTRA_PATH}${path.separator}${env.PATH}" />
+				<env key="NPM_HOME" value="${loc.NPM_HOME}" />
+				<env key="NPM_BINARIES_HOME" value="${loc.NPM_BINARIES_HOME}" />
+				<env key="NODE_HOME" value="${loc.NODE_HOME}" />
+
+				<arg value="@{phase}" />
+				<arg
+					line="--BACKOFFICE_HOME=${ext.backoffice.path} --EXTENSION_NAME=@{extensionname} --EXTENSION_PATH=${ext.@{extensionname}.path} --RESOURCES_PATH=@{resources} --IS_SOURCE_MAP_ENABLED=${backoffice.sass.source.map.enabled} --DESTINATION=@{destination} --SASS_VARIABLES_FILE=${backofficeSassVariableFile} --EXTENSION_SASS_VARIABLES_FILE=${backofficeExtensionSassVariableFile} --TEMP_DIR=${HYBRIS_TEMP_DIR} --force" />
+			</exec>
+			<echo message="END of calling grunt @{phase}" />
+		</sequential>
+	</macrodef>
+
+
+	<patternset id="backoffice.localization.pattern">
+		<!-- core and hmc -->
+		<include name="**/*locales*_en.properties" />
+		<exclude name="**/hmc/web/webroot/WEB-INF/classes/**/*" />
+		<exclude name="**/unittest/**/*" />
+
+		<!-- cockpit (ng) -->
+		<include name="**/i3-label_en.properties" />
+		<include name="**/labels_en.properties" />
+
+		<!-- messages -->
+		<include name="**/*messages_en.properties" />
+		<include name="**/*messages.properties" />
+
+		<!-- frontend properties files in WEB-INF/messages folder -->
+		<include name="**/WEB-INF/messages/*_en.properties" />
+
+		<!-- csv and impex -->
+		<include name="**/*_en.csv" />
+		<include name="**/*_en.impex" />
+
+		<include name="**/lang-en.properties" />
+
+		<!-- email localizations from yacceleratorcore -->
+		<include name="resources/**/messages/*_en.properties" />
+
+		<!-- include validation messages -->
+		<include name="resources/**/ValidationMessages.properties" />
+	</patternset>
+
+	<patternset id="extension.backoffice.binary.filter">
+		<patternset refid="extension.binary.filter" />
+		<exclude name="node_modules/**" />
+		<exclude name="resources/backoffice/generated/**" />
+	</patternset>
+	<patternset id="extension.backoffice.source.filter">
+		<patternset refid="extension.source.filter" />
+		<exclude name="node_modules/**" />
+		<exclude name="resources/backoffice/generated/**" />
+	</patternset>
+	<patternset id="extension.backoffice.devzip.filter">
+		<patternset refid="extension.source.filter" />
+		<exclude name="node_modules/**" />
+		<exclude name="resources/backoffice/generated/**" />
+	</patternset>
+	<patternset id="extension.backoffice.production.filter">
+		<patternset refid="extension.production.filter" />
+		<exclude name="node_modules/**" />
+		<exclude name="resources/backoffice/generated/**/*.scss" />
+		<exclude name="resources/backoffice/generated/**/*.map" />
+	</patternset>
+</project>

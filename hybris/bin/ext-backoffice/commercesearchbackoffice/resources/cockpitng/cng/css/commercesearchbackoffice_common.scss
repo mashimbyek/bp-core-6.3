@@ -1,0 +1,19 @@
+.yw-collapsibleContainer--dark {
+	background: $black__blueish--200;
+
+	.z-north, .z-center, .z-south {
+		background: $black__blueish--200;
+	}
+	.z-north-header,
+	.z-center-header,
+	.z-south-header,
+	.yw-collapsed-down > .z-north-header,
+	.yw-collapsed-down > .z-center-header,
+	.yw-collapsed-down > .z-south-header {
+		background: $black__blueish--200;
+
+		.z-label {
+			color: $white;
+		}
+	}
+}

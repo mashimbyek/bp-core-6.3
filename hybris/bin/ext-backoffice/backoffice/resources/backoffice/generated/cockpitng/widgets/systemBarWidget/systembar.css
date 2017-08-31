@@ -1,0 +1,59 @@
+/*================================
+    Systembar Variables
+================================*/
+/*================================
+    Systembar Mixins
+================================*/
+/*================================
+    Systembar (General)
+================================*/
+.yw-systemBarContainer {
+  background-color: #0486e0; }
+  .yw-systemBarContainer:after {
+    content: "";
+    display: block;
+    clear: both; }
+  .yw-systemBarContainer .yw-statusToolbar:after {
+    content: "";
+    display: block;
+    clear: both; }
+  .yw-systemBarContainer .yw-statusToolbar-left {
+    float: left; }
+  .yw-systemBarContainer .yw-statusToolbar-center {
+    width: 100%;
+    height: 0;
+    position: absolute;
+    text-align: center; }
+  .yw-systemBarContainer .yw-statusToolbar-right {
+    float: right;
+    text-align: right; }
+  .yw-systemBarContainer .yw-statusToolbar .yw-logoContainer {
+    width: 150px;
+    height: 48px;
+    background-image: url("images/logo-commerce.svg");
+    background-repeat: no-repeat;
+    background-position: left center;
+    background-size: 150px;
+    margin: 0 10px;
+    display: inline-block;
+    vertical-align: top; }
+    @media (max-width: 699px) {
+      .yw-systemBarContainer .yw-statusToolbar .yw-logoContainer {
+        width: 28px; } }
+  .yw-systemBarContainer .yw-statusToolbar .yw-perspectiveChooser {
+    display: inline-block;
+    vertical-align: top; }
+  .yw-systemBarContainer .yw-statusToolbar .yw-systemItemsContainer {
+    line-height: 48px;
+    display: inline-block;
+    vertical-align: top; }
+  .yw-systemBarContainer .yw-statusToolbar .z-toolbarbutton {
+    width: 48px;
+    height: 48px;
+    line-height: 42px;
+    text-align: center;
+    vertical-align: top; }
+    .yw-systemBarContainer .yw-statusToolbar .z-toolbarbutton:hover, .yw-systemBarContainer .yw-statusToolbar .z-toolbarbutton:focus, .yw-systemBarContainer .yw-statusToolbar .z-toolbarbutton:active {
+      background-color: #32a0ec; }
+  .yw-systemBarContainer .yw-statusToolbar .widget_cnt {
+    display: inline-block; }

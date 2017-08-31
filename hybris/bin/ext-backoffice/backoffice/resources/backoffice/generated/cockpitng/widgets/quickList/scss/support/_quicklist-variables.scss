@@ -1,0 +1,60 @@
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/cockpitng/cng/scss/cockpitng-globals.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/scss/backoffice-variables.scss'; 
+
+/*================================
+    Quick List Widget Variables
+================================*/
+// Variable defintions of Quick List Widget
+
+
+$quicklist__widget--height: 100%;
+$quicklist__widget--color: $black__blueish--100;
+$quicklist__widget--overflow: auto;
+$quicklist__widget--bg-color: $grey__light--500;
+$quicklist__widget--padding: 0 20px 50px;
+
+$quickList__info-container--text-align: right;
+$quickList__info-container--font-weight: bold;
+$quicklist__info-container--padding: 15px 20px 5px;
+
+$quickList__tile--line-height: 16px;
+$quickList__tile--padding: 15px 0;
+$quickList__tile--border-color: $grey__light--800;
+$quickList__tile--border: 1px solid $quickList__tile--border-color;
+
+$quickList__hyperlink--text-decoration: underline;
+$quickList__hyperlink--cursor: pointer;
+$quickList__hyperlink--color: $blue__default;
+
+$quickList__tile-title--max-height: 50px;
+$quickList__tile-title--font-weight: bold;
+$quickList__tile-title--margin-bottom: 10px;
+
+$quickList__tile-thumbnail--max-width: 30%;
+$quickList__tile-thumbnail--vertical-align: top;
+$quickList__tile-thumbnail--display: inline-block;
+
+$quickList__tile-subtitle-container--max-width: 70%;
+$quickList__tile-subtitle-container--vertical-align: top;
+$quickList__tile-subtitle-container--padding-left: 15px;
+$quickList__tile-subtitle-container--display: inline-block;
+
+$quickList__tile-subtitle--max-height: 50px;
+$quickList__tile-subtitle--font-size: 12px;
+
+$quickList__tile-title--display: block;
+$quickList__tile-title--display-webkit: -webkit-box;
+$quickList__tile-title--overflow: hidden;
+$quickList__tile-title--text-overflow: ellipsis;
+$quickList__tile-title--word-wrap: break-word;
+$quickList__tile-title--webkit-line-clamp: 3;
+$quickList__tile-title--webkit-box-orient: vertical;
+
+$quickList__remove-btn--width: 32px;
+$quickList__remove-btn--height: 32px;
+$quickList__remove-btn--min-height: 32px;
+$quickList__remove-btn--color: $blue__dark--300;
+$quickList__remove-btn--background-color: transparent;
+$quickList__remove-btn-hover--color: $blue__default;
+$quickList__remove-btn-hover--background-color: transparent;
+$quickList__remove-btn--float: right;

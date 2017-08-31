@@ -1,0 +1,34 @@
+// new color in variables $grey__default--1000: #8f9ba9; $grey__light--1100: #dce1e8; $grey__light--1200: #f6f8fa;
+//ToDo: this import will be replaced with cockpitng-globals.scss
+@import "_catalogSelector-temporary-variables.scss";
+
+$catalogSelector__popup--font-family: $font-family-opensans;
+$catalogSelector__popup--font-size: $font-size__base;
+$catalogSelector__popup--font-color: $grey__default--500;
+
+$catalogSelector__button--width: 100%;
+$catalogSelector__button--height: 100%;
+$catalogSelector__button--max-width: 400px;
+$catalogSelector__button--min-height: $navigation__top-menu--height;
+$catalogSelector__button--padding: 0 20px;
+
+$catalogSelector__button-hover--bg-color: $blue__default--100;
+
+$catalogSelector__button--font-family: $font-family-opensans;
+$catalogSelector__button--font-size: $font-size__base;
+$catalogSelector__button--font-color: $white;
+
+$catalogSelector__popup--border-color: $grey__light--1100;
+$catalogSelector__popup--border: $boxes--border__thin solid $catalogSelector__popup--border-color;
+
+$catalogSelector__button--border-color: rgba($white, 0.1);
+$catalogSelector__button--border: $boxes--border__thin solid $catalogSelector__button--border-color;
+
+$catalogSelector__popup--item-hover--color: $blue__default;
+$catalogSelector__popup--item-selected--color: $blue__default;
+$catalogSelector__popup--item-caret--color: $grey__default--1000;
+
+$catalogSelector__popup--icon-check--color: $blue__default;
+$catalogSelector__popup--icon-uncheck--color: rgba($blue__default, 0.5);
+
+$catalogSelector__popup--catalog-all--bg-color: $grey__light--1200;

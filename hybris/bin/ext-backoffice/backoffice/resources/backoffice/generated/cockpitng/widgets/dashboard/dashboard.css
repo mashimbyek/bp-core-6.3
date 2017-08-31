@@ -1,0 +1,85 @@
+/*================================
+    Dashboard Charts
+================================*/
+/*================================
+    Dashboard Charts
+================================*/
+.yw-dashboard {
+  background-color: #eef3f7;
+  height: 100%;
+  overflow: auto;
+  position: relative; }
+  .yw-dashboard-lock {
+    position: absolute;
+    top: 0;
+    right: 10px; }
+  .yw-dashboard-actions {
+    background-color: transparent;
+    margin: 10px; }
+  .yw-dashboard-slot-ghost {
+    border: 1px solid #273a4e;
+    overflow: hidden;
+    max-width: 500px; }
+  .yw-dashboard .yw-children-container .yw-dashboard-top-container {
+    background-color: #eef3f7; }
+  .yw-dashboard .yw-children-container .yw-dashboard-column {
+    width: 100%;
+    position: relative;
+    overflow: hidden; }
+    .yw-dashboard .yw-children-container .yw-dashboard-column:before {
+      content: "";
+      background: #eef3f7;
+      width: 100%;
+      position: absolute;
+      top: 60px;
+      height: 1px;
+      z-index: 1; }
+    .yw-dashboard .yw-children-container .yw-dashboard-column .yw-dashboard-row {
+      overflow: hidden;
+      display: table;
+      margin-right: -10px; }
+      .yw-dashboard .yw-children-container .yw-dashboard-column .yw-dashboard-row .yw-dashboard-column {
+        display: table-cell;
+        vertical-align: top;
+        padding-right: 10px; }
+        .yw-dashboard .yw-children-container .yw-dashboard-column .yw-dashboard-row .yw-dashboard-column:last-child {
+          padding-right: 10px; }
+      .yw-dashboard .yw-children-container .yw-dashboard-column .yw-dashboard-row .yw-dashboard-slot-draggable.z-drag-ghost {
+        background-color: #0486e0; }
+      .yw-dashboard .yw-children-container .yw-dashboard-column .yw-dashboard-row .yw-dashboard-slot-draggable + .z-drag-over {
+        position: relative;
+        background-color: transparent; }
+        .yw-dashboard .yw-children-container .yw-dashboard-column .yw-dashboard-row .yw-dashboard-slot-draggable + .z-drag-over:before {
+          width: 100%;
+          height: 100%;
+          content: '';
+          position: absolute;
+          background-color: #0486e0;
+          opacity: 0.2;
+          z-index: 1; }
+  .yw-dashboard .yw-children-container .yw-dashboard-dnd-enabled .yw-dashboard-slot {
+    position: relative;
+    padding-bottom: 10px; }
+  .yw-dashboard .yw-children-container .yw-dashboard-dnd-enabled .yw-dashboard-slot-draggable {
+    width: 100%;
+    height: 6px;
+    background-color: rgba(4, 134, 224, 0.3);
+    position: absolute;
+    cursor: move;
+    z-index: 2; }
+    .yw-dashboard .yw-children-container .yw-dashboard-dnd-enabled .yw-dashboard-slot-draggable:before {
+      width: 27px;
+      height: 27px;
+      content: "";
+      background-image: url("images/drag-dashboard.png");
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-color: rgba(4, 134, 224, 0.3);
+      position: absolute;
+      top: 6px;
+      left: 50%;
+      margin-left: -19px;
+      z-index: 2; }
+  .yw-dashboard-title {
+    color: #273a4e;
+    font-size: 29px; }

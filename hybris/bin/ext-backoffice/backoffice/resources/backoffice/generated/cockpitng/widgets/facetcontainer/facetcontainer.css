@@ -1,0 +1,240 @@
+.yw-facetcontainer-widget {
+  background-color: #27394f;
+  height: auto !important;
+  min-heigth: 100%;
+  /* FACETS */
+  /*
+        only for simple listing
+    */
+  /*
+        simple listing end
+    */
+  /* WORKAROUND FOR FACETTSCROLL - REMOVE AFTER LAYOUT CONMPONENT UPDATE!!! */
+  /*.invisible-facet-panel .toggle-facet-button,
+    .invisible-facet-panel .toggle-facet-button:hover {
+        background: url("images/popup-icon-deactivate.png") center center no-repeat;
+    }*/ }
+  .yw-facetcontainer-widget .z-panel-head {
+    background: none repeat scroll 0 0 #0f1419;
+    border: medium none;
+    cursor: pointer; }
+  .yw-facetcontainer-widget .z-listbox {
+    border-color: transparent; }
+  .yw-facetcontainer-widget .z-listitem {
+    background: #090c0f;
+    color: #ffffff;
+    font-size: 14px; }
+    .yw-facetcontainer-widget .z-listitem-selected.z-listitem {
+      background: #1e2830; }
+      .yw-facetcontainer-widget .z-listitem-selected.z-listitem .z-listcell-content {
+        color: #0486e0; }
+      .yw-facetcontainer-widget .z-listitem-selected.z-listitem:hover {
+        background: #243039; }
+    .yw-facetcontainer-widget .z-listitem:hover {
+      background: #1e2830; }
+      .yw-facetcontainer-widget .z-listitem:hover > .z-listcell > .z-listcell-content {
+        color: #a6b3c4; }
+    .yw-facetcontainer-widget .z-listitem .z-listcell-content {
+      color: #ffffff;
+      font-size: 14px; }
+  .yw-facetcontainer-widget .visible-facet-panel,
+  .yw-facetcontainer-widget .invisible-facet-panel {
+    margin-top: 1px; }
+  .yw-facetcontainer-widget .visible-facet-panel .z-panelchildren > .z-listbox {
+    border: none; }
+  .yw-facetcontainer-widget .z-panel-header {
+    color: #ffffff;
+    font-weight: normal; }
+  .yw-facetcontainer-widget .z-panel-header .z-caption {
+    white-space: normal; }
+  .yw-facetcontainer-widget .z-listbox-footer {
+    background: #030506;
+    border: none; }
+    .yw-facetcontainer-widget .z-listbox-footer .z-toolbarbutton-content, .yw-facetcontainer-widget .z-listbox-footer .z-toolbarbutton:hover .z-toolbarbutton-content {
+      color: #ffffff; }
+  .yw-facetcontainer-widget .z-portalchildren-cnt .z-panel.z-caption-l:hover {
+    background: url("images/icon_handle_drag_default.png") center no-repeat; }
+  .yw-facetcontainer-widget .z-portalchildren-cnt .z-panel .z-panel-hl,
+  .yw-facetcontainer-widget .z-portalchildren-cnt .z-panel .z-panel-hr,
+  .yw-facetcontainer-widget .z-portalchildren-cnt .z-panel .z-panel-header {
+    background: #d3d9df;
+    color: #043263; }
+  .yw-facetcontainer-widget .z-portalchildren-cnt .z-panel .z-panel-hr {
+    background: #d3d9df url("images/icon_arrow_right.png?v4") right center no-repeat !important; }
+  .yw-facetcontainer-widget .z-portalchildren-cnt .z-panel .z-panel-hl {
+    border: 0; }
+  .yw-facetcontainer-widget .z-portalchildren-cnt .z-panel {
+    padding: 5px 5px 0; }
+  .yw-facetcontainer-widget .z-portalchildren-cnt .z-panelchildren div.z-listbox,
+  .yw-facetcontainer-widget .z-portalchildren-cnt .z-panelchildren div.z-listbox-body .z-listcell {
+    border: none; }
+  .yw-facetcontainer-widget .z-panelchildren {
+    background: transparent; }
+  .yw-facetcontainer-widget .z-panelchildren .z-checkbox {
+    display: block;
+    line-height: 24px;
+    padding-left: 12px;
+    cursor: move;
+    position: relative; }
+  .yw-facetcontainer-widget .z-checkbox input {
+    position: absolute;
+    top: 50%;
+    margin-top: -7px; }
+  .yw-facetcontainer-widget .invisible-facet-panel {
+    opacity: 0.5; }
+  .yw-facetcontainer-widget .z-panelchildren .z-checkbox label {
+    font-size: 12px;
+    line-height: 24px;
+    padding-left: 23px;
+    display: block; }
+  .yw-facetcontainer-widget .z-panelchildren .z-checkbox:hover {
+    background: #085abc url("images/icon_handle_drag_white.png") 4px center no-repeat;
+    color: #a6b3c4; }
+  .yw-facetcontainer-widget .z-checkbox label {
+    background: none; }
+  .yw-facetcontainer-widget .z-checkbox input:checked + label {
+    background: #085abc;
+    color: #FFF; }
+  .yw-facetcontainer-widget .z-portalchildren-cnt .z-panel-hl {
+    height: 25px;
+    line-height: 25px;
+    overflow: hidden; }
+  .yw-facetcontainer-widget .z-portalchildren-cnt .z-panel-hl table td {
+    vertical-align: top; }
+  .yw-facetcontainer-widget .z-portalchildren-cnt .z-panel-hl table td.z-caption-l {
+    text-transform: capitalize; }
+  .yw-facetcontainer-widget .z-portalchildren-cnt .z-panel-header {
+    margin-top: -2px; }
+  .yw-facetcontainer-widget .z-portalchildren-cnt .z-toolbar-panel .z-toolbar-panel-start .z-toolbar-panel-cnt {
+    float: right; }
+  .yw-facetcontainer-widget .z-listheader-img,
+  .yw-facetcontainer-widget .z-listitem-img-checkbox,
+  .yw-facetcontainer-widget .z-listitem-img-radio,
+  .yw-facetcontainer-widget .z-listgroup-img-checkbox,
+  .yw-facetcontainer-widget .z-listgroup-img-radio,
+  .yw-facetcontainer-widget .z-listgroupfoot-img {
+    background-image: url("images/check-sprite.png?v5");
+    height: 14px;
+    min-height: 14px;
+    width: 14px; }
+  .yw-facetcontainer-widget .z-listitem-seld {
+    background-position: 0 0; }
+  .yw-facetcontainer-widget .z-listitem-over-seld {
+    background-position: -42px; }
+  .yw-facetcontainer-widget div.facet-popup-button,
+  .yw-facetcontainer-widget .z-toolbar-start,
+  .yw-facetcontainer-widget .z-toolbar-panel .z-toolbar-panel-start .z-toolbar-panel-cnt {
+    white-space: nowrap; }
+  .yw-facetcontainer-widget .z-listheader-img-seld,
+  .yw-facetcontainer-widget .z-listitem-seld > td > .z-listcell-cnt > .z-listitem-img-checkbox,
+  .yw-facetcontainer-widget .z-listgroup-seld > td > .z-listcell-cnt > .z-listgroup-img-checkbox,
+  .yw-facetcontainer-widget .z-listgroupfoot-seld > td > .z-listcell-cnt > .z-listgroupfoot-img-checkbox {
+    background-position: -14px 0; }
+  .yw-facetcontainer-widget .z-listheader-img-seld:hover,
+  .yw-facetcontainer-widget .z-listitem-seld > td:hover > .z-listcell-cnt > .z-listitem-img-checkbox,
+  .yw-facetcontainer-widget .z-listgroup-seld > td:hover > .z-listcell-cnt > .z-listgroup-img-checkbox,
+  .yw-facetcontainer-widget .z-listgroupfoot-seld > td:hover > .z-listcell-cnt > .z-listgroupfoot-img-checkbox {
+    background-position: -14px 0; }
+  .yw-facetcontainer-widget div.z-toolbarbutton-cnt,
+  .yw-facetcontainer-widget .z-toolbarbutton {
+    background: none !important;
+    border: 0 !important;
+    padding: 0;
+    margin: 0; }
+  .yw-facetcontainer-widget .z-toolbarbutton {
+    margin: 7px 0 0 0;
+    min-height: 16px; }
+  .yw-facetcontainer-widget div.z-toolbarbutton-body {
+    background: url("images/check-sprite.png?v5") -57px 0 no-repeat; }
+  .yw-facetcontainer-widget .z-listfooter .z-listfooter-cnt,
+  .yw-facetcontainer-widget .z-listfooter .z-listfooter-cnt div.z-toolbarbutton-cnt {
+    padding: 0 0 0 20px;
+    width: 100px;
+    height: 15px;
+    line-height: 10px;
+    margin: -3px 0 0 0;
+    background-position: left center; }
+  .yw-facetcontainer-widget .z-listfooter .z-listfooter-cnt {
+    padding: 0; }
+  .yw-facetcontainer-widget .z-listfooter-cnt .z-toolbarbutton {
+    box-shadow: none; }
+  .yw-facetcontainer-widget .z-listfooter-cnt div.z-toolbarbutton-body,
+  .yw-facetcontainer-widget .z-listfooter-cnt div.z-toolbarbutton-body:hover {
+    border: 0 !important;
+    width: 8px;
+    height: 8px;
+    padding: 0;
+    margin: 0; }
+  .yw-facetcontainer-widget .z-west-body {
+    overflow: auto !important; }
+  .yw-facetcontainer-widget div.facet-popup-button {
+    background: blue;
+    float: left;
+    display: inline; }
+  .yw-facetcontainer-widget .facet-toolbar-popup {
+    padding: 0 !important;
+    width: 35px;
+    background: #FFF;
+    box-shadow: 0 0 15px #888; }
+  .yw-facetcontainer-widget .facet-toolbar-popup .z-popup-cl {
+    border: 0;
+    margin: 0;
+    padding: 0; }
+  .yw-facetcontainer-widget .yw-facet-container-content .z-caption-content {
+    display: table;
+    line-height: 1; }
+  .yw-facetcontainer-widget .yw-facet-container-content .z-caption-content .z-label {
+    display: table-cell;
+    width: 100%; }
+  .yw-facetcontainer-widget .yw-facet-container-content .z-caption-content .z-toolbar {
+    display: table-cell;
+    width: 1%;
+    vertical-align: middle; }
+  .yw-facetcontainer-widget .invisible-facet-panel .toggle-facet-button,
+  .yw-facetcontainer-widget .visible-facet-panel .toggle-facet-button,
+  .yw-facetcontainer-widget .visible-facet-panel .facet-down-button,
+  .yw-facetcontainer-widget .visible-facet-panel .facet-info-button,
+  .yw-facetcontainer-widget .visible-facet-panel .facet-up-button {
+    padding: 0 0 0 2px;
+    margin: 0;
+    width: 19px;
+    height: 16px;
+    min-height: 16px; }
+  .yw-facetcontainer-widget .z-toolbarbutton-content {
+    display: block; }
+  .yw-facetcontainer-widget .invisible-facet-panel .z-panel-header .z-toolbar .z-toolbarbutton-content {
+    width: 16px;
+    background: url(images/popup-icon-status-sprite.png) 0px -16px no-repeat;
+    margin-top: 7px;
+    height: 9px;
+    overflow: hidden; }
+  .yw-facetcontainer-widget .z-panel-body .z-listcell {
+    border: none; }
+  .yw-facetcontainer-widget .invisible-facet-panel + .z-panel-move-block,
+  .yw-facetcontainer-widget .visible-facet-panel + .z-panel-move-block {
+    display: none; }
+  .yw-facetcontainer-widget .visible-facet-panel .toggle-facet-button .z-toolbarbutton-content {
+    width: 16px;
+    background: url(images/popup-icon-status-sprite.png) 0px 4px no-repeat;
+    margin-top: 3px;
+    height: 14px;
+    overflow: hidden; }
+  .yw-facetcontainer-widget .visible-facet-panel .facet-down-button .z-toolbarbutton-content {
+    width: 16px;
+    background: url(images/icon_facet_order_arrow_sprite.png) 0px -1px no-repeat;
+    margin-top: 3px;
+    height: 14px; }
+    .yw-facetcontainer-widget .visible-facet-panel .facet-down-button .z-toolbarbutton-content:hover {
+      background: url(images/icon_facet_order_arrow_sprite.png) -18px -1px no-repeat; }
+  .yw-facetcontainer-widget .facet-info-button .z-toolbarbutton-content {
+    width: 16px;
+    background: url(images/icon_facet_order_info_default.png) center center no-repeat;
+    margin-top: -2px;
+    height: 14px; }
+  .yw-facetcontainer-widget .visible-facet-panel .facet-up-button .z-toolbarbutton-content {
+    width: 16px;
+    background: url(images/icon_facet_order_arrow_sprite.png) 0px -19px no-repeat;
+    margin-top: 3px;
+    height: 14px; }
+    .yw-facetcontainer-widget .visible-facet-panel .facet-up-button .z-toolbarbutton-content:hover {
+      background: url(images/icon_facet_order_arrow_sprite.png) -18px -19px no-repeat; }

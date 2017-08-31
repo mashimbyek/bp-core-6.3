@@ -1,0 +1,339 @@
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/cockpitng/cng/scss/cockpitng-globals.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/scss/backoffice-variables.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/backoffice/scss/backoffice-variables.scss'; 
+
+@import "../support/_collectionBrowser-variables.scss";/*================================
+    Collection Browser - Defaults
+================================*/
+// All Defaults connected to the Collection Browser
+// Status: indented, variables assigned
+// ToDo: finalize styling, add/check loading-screen styling & grid-view styling, check specs when defining explorertree, clean comments
+
+
+
+.yw-coll-browser-container {
+    .z-listbox {
+        border: none;
+    }
+    .z-listbox-body {
+        .z-listcell-content {
+            padding: $collection-browser__list-cell--padding;
+            font-size: $font-size__base;
+            min-height: $collection-browser__list-view-entry--min-height;
+        }
+    }
+    // Table Header //
+    .z-listheader {
+        border: none;
+
+        &-content {
+            padding: $collection-browser__header-content--padding;
+            display: inline-block;
+        }
+        &-bg {
+            background: none;
+        }
+        &-sort {
+            &:hover, &-dsc, &-asc {
+                .z-listheader-content {
+                    color: $collection-browser__header-sort--color;
+                }
+            }
+            .z-listheader-content {
+                padding-right: $collection-browser__header-sort-content--padding-right;
+            }
+        }
+        &-sorticon {
+            color: $collection-browser__header-sort--color;
+            float: right;
+            position: static;
+            display: inline;
+            margin-right: -$collection-browser__header-sort-icon--space;
+            font-size: $collection-browser__header-sort-icon--font-size;
+            line-height: inherit;
+
+            i {
+                position: relative;
+                top: -1px;
+            }
+            .z-icon-caret-up {
+                top: -2px;
+            }
+        }
+    }
+
+    tr.z-listhead th {
+        &.yw-listview-colheader {
+            position: relative;
+            overflow: hidden;
+
+            &:after {
+                content: "";
+                border-top: $collection-browser__default--border;
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+            }
+            &:first-child:after {
+                left: $collection-browser__side-content-indent--padding;
+            }
+            &:nth-last-of-type(2):after {
+                right: $collection-browser__side-content-indent--padding;
+            }
+        }
+
+        &:first-of-type .z-listheader-content {
+            padding-left: $collection-browser__side-content-indent--padding
+        }
+        &:nth-last-of-type(2) .z-listheader-content {
+            padding-right: $collection-browser__side-content-indent--padding;
+        }
+    }
+
+    tr.z-listitem > td {
+        &:first-of-type .z-listcell-content {
+            padding-left: $collection-browser__side-content-indent--padding;
+            &:after {
+                left: $collection-browser__side-content-indent--padding;
+            }
+        }
+        
+        &:last-of-type .z-listcell-content {
+            padding-right: $collection-browser__side-content-indent--padding;
+            &:after {
+                right: $collection-browser__side-content-indent--padding;
+            }
+        }
+    }
+    .z-listbox-header-border,
+    .z-listbox-body .z-listcell {
+        border-color: transparent;
+    }
+    .z-listbox-body {
+        > table{
+            width:100%!important;
+        }
+        .z-listitem {
+            > td > .z-listcell-content{
+                &:after {
+                    content: "";
+                    border-top: $collection-browser__default--border;
+                    position: absolute;
+                    left: 0;
+                    right: 0;
+                    top: 0;
+                }
+            }
+            &:first-child, &-selected, &-selected:hover {
+                > td > .z-listcell-content:after{
+                    border-color: transparent;
+                }
+            }
+            &:hover, &-selected, &-selected:hover {
+                + .z-listitem {
+                    > td > .z-listcell-content:after {
+                        border-color: transparent;
+                    }
+                    &-selected > td > .z-listcell-content:after {
+                        border-color: $collection-browser__list-item-selected-delimiter--border-color;
+                    }
+                }
+            }
+        }
+        @if $collection-browser__list--bottom-border{
+            > table {
+                border-bottom: $collection-browser__list--bottom-border;
+            }
+        }
+    }
+    // EMPTY LIST //
+    tbody.z-listbox-empty-body td {
+        padding: $collection-browser__list-item-content--padding-y 0;
+    }
+    .z-listitem-checkable .z-listitem-icon.z-icon-check,
+    .z-treerow-checkable .z-treerow-icon.z-icon-check {
+        color: $collection-browser__checkbox-unchecked--color;
+        display: block;
+        position: relative;
+        font-size: $collection-browser__checkbox--font-size;
+        line-height: $collection-browser__checkbox--font-size;
+        top: 50%;
+        margin-top: -$collection-browser__checkbox--font-size/2;
+        text-align: center;
+    }
+}
+
+/* LIST - SEE COCKPIT.CSS */
+
+.yw-listview {
+    &-caption {
+        .yw-listview-title, .yw-listview-subtitle {
+            font-size: $collection-browser__title--font-size;
+            font-weight: 500;
+            color: $collection-browser__sub-title--color;
+        }
+        .yw-listview-title {
+            color: $collection-browser__title--color;
+            text-transform: uppercase;
+        }
+    }
+    // Deprecated ?
+    /* DE404: FIX FOR SELECT ALL CHECKBOX ACTIVE STATE */
+    &-colheader .z-listheader-image-selected {
+        background-position: -26px 0;
+    }
+
+    > .yw-listview-cell-label.yw-collection-browser-hyperlink {
+        &:hover {
+            text-decoration: none;
+
+            &:after {
+                border-bottom: $collection-browser__hyperlink-hover-after--border-bottom;
+                position: absolute;
+                width: 100%;
+                height: $collection-browser__hyperlink-hover-after--height;
+                bottom: $collection-browser__hyperlink-hover-after--bottom;
+                left: 0;
+                content: "";
+            }
+        }
+    }
+}
+
+.yw-nested-widget .yw-listview {
+    &-spacer {
+        display: none;
+    }
+}
+
+/* STATUSBAR */
+button.yw-listview-statusbar-button {
+    background: none repeat scroll 0 0 transparent;
+    color: $collection-browser__list-item--color;
+    height: auto;
+    left: inherit;
+    padding: $collection-browser__list-view-status-button--padding;
+
+    &:hover {
+        background-color: $collection-browser__list-view-status-button--hover-bg-color;
+        color: $collection-browser__list-view-status-button--hover-color;
+        cursor: default;
+    }
+    &[disabled], &[disabled]:hover {
+        background-color: transparent !important;
+    }
+}
+
+.ye-listview-def-preview,
+.ye-listview-preview {
+    &-img {
+        max-width: $collection-browser__list-view-preview-image--max-size;
+        max-height: $collection-browser__list-view-preview-image--max-size;
+        vertical-align: middle;
+    }
+    &-popup-image {
+        max-width: $collection-browser__list-view-popup-image--width;
+        max-height: $collection-browser__list-view-popup-image--height;
+    }
+}
+
+.yw-treeview {
+    &-cell {
+        display: inline-block;
+
+        &-data-attr {
+            font-style: italic;
+        }
+        /* Spacing for IMG + Label */
+        &-preview,
+        &-label {
+            margin-left: $collection-browser__tree-item-label--margin-left;
+        }
+        &-preview + &-label {
+            margin-left: $collection-browser__tree-item-preview-to-label--space;
+        }
+    }
+    &-row-subnode {
+        background: $collection-browser__tree-item-subnode--bg-color;
+    }
+}
+
+.yw-coll-browser-tree-view-table {
+    .z-tree-body td.z-treecell,
+    .z-tree-footer td.z-treefooter {
+        border: none;
+        border-bottom: 1px solid $collection-browser__tree-item--border-color;
+        padding: $collection-browser__tree-item--padding;
+        border-color: transparent;
+        position: relative;
+
+        &:before {
+            content: "";
+            border-top: $collection-browser__default--border;
+            position: absolute;
+            left: $collection-browser__side-content-indent--padding;
+            right: $collection-browser__side-content-indent--padding;
+            top: 0;
+        }
+    }
+
+    .z-tree-body .yw-treeview-row-topnode.z-treerow:first-child .z-treecell{
+        &:before{
+            border: none;
+        }
+    }
+
+    .z-tree-body .z-treecell-content {
+        padding-left: $collection-browser__tree-view-content--padding-left;
+    }
+    table {
+        table-layout: auto !important;
+    }
+
+    &-empty .z-treechildren {
+        font-weight: normal;
+        color: $collection-browser__tree-item-emptynode--color;
+        font-style: italic;
+        text-align: center;
+    }
+}
+
+
+div.z-treecell-content > .z-treerow-checkable {
+        background: none;
+        border: none;
+}
+
+
+.yw-collection-preview {
+    .z-listbox-body {
+        background-color: $collection-browser__collection-preview--bg-color;
+        background-image: url("img/icon_loading_indicator_default.gif");
+        background-position: $collection-browser__collection-preview--bg-position;
+        background-repeat: no-repeat;
+        width: 100% !important; /* FIX FOR WRONG ZK WIDTH CALCULATION */
+    }
+    &-empty-list.z-listbox .z-listbox-body {
+        background: $collection-browser__collection-preview--bg-color;
+    }
+}
+
+.yw-coll-browser-container {
+    .z-treerow .z-treecell,
+    .z-listcell-content,
+    .z-treecell-content {
+        cursor: $collection-browser__tree-view-content--cursor;
+    }
+}
+
+.yw-coll-browser-hyperlink {
+    &:hover {
+        cursor: $collection-browser__hyperlink-label-hover--cursor;
+
+        &.z-label {
+            color: $collection-browser__hyperlink-label-hover--color;
+            text-decoration: underline;
+        }
+    }
+}

@@ -1,0 +1,37 @@
+/*================================
+    Explorer Tree (Variables)
+================================*/
+/*================================
+    Explorer Tree (Mixins)
+================================*/
+/*================================
+    Explorer Tree Filter
+================================*/
+.yw-explorerTree-filterDiv {
+  background: none;
+  padding: 20px; }
+  .yw-explorerTree-filterDiv input.yw-filter-textbox {
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.5);
+    background-color: transparent; }
+    .yw-explorerTree-filterDiv input.yw-filter-textbox::-webkit-input-placeholder {
+      color: rgba(255, 255, 255, 0.5); }
+    .yw-explorerTree-filterDiv input.yw-filter-textbox::-moz-placeholder {
+      /* Firefox 19+ */
+      color: rgba(255, 255, 255, 0.5); }
+    .yw-explorerTree-filterDiv input.yw-filter-textbox:-ms-input-placeholder {
+      color: rgba(255, 255, 255, 0.5); }
+    .yw-explorerTree-filterDiv input.yw-filter-textbox:focus {
+      color: #151c22;
+      border-color: #ffffff;
+      background-color: rgba(255, 255, 255, 0.85); }
+      .yw-explorerTree-filterDiv input.yw-filter-textbox:focus::-webkit-input-placeholder {
+        color: transparent; }
+      .yw-explorerTree-filterDiv input.yw-filter-textbox:focus::-moz-placeholder {
+        /* Firefox 19+ */
+        color: transparent; }
+      .yw-explorerTree-filterDiv input.yw-filter-textbox:focus:-ms-input-placeholder {
+        color: transparent; }
+
+.yw-explorerTree-hideTextBoxDiv {
+  float: right; }

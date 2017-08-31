@@ -1,0 +1,32 @@
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/cockpitng/cng/scss/cockpitng-globals.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/scss/backoffice-variables.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/backoffice/scss/backoffice-variables.scss'; 
+
+@import "../systemBarWidget/scss/support/_systembar-mixins.scss";/*================================
+    QuickLocaleToggle Popup (Systembar)
+================================*/
+// Relevant Changes applied to the Quick Locale Toggle Popup
+
+// Status:
+// - all necessary changes added
+// - code refactored, cleaned and styling transfered to systembar-mixins.scss
+
+
+
+.yw-quickToggleLocale {
+    @include _default_systembar_popup();
+
+    &-cl {
+        width: 100%;
+        padding: $systembar-popup__list-cell--padding;
+        border-top: $systembar-popup__list-cell--border-top;
+        background: $systembar-popup__item--bg-color;
+    }
+
+    &-cl &-cl-value,
+    &-cl &-cl-label {
+        display: inline-block;
+        padding: $systembar-popup__list-cell-content--padding;
+        color: $systembar-popup__list-cell--font-color;
+    }
+}

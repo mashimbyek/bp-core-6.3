@@ -1,0 +1,21 @@
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/cockpitng/cng/scss/cockpitng-globals.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/scss/backoffice-variables.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/backoffice/scss/backoffice-variables.scss'; 
+
+@import "support/_explorerTree-mixins.scss";/*================================
+    Explorer Tree
+================================*/
+
+// Status:
+// - all necessary changes added
+// ToDo: clean up code and optimize
+
+
+
+.yw-explorerTree {
+
+  &-widget {
+    border: none;
+    background-color: $explorertree__default--bg-color;
+  }
+}

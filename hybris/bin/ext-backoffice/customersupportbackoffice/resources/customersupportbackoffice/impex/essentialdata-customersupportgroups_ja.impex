@@ -1,0 +1,16 @@
+# ******************************This file is generated - please do not edit it. It will be regenerated after every build.********************************#
+
+# Language
+$lang=ja
+
+UPDATE BackofficeRole;uid[unique=true];locname[lang=$lang]
+ ;customersupportadministratorrole;"カスタマー サポート管理者ロール"
+ ;customersupportagentrole;"カスタマー サポート エージェントロール"
+ ;customersupportmanagerrole;"カスタマー サポート マネージャロール"
+
+UPDATE UserGroup;uid[unique=true];locname[lang=$lang]
+ ;customersupportadministratorgroup;"カスタマー サポート管理者グループ"
+
+UPDATE CsAgentGroup;uid[unique=true];locname[lang=$lang]
+ ;customersupportagentgroup;"カスタマー サポート エージェントグループ"
+ ;customersupportmanagergroup;"カスタマー サポート マネージャグループ"

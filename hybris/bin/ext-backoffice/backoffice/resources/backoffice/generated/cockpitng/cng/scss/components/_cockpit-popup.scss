@@ -1,0 +1,180 @@
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/cockpitng/cng/scss/cockpitng-globals.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/scss/backoffice-variables.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/backoffice/scss/backoffice-variables.scss'; 
+
+@import "../support/_cockpit-variables.scss";/*================================
+    z-Popup
+================================*/
+// Defintions on Standard-Popups & contained Elements (Basig ones)
+
+// Status:
+// - all necessary changes added and code mostly cleaned
+// - ToDo: add/define variables & optimize code
+
+
+
+.z-popup {
+    background-color: $window__popup--bg-color;
+    border: $window__popup--border;
+    border-radius: $window__popup--border-radius;
+    box-shadow: $window__popup--box-shadow;
+
+    &-content {
+        //overwrite zk styling
+        color: $window__popup-content--color;
+        padding: $window__popup-content--padding;
+
+        .yw-desc-tooltip & {
+            padding: $window__popup-content-tooltip--padding;
+        }
+    }
+
+    &-plain {
+        box-shadow: $window__popup-plain--box-shadow;
+    }
+
+    .z-popup-cl {
+        background: $window__popup--bg-color;
+    }
+    &.z-popup-open.ye-list-toolbar-popup-add {
+        width: $window__toolbar-list-add-popup--width;
+    }
+}
+
+.z-combobox-shadow,
+.z-bandbox-shadow {
+    box-shadow: $window__box-popup-shadow--box-shadow;
+    border-radius: $window__box-popup-shadow--border-radius;
+}
+
+// z-menupopup
+// ====================
+//
+
+.z-menupopup, .z-menu {
+    border: none;
+    padding: 0;
+}
+
+.z-menupopup-content {
+    background-color: $navigation-popup__menu--bg-color;
+    
+    .z-menu-content:hover, 
+    .z-menu-content:hover .z-menu-icon, 
+    .z-menuitem-content:hover {
+        background-color: $navigation-popup__menu-item--hover-bg-color;
+    }
+    
+    .z-menu a.z-menu-content,
+    .z-menuitem a.z-menuitem-content {
+        color: $navigation-popup__menu-item--color;
+    }
+
+    .z-menu:hover,
+    .z-menuitem:hover {
+        background-color: $navigation-popup__menu--bg-color;
+    }
+
+    /* zk7-revised-TODO */
+    .z-menu:hover .z-menuitem,
+    .z-menuitem:hover .z-menu {
+        &-cl,
+        &-cr,
+        &-cm {
+            background-color: $navigation-popup__menu--bg-color;
+        }
+    }
+}
+
+.z-menupopup, .z-menu, .z-menuitem {
+    background-color: $navigation-popup__menu--bg-color !important;
+}
+
+div.z-menupopup-separator {
+    display: none;
+}
+
+li.z-menuseparator {
+    margin-left: 26px;
+    margin-right: 10px;
+}
+
+
+// Popup Bandbox / Combobox
+// ====================
+//
+
+/*
+.z-bandbox-popup {
+    border: none; 
+}
+*/
+
+.ye-inline-editor-row-popup {
+    border: 1px solid #6f7c91;
+    box-shadow: $window__box-popup-shadow--box-shadow;
+    border-radius: $window__box-popup-shadow--border-radius;
+//    background-color: $default-multi-reference-editor__inline-popup--bg-color !important;
+    width: 160px;
+    
+    &:after {
+        content: "";
+        position: absolute;
+        width: 15px;
+        height: 15px;
+        top: -1px;
+        left: 156px;
+        box-sizing: border-box;
+        background-color: $window__popup--bg-color;
+        transform-origin: 0 0;
+//        -ms-transform-origin: 0 0;
+        transform: rotate(135deg);
+//        -ms-transform: rotate(135deg);
+        border: 0 none;
+        border-left: 1px solid #6f7c91;
+        border-bottom: 1px solid #6f7c91;
+        box-shadow: $window__box-popup-shadow--box-shadow;
+    }
+    .z-menuitem {
+        background: transparent !important;
+        &:last-child {
+            a.z-menuitem-content {
+                border-bottom: 0 none;
+            }
+        }
+        &-image {
+            display: none;
+        }
+    }
+    .z-menupopup-content {
+        .z-menuitem {
+            /*a.z-menuitem-content {
+                color: #000;
+                font-size: 12px;
+                padding: 12px;
+                border-bottom: 1px solid #e2e5e9;
+                &:hover {
+                    background: #6f7c91;
+                    color: #ffffff;
+                }
+            }*/
+        }
+    }    
+}
+
+
+.z-datebox-popup{
+    border-color: $editor-defaults__box--border-color;
+    box-shadow: -2px 2px 0 $editor-defaults__box--shadow-color;
+
+    .z-calendar + .z-timebox{
+        margin: $editor-defaults__locedit-options--margin-y $editor-defaults__locedit-options--margin-x;
+    }
+}
+
+.z-combobox-popup, .z-bandbox-popup{
+    //height for bandbox-popup added at the moment (should not be) - remove if fixed (or merge-conflict related)
+    height: $selectbox__combobox-comboitem--height;
+    max-height: $selectbox__combobox-comboitem--max-height;
+    font-size: $selectbox__combobox-comboitem--font-size;
+}

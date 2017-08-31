@@ -1,0 +1,192 @@
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/cockpitng/cng/scss/cockpitng-globals.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/scss/backoffice-variables.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/backoffice/scss/backoffice-variables.scss'; 
+
+//_default-extendedmultireferenceeditor-default
+// .ye-com_hybris_cockpitng_editor_extendedmultireferenceeditor 
+.ye-com_hybris_cockpitng_editor_extendedmultireferenceeditor {
+//    margin-top: 2px;
+    .z-listitem .yw-ref-list-cell.ye-editable-property .ye-com_hybris_cockpitng_editor_boolean_wrapper {
+        padding: 0;
+        margin: $default-multi-reference-editor__inline-edit-boolean-wrapper--margin;
+
+        td table td, .z-div {
+            line-height: 1 !important;
+        }
+        table {
+            display: inline-block;
+            line-height: 1;
+        }
+    }
+
+    .ye-default-reference-editor-selected-listbox {
+        > div.z-listbox-body {
+            @if $default-reference-editor__list-body-loading--bg-color {
+                background-color: $default-reference-editor__list-body-loading--bg-color;
+            }
+            background-image: url("images/icon_loading_indicator_default.gif");
+            background-position: $default-reference-editor__list-body-loading-icon--background-position;
+            background-repeat: no-repeat;
+
+            border-left: $default-reference-editor__box--border-width solid $editor-area__box--border-color;
+            border-right: $default-reference-editor__box--border-width solid $editor-area__box--border-color;
+            border-bottom: none;
+            box-sizing: border-box;
+            height: auto !important;
+
+            .z-listcell {
+                border-top: $default-reference-editor__box--border-width solid $default-reference-editor__list-tree-cell--border-color;
+                position: relative;
+                height: $default-multi-reference-editor__list-cell--height;
+                &.yw-ref-list-cell {
+                    padding: $default-multi-reference-editor__list-cell--padding;
+                    &:first-child {
+                        padding-left: $default-multi-reference-editor__list-cell--padding-x;
+                    }
+                }
+
+            }
+            .yw-last-column {
+                //needed for columns with remove-button & needs to be checked
+                    .z-listcell-content {
+                        padding-right: 25px;
+                        position: relative;
+                        overflow: visible;
+                        
+                        .ye-default-reference-editor-remove-button {
+                            right: -5px;
+                            height: 22px;
+                        }
+                    }
+            }
+            .z-listcell.ye-row-status {
+                padding: 0;
+            }
+        }
+        .z-listitem {
+            background-color: $editor-area__component--bg-color;
+
+            &:first-child > .z-listcell{
+                border-top-width: 0;
+            }
+        }
+        .z-listitem .z-listcell-content {
+            position: relative;
+            &:hover {
+                
+            }
+        }
+    }
+    tr.z-listitem-selected {
+        background-color: $editor-area__component--bg-color;
+        &:hover {
+            background-color: $default-reference-editor__list-item--hover-bg-color;
+        }
+        div.z-listcell-content {
+            color: inherit;
+        }
+    }
+    td.ye-row-status {
+        padding-left: 0;
+        
+        .z-listcell-content {
+            width: $default-multi-reference-editor__inline-row-status-content--width;
+            padding: 0;
+        }
+        &-edited {
+            border-left: $default-multi-reference-editor__inline-row-status--border-left-width solid $default-multi-reference-editor__inline-row-status-edited--border-color !important;
+        }
+        &-invalid {
+            border-left: $default-multi-reference-editor__inline-row-status--border-left-width solid $default-multi-reference-editor__inline-row-status-invalid--border-color !important;
+        }
+    }
+    .z-listcell{
+        &, &-content {
+            font-size: $default-multi-reference-editor__list-cell--font-size;
+            line-height: $default-multi-reference-editor__list-cell--line-height;
+        }
+    }
+    
+    .z-listitem {
+        .yw-ref-list-cell > .z-listcell-content {
+            display: inline;
+        }
+        > .z-listcell.ye-editable-property {
+            > .z-listcell-content {
+                position: relative;
+
+                input {
+                    box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.25) inset;
+                }
+                &:hover {
+                    color: $default-multi-reference-editor__list-cell-content--hover-color;
+
+                    &:after {
+                        content: "";
+                        position: absolute;
+                        
+                        width: $default-multi-reference-editor__list-cell-edit-icon--size;
+                        min-height: $default-multi-reference-editor__list-cell-edit-icon--size;
+                        height: 100%;
+                        bottom: 0;
+                        right: $default-multi-reference-editor__list-cell-edit-icon--right;
+                        background: transparent url('images/icon_edit-pencil.png') center no-repeat; 
+                        cursor: default;
+                    }
+                }
+            }
+        }
+        
+        > .z-listcell.ye-editable-property.ye-current-edit-state-inline-cell {
+            > .z-listcell-content {
+                .yw-listview-cell-label {
+                    display: none;
+                }
+                &:hover {
+                    &:after {
+                        /*
+                        border-bottom: 0 none;
+                        position: absolute;
+                        width: 100%;
+                        height: 1px;
+                        bottom: 4px;
+                        left: 0;
+                        content: "";
+                        */
+                        display: none;
+                    }
+                }
+            }
+        }
+        > .z-listcell.ye-cell-modified {
+            > .z-listcell-content {
+                font-style: italic;
+            }
+        }
+    }
+}
+
+.yw-editorarea-tabbox-tabpanels-tabpanel-groupbox-ed-editor {
+    .ye-current-edit-state-inline-cell {
+        .z-listcell-content {
+            .ye-com_hybris_cockpitng_editor_defaultdate {
+                max-width: $default-multi-reference-editor__list-cell-inline-date-editor--max-width;
+            }
+        }
+    }
+    .ye-default-reference-editor-selected-listbox .z-listbox-body{
+        td.ye-editable-property {
+            height: $editor-defaults__inline-box--height;
+        }
+    }
+}
+.yw-editorarea-tabbox-tabpanels-tabpanel-groupbox {
+    .z-groupbox-content {
+        >table.z-tablelayout {
+            width: 100%;
+            table-layout: fixed;
+        }
+    }
+}
+
+

@@ -1,0 +1,48 @@
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/cockpitng/cng/scss/cockpitng-globals.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/scss/backoffice-variables.scss'; 
+
+/*================================
+    Multi Layout Widget
+================================*/
+
+
+
+$multilayout__widget--bg-color: $grey__light--100;
+$multilayout__widget-layout--height: 100%;
+$multilayout__widget-hlayout--padding: 10px;
+$multilayout__widget-toolbarbutton--padding: 0;
+$multilayout__widget-toolbarbutton--border: none;
+$multilayout__widget-toolbarbutton-body--padding: 0;
+$multilayout__widget-toolbarbutton-body--border: none;
+$multilayout__widget-toolbarbutton-content--padding: 0;
+$multilayout__widget-toolbarbutton--bg-color: transparent;
+$multilayout__widget-button-layout--width: 17px;
+$multilayout__widget-button-layout--height: 17px;
+$multilayout__widget-admin-layout--height: 50%;
+$multilayout__widget-common-north--maxheight: 70%;
+
+$multilayout__widget-bg-image: (
+        first-default: url(images/icon_system_template_SLE-i.png),
+        first-active: url(images/icon_system_template_SLE.png),
+        first-hover: url(images/icon_system_template_SLE-h.png),
+        second-default: url(images/icon_system_template_SL_E-i.png),
+        second-active: url(images/icon_system_template_SL_E.png),
+        second-hover: url(images/icon_system_template_SL_E-h.png),
+        third-default: url(images/icon_system_template_fullsize-i.png),
+        third-active: url(images/icon_system_template_fullsize.png),
+        third-hover: url(images/icon_system_template_fullsize-h.png)
+);
+
+@mixin multilayout-bg-image ($level: first) {
+  .yw-#{$level}Layout {
+    background-image: map-get($multilayout__widget-bg-image, #{$level}-default);
+
+    &:hover {
+      background-image: map-get($multilayout__widget-bg-image, #{$level}-hover);
+    }
+
+    &.yw-active-true {
+      background-image: map-get($multilayout__widget-bg-image, #{$level}-active);
+    }
+  }
+};

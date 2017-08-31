@@ -1,0 +1,34 @@
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/cockpitng/cng/scss/cockpitng-globals.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/scss/backoffice-variables.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/backoffice/scss/backoffice-variables.scss'; 
+
+@import "support/_explorerTree-mixins.scss";/*================================
+    Explorer Tree Filter
+================================*/
+// Modifications on z-Tree filter section
+
+// Status:
+// - all necessary changes added
+
+
+
+.yw-explorerTree {
+
+  &-filterDiv {
+    background: none;
+    padding: $explorertree__tree-filter-div--padding;
+
+    input.yw-filter-textbox {
+      @include _filter-textbox-colors ($explorertree__tree-filter-input--color,
+              $explorertree__tree-filter-input--border-color,
+              $explorertree__tree-filter-input--bg-color,
+              $explorertree__tree-filter-input-focus--color,
+              $explorertree__tree-filter-input-focus--border-color,
+              $explorertree__tree-filter-input-focus--bg-color);
+    }
+  }
+
+  &-hideTextBoxDiv {
+    float: right;
+  }
+}

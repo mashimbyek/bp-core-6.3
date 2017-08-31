@@ -1,0 +1,49 @@
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/cockpitng/cng/scss/cockpitng-globals.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/scss/backoffice-variables.scss'; 
+
+
+
+button.y-icon-remove {
+    &.z-button {
+        min-height: 16px;
+        width: 16px;
+        padding: 0px;
+        height: 16px;
+        background: url("images/icon_circle_delete_sprite_16.png") no-repeat 0 0 transparent;
+    }
+
+    &:hover {
+        background-position: 0 -48px;
+        background-color: transparent !important;
+    }
+
+    &:active {
+        background-position: 0 -32px;
+        background-color: transparent !important;
+    }
+
+    &:disabled {
+        background-position: 0 -64px;
+        background-color: transparent !important;
+    }
+}
+
+.yw-boostviewer-rules-property,
+.yw-boostviewer-rules-operator,
+.yw-boostviewer-rules-name,
+.yw-boostviewer-rules-boost,
+.yw-boostviewer-rules-remove {
+}
+
+.yw-boostviewer-rules-boost div.z-listcell-content {
+    color: $blue__default;
+    font-weight: $font-weight-bold;
+}
+
+.yw-boostviewer-description {
+    padding: 10px;
+}
+
+.yw-boostviewer-content {
+    overflow: hidden;
+}

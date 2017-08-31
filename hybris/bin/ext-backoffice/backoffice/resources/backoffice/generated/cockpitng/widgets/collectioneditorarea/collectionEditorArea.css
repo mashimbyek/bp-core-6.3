@@ -1,0 +1,33 @@
+/*================================
+    Collection Editor Area (General)
+================================*/
+.yw-preview-next,
+.yw-preview-previous {
+  opacity: 0.8;
+  background: #ddd;
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  top: 50%;
+  margin-top: -15px;
+  cursor: pointer;
+  z-index: 500; }
+
+.yw-preview-previous {
+  left: 0; }
+
+.yw-preview-next {
+  right: 0; }
+
+.yw-collection-preview-cnt.yw-single-reference > div.z-hlayout-inner {
+  width: 100%;
+  padding-right: 0 !important; }
+
+.yw-collection-preview-cnt.yw-multi-reference > div.z-hlayout-inner:nth-child(1) {
+  width: 700px;
+  float: left;
+  padding-right: 0 !important; }
+
+.yw-collection-preview-cnt.yw-multi-reference > div.z-hlayout-inner:nth-child(2) {
+  width: 246px;
+  float: right; }

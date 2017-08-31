@@ -1,0 +1,117 @@
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/cockpitng/cng/scss/cockpitng-globals.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/scss/backoffice-variables.scss'; 
+
+
+
+//    Variables
+// ================================
+
+// Input-Field Definitions
+$editor-area__input-field--border-radius: 0;
+$editor-area__input-field--border-width: $boxes--border__thin;
+$editor-area__input-field--font-size: $font-size__base;
+$editor-area__input-field--line-height: $font-size__medium;
+$editor-area__input-field--text-indent: 10px;
+$editor-area__label-field--margin-bottom: 10px;
+$editor-area__input-field--color: $grey__dark--700;
+
+$editor-area__box--height: $editor-defaults__inline-box--height;
+$editor-area__box--text-color: $black;
+$editor-area__box--focus-color: $blue__default; //$grey__default--600;
+$editor-area__box--icon-color: $blue__dark--600;
+$editor-area__box--border-color: $grey__default--900;
+$editor-area__box-disabled--border-color: $editor-area__box--border-color;
+
+$editor-area__component--bg-color: $white;
+
+$editor-area__toolbar-spacer--height: 10px;
+$editor-area__toolbar--margin: 10px;
+
+$editor-area__container-default--padding-x: $container-spacing-default__base;
+
+// Tab-Defintions
+$editor-area__tablabel--font-size: $font-size__small;
+
+$editor-area__tabpanel--padding-bottom: $container-spacing-default__half;
+
+$editor-area__tabpanel-attribute-cell--padding-bottom: $container-spacing-default__half;
+$editor-area__tabpanel-tabs-container--padding: 0 $editor-area__container-default--padding-x $container-spacing-default__half;
+
+
+$editor-area__tabpanel-groupbox--padding: 0 $editor-area__container-default--padding-x; //$container-spacing-default__half;
+
+$editor-area__tabpanel-groupbox-header-caption--padding-right: $container-spacing-default__half;
+$editor-area__tabpanel-groupbox-header-caption--color: $black__blueish--100;
+$editor-area__tabpanel-groupbox-header-caption--font-size: $font-size__medium;
+$editor-area__tabpanel-groupbox-header-caption--line-height: $font-size__base;
+$editor-area__tabpanel-groupbox-header-caption--hover-bg-color: false;
+$editor-area__tabpanel-groupbox-header-caption--min-height: 28px;
+$editor-area__tabpanel-groupbox-header-caption--space-top: 20px;
+$editor-area__tabpanel-groupbox-header-caption--space-bottom: 20px;
+$editor-area__tabpanel-groupbox-header-caption--padding: $editor-area__tabpanel-groupbox-header-caption--space-top 0 $editor-area__tabpanel-groupbox-header-caption--space-bottom;
+$editor-area__tabpanel-groupbox-header-caption--text-align: left;
+$editor-area__tabpanel-groupbox-header-caption--hover-color: $blue__default;
+$editor-area__tabpanel-groupbox-header-caption--font-weight: bold;
+$editor-area__tabpanel-groupbox-header-collapse-icon--size: 16px;
+
+$editor-area__tabpanel-groupbox-body--padding: $container-spacing-default__third 0 $container-spacing-default__half;
+
+$editor-area__tabpanel-groupbox-hbox-separator--width: 3em; //used for inline-separation e.g. boolena-editor
+$editor-area__tabpanel-groupbox-fluid-hbox--padding-left: 120px;
+
+$editor-area__tabpanel-groupbox-view-mode-combobox--max-width: 150px;
+
+$editor-area__header-title-caption--color: $blue__default--600;
+$editor-area__header-title-caption--font-size: $font-size__base;
+$editor-area__header-title-caption--padding: 5px $editor-area__container-default--padding-x;
+
+$editor-area__tabpanel-delimit-horizontal--border-width: 1px;
+$editor-area__tabpanel-delimit-horizontal--border-color: $grey__default--300; //#B2B9C5
+
+$editor-area__tabpanel-essentials-header-caption--font-weight: bold;
+$editor-area__tabpanel-essentials-header-caption--padding-top: 7px;
+$editor-area__tabpanel-essentials-delimit-horizontal--border-width: 1px;// 2px;
+
+
+$editor-area__defautl-content-empty--font-size: $font-size__base;
+$editor-area__defautl-content-empty--font-style: italic;
+$editor-area__defautl-content-empty--color: $grey__default--900;
+$editor-area__defautl-content-empty--padding: 4px 8px;
+
+$editor-area__window-highlighted-tabpanel--width: 300px;
+
+$editor-area__tabbox-split-section-static-section--width: 30%;
+$editor-area__tabbox-split-section-tabpanels--width: 70%;
+$editor-area__tabbox-split-section--bg-color: $editor-area__component--bg-color;
+
+$editor-area__tabbox-split-tabs--height: 29px;
+$editor-area__tabbox-split-tabs-content--top: $editor-area__tabbox-split-tabs--height;
+
+//Validation Colors
+$validation__error--color: $orange__default--300; 
+$validation__error--bg-color: $red__light--100;
+$validation__warn--color: $orange__default; 
+$validation__warn--bg-color: $yellow__default--500;
+$validation__info--color: $blue__default; 
+$validation__info--bg-color: $blue__light--100;
+
+
+
+//added but seemed unused (or overridden) - supposly refector wiht riquirements for reference-editors (o.e)
+// _panel
+	$editor-area__tabpanel-groupbox-ed--padding-right: 5px;
+$editor-area__tabpanel-groupbox-ed--padding-bottom: $editor-area__tabpanel-attribute-cell--padding-bottom;//$editor-area__tabpanel--padding-bottom;
+
+$editor-area__tabpanel-description-text--line-height: $font-size__medium;
+$editor-area__tabpanel-description-text--font-size: $font-size__base;
+	$editor-area__tabpanel-groupbox-desc-label--padding: 0 0 $container-spacing-default__base;
+//	$editor-area__tabpanel-groupbox-desc-label--color: $blue__default; //original #0486e0
+
+	$editor-area__tabpanel-groupbox-ref-editor-bandbox-button--top: 4px; 
+// _essential section
+	$editor-area__loceditor-caption-spacer-height: 20px;
+//
+
+// Fluid Mode
+	$editor-area__fluid-mode-default-container--max-width: 620px;
+	$editor-area__fluid-mode-default-element--padding-right: $container-spacing-default__half;

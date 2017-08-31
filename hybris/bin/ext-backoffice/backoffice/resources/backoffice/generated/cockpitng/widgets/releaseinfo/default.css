@@ -1,0 +1,71 @@
+.yw-cng-release-releaseinfo-titleContainer {
+  font-family: 'Roboto', Arial, sans-serif;
+  background-color: transparent; }
+
+.yw-cng-release-releaseinfo-teaserContainer .z-label {
+  color: #5F6674;
+  font-family: 'Roboto',Arial,sans-serif !important;
+  font-size: 13px;
+  font-weight: normal; }
+
+.yw-cng-release-releaseinfo-titleContainer span {
+  font-size: 25px;
+  font-weight: 200;
+  color: #085ABC; }
+
+.yw-cng-release-releaseinfo-titleContainer .yw-cngreleasecurrent {
+  background-color: transparent; }
+
+.yw-cng-release-releaseinfo-titleContainer .featureheader {
+  background-color: transparent; }
+
+.yw-cng-release-releaseinfo-titleContainer .featurelist {
+  background-color: transparent; }
+
+.yw-cng-release-releaseinfo-titleContainer .yw-cng-release-releaseinfo-v2,
+.yw-cng-release-releaseinfo-titleContainer .yw-cng-release-releaseinfo-v3 {
+  background-color: transparent; }
+
+.yw-cng-release-releaseinfo-titleContainer {
+  background-color: transparent; }
+
+.yw-cng-release-releaseinfo {
+  color: #162037;
+  font-size: 13px;
+  font-family: arial, san-serif;
+  overflow: auto;
+  background: #EBECEE; }
+
+.yw-cng-release-releaseinfo > div {
+  margin: 20px 0 0 40px; }
+
+div.yw-cng-release-releaseinfo-teaserContainer {
+  margin-right: 2em; }
+
+.yw-cng-release-releaseinfo .featureheader {
+  border-bottom: 1px solid #CCCCCC;
+  display: block;
+  font-family: 'Roboto',Arial,sans-serif !important;
+  font-size: 18px;
+  font-weight: 200;
+  margin: 50px 0 0;
+  padding-bottom: 5px; }
+
+.yw-cng-beta-releaseinfo ul {
+  list-style: none; }
+
+.yw-cng-release-releaseinfo ul li {
+  list-style: none;
+  padding-left: 1em; }
+
+.yw-cng-release-releaseinfo ul li.level2 {
+  margin-left: 1em;
+  list-style: disc outside none;
+  color: #5F6674; }
+
+.yw-cng-release-releaseinfo ul li.level1 {
+  margin-top: 3px;
+  font-weight: 200;
+  font-size: 15px;
+  margin-top: 20px;
+  margin-left: -1em; }

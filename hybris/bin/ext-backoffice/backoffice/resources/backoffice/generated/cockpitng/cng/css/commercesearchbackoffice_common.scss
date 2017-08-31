@@ -1,0 +1,22 @@
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/cockpitng/cng/scss/cockpitng-globals.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/scss/backoffice-variables.scss'; 
+
+.yw-collapsibleContainer--dark {
+	background: $black__blueish--200;
+
+	.z-north, .z-center, .z-south {
+		background: $black__blueish--200;
+	}
+	.z-north-header,
+	.z-center-header,
+	.z-south-header,
+	.yw-collapsed-down > .z-north-header,
+	.yw-collapsed-down > .z-center-header,
+	.yw-collapsed-down > .z-south-header {
+		background: $black__blueish--200;
+
+		.z-label {
+			color: $white;
+		}
+	}
+}

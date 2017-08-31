@@ -1,0 +1,49 @@
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/cockpitng/cng/scss/cockpitng-globals.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/scss/backoffice-variables.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/backoffice/scss/backoffice-variables.scss'; 
+
+@import "support/_refineby-variables.scss";/*================================
+    Refine By
+================================*/
+
+
+
+.yw-refineby {
+  height: 100%;
+  overflow: auto;
+  background: $refineby__default--bg-color;
+
+  .yw-main-container {
+    padding: 15px;
+    overflow: auto;
+  }
+
+  .yw-info-container {
+    font-style: italic;
+  }
+
+  .yw-facet-slot {
+    margin-bottom: 10px;
+  }
+
+  .yw-facet-name {
+    display: block;
+    font-weight: bold;
+    color: $white;
+    padding: 10px 0 5px;
+  }
+  .yw-facet-value{
+    margin-bottom: 4px;
+  }
+
+  .yw-toggle-facets {
+    display: block;
+    margin: 10px 0 20px;
+    color: $blue__default;
+    cursor: pointer;
+
+    &:hover {
+      color: $blue__default;
+    }
+  }
+}

@@ -1,0 +1,56 @@
+/*================================
+    Multi Layout Widget
+================================*/
+/*================================
+    Multi Layout Widget
+================================*/
+.yw-multilayoutwidget {
+  background-color: #d2dae4; }
+  .yw-multilayoutwidget .yw-firstLayout,
+  .yw-multilayoutwidget .yw-secondLayout {
+    height: 100%; }
+  .yw-multilayoutwidget .yw-hlayout {
+    padding: 10px; }
+    .yw-multilayoutwidget .yw-hlayout .z-toolbarbutton {
+      border: none;
+      padding: 0; }
+      .yw-multilayoutwidget .yw-hlayout .z-toolbarbutton:hover {
+        border: none;
+        padding: 0;
+        background-color: transparent; }
+    .yw-multilayoutwidget .yw-hlayout .z-toolbarbutton-body {
+      border: none;
+      padding: 0; }
+    .yw-multilayoutwidget .yw-hlayout .z-toolbarbutton-content {
+      padding: 0; }
+    .yw-multilayoutwidget .yw-hlayout .yw-firstLayout,
+    .yw-multilayoutwidget .yw-hlayout .yw-secondLayout,
+    .yw-multilayoutwidget .yw-hlayout .yw-thirdLayout {
+      width: 17px;
+      height: 17px;
+      background-repeat: no-repeat;
+      vertical-align: top; }
+    .yw-multilayoutwidget .yw-hlayout .yw-firstLayout {
+      background-image: url(images/icon_system_template_SLE-i.png); }
+      .yw-multilayoutwidget .yw-hlayout .yw-firstLayout:hover {
+        background-image: url(images/icon_system_template_SLE-h.png); }
+      .yw-multilayoutwidget .yw-hlayout .yw-firstLayout.yw-active-true {
+        background-image: url(images/icon_system_template_SLE.png); }
+    .yw-multilayoutwidget .yw-hlayout .yw-secondLayout {
+      background-image: url(images/icon_system_template_SL_E-i.png); }
+      .yw-multilayoutwidget .yw-hlayout .yw-secondLayout:hover {
+        background-image: url(images/icon_system_template_SL_E-h.png); }
+      .yw-multilayoutwidget .yw-hlayout .yw-secondLayout.yw-active-true {
+        background-image: url(images/icon_system_template_SL_E.png); }
+    .yw-multilayoutwidget .yw-hlayout .yw-thirdLayout {
+      background-image: url(images/icon_system_template_fullsize-i.png); }
+      .yw-multilayoutwidget .yw-hlayout .yw-thirdLayout:hover {
+        background-image: url(images/icon_system_template_fullsize-h.png); }
+      .yw-multilayoutwidget .yw-hlayout .yw-thirdLayout.yw-active-true {
+        background-image: url(images/icon_system_template_fullsize.png); }
+
+.yw-thirdLayout-vlayout-admin .z-vlayout-inner {
+  height: 50%; }
+
+.yw-multilayoutwidget-common-north {
+  max-height: 70%; }

@@ -1,0 +1,135 @@
+/*================================
+    Explorer Tree (Variables)
+================================*/
+/*================================
+    Explorer Tree (Mixins)
+================================*/
+/*================================
+    Explorer Tree
+================================*/
+.yw-explorerTree {
+  /*
+  .y-navigable-node {
+    span.z-vfiletree {
+      &-ico  {
+        background: url("images/icon_func_toggle_sprite.png") no-repeat $explorertree__item-toggle-icon-closed--bg-pos;
+      }
+
+      &-root-open,
+      &-tee-open,
+      &-last-open{
+        background-position: $explorertree__item-toggle-icon-open--bg-pos;
+      }
+    }
+
+    .z-treerow-selected & {
+      span.z-vfiletree{
+        &-ico {
+          background-position: $explorertree__item-toggle-icon-closed--bg-pos;
+        }
+        &-root-open,
+        &-tee-open,
+        &-last-open{
+          background-position: $explorertree__item-toggle-icon-open--bg-pos;
+        }
+      }
+    }
+  }
+  */
+  /* check / test if necessary */ }
+  .yw-explorerTree-widget .yw-explorerTree {
+    height: 100%;
+    background-color: #1e2830;
+    border: 0 none;
+    overflow-y: auto; }
+    .yw-explorerTree-widget .yw-explorerTree.z-vfiletree {
+      background: none;
+      overflow: auto; }
+    .yw-explorerTree-widget .yw-explorerTree .yw-treeCellInner .z-label {
+      display: block; }
+    .yw-explorerTree-widget .yw-explorerTree .z-treechildren .z-treecell-content {
+      display: table;
+      padding: 0 0 0 20px; }
+  .yw-explorerTree .z-treecell-content .yw-treeCellInner .z-label {
+    padding: 3px 0 0 15px;
+    word-wrap: break-word; }
+  .yw-explorerTree .z-vfiletree-icon {
+    display: table-cell;
+    color: #7f90a5; }
+  .yw-explorerTree .z-treerow {
+    background-color: #000000;
+    -webkit-transition: background-color .15s;
+    transition: background-color .15s; }
+    .yw-explorerTree .z-treerow .z-treecell {
+      padding-top: 7px;
+      padding-bottom: 8px;
+      padding-right: 0;
+      border: none;
+      background: transparent; }
+    .yw-explorerTree .z-treerow:hover > .z-treecell {
+      background-color: transparent; }
+  .yw-explorerTree .z-treerow > .z-treecell .z-treecell-content, .yw-explorerTree .z-treerow > .z-treecell .z-vfiletree-icon {
+    color: #ffffff; }
+  .yw-explorerTree .z-treerow:hover > .z-treecell .z-treecell-content, .yw-explorerTree .z-treerow:hover > .z-treecell .z-vfiletree-icon {
+    color: #a6b3c4; }
+  .yw-explorerTree .yw-highlighted > .z-treecell .z-treecell-content, .yw-explorerTree .yw-highlighted > .z-treecell .z-vfiletree-icon {
+    color: #0486e0; }
+  .yw-explorerTree .yw-selected > .z-treecell .z-treecell-content, .yw-explorerTree .yw-selected > .z-treecell .z-vfiletree-icon {
+    color: #0486e0; }
+  .yw-explorerTree .yw-selected:hover > .z-treecell .z-treecell-content, .yw-explorerTree .yw-selected:hover > .z-treecell .z-vfiletree-icon {
+    color: #0486e0; }
+  .yw-explorerTree .z-treerow-focus > .z-treecell .z-treecell-content, .yw-explorerTree .z-treerow-focus > .z-treecell .z-vfiletree-icon {
+    color: #31b9ff; }
+  .yw-explorerTree .z-treerow-focus:hover > .z-treecell .z-treecell-content, .yw-explorerTree .z-treerow-focus:hover > .z-treecell .z-vfiletree-icon {
+    color: #31b9ff; }
+  .yw-explorerTree .y-tree-icon {
+    float: left;
+    height: 16px;
+    left: -8px;
+    margin-right: 13px;
+    margin-top: 6px;
+    min-height: 16px;
+    position: absolute;
+    width: 16px; }
+  .yw-explorerTree .z-treerow:hover [class^="y-tree-icon"] {
+    background-position: 0 -16px; }
+  .yw-explorerTree .yw-selected [class^="y-tree-icon"],
+  .yw-explorerTree .yw-selected:hover [class^="y-tree-icon"] {
+    background-position: 0 -32px; }
+  .yw-explorerTree .z-treerow-focus [class^="y-tree-icon"],
+  .yw-explorerTree .z-treerow-focus:hover [class^="y-tree-icon"] {
+    background-position: 0 -48px; }
+  .yw-explorerTree .yw-navigationNode-level1 {
+    background-color: transparent; }
+  .yw-explorerTree .yw-navigationNode-level2 {
+    background: #151c22; }
+  .yw-explorerTree .yw-navigationNode-level3 {
+    background: #0f1419; }
+  .yw-explorerTree .z-vfiletree-spacer {
+    width: 10px;
+    min-width: 10px;
+    display: table-cell; }
+  .yw-explorerTree .z-vfiletree-body {
+    width: 100% !important;
+    background: none; }
+    .yw-explorerTree .z-vfiletree-body > table {
+      border-spacing: 0; }
+  .yw-explorerTree span.z-vfiletree-tee, .yw-explorerTree span.z-vfiletree-last {
+    background-image: none; }
+  .yw-explorerTree .yw-treeCellInner {
+    display: inline-table;
+    position: relative; }
+
+span.z-vfiletree-ico,
+span.z-vfiletree-firstspacer {
+  background: none; }
+
+.yw-no-permission-label {
+  opacity: 0.3;
+  cursor: not-allowed !important; }
+  .yw-no-permission-label > td {
+    cursor: not-allowed; }
+
+.yw-navigationNode-cannot-access {
+  opacity: 0.5;
+  font-style: italic; }

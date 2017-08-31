@@ -1,0 +1,135 @@
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/cockpitng/cng/scss/cockpitng-globals.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/scss/backoffice-variables.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/backoffice/scss/backoffice-variables.scss'; 
+
+@import "_systembar-variables.scss";/*================================
+    Systembar Mixins
+================================*/
+// Relevant Mixins applied to:
+// - Systembar (General)
+// - Quick Locale Toggle Popup
+// - User Role Chooser Popup
+// - Perspective Chooser Popup
+
+
+
+//should maybe be added as .yw-systemBarPopup (adding that styleclass to yw-roleChooser-popup & yw-quickToggleLocale)
+//to define the standard look of systembar-triggered Popups
+@mixin _default_systembar_popup () {
+    border: none;
+
+    .z-popup-content {
+        padding: $systembar-popup__content--padding; //TODO: styling padding 0 for popup add to global file
+        // this definition is due to the mockup, where no separate styling for a title-label is defined (only the plain
+        //list appears on it)
+        > .z-label, > .z-div > .z-label {
+            display: none !important;
+        }
+    }
+
+    .z-popup-cl{
+        border-top: none;
+    }
+
+    .z-listbox{
+        border: none;
+    }
+
+    //could be relevant to do in _cockpit-listbox.scss directly
+    .z-listitem {
+        background-color: $systembar-popup__item--bg-color;
+
+        &:hover {
+            background-color: $systembar-popup__item--bg-color;
+        }
+
+        .z-listcell {
+            padding: $systembar-popup__list-cell--padding;
+            border-top: $systembar-popup__list-cell--border-top;
+            border-bottom: $systembar-popup__list-cell--border-bottom;
+            background: none;
+            
+            &:hover {
+                background-color: $systembar-popup__item-hover--bg-color;
+            }
+
+            &-content {
+                padding: $systembar-popup__list-cell-content--padding;
+            }
+        }
+
+        .z-listcell-content,
+        .z-listcell-content .z-label,
+        &:hover .z-listcell-content {
+            @include _systembar_fonts ();
+        }
+
+        &.z-listitem-selected {
+            background-color: $systembar-popup__item--bg-color;
+
+            &:hover {
+                background-color: $systembar-popup__item--bg-color;
+            }
+
+            .z-listcell {
+                background-color: $systembar-popup__item-selected--bg-color;
+
+                &:hover {
+                    background-color: $systembar-popup__item-hover--bg-color;
+                }
+            }
+        }
+
+        @include _systembar_check ();
+    }
+}
+
+// systembar and popup menu checks styling
+// TODO: styling for checks add to global styling file
+@mixin _systembar_check (){
+    .z-listcell {
+        .z-listitem-checkable .z-listitem-icon.z-icon-check {
+            display: inline-block;
+            position: relative;
+            vertical-align: middle;
+            top: $systembar-popup__icon-check--top;
+            padding-top: $systembar-popup__icon-check--padding-top;
+            margin-top: $systembar-popup__icon-check--margin-top;
+            @include _systembar_fonts ($systembar-popup__icon-uncheck--color,
+                    $systembar__default--font-weight,
+                    $font-size__medium,
+                    $font-family-fontawesome);
+        }
+    }
+
+    &.z-listitem-selected .z-listcell {
+        .z-listitem-checkable .z-listitem-icon.z-icon-check {
+            color: $systembar-popup__icon-check--color;
+        }
+    }
+}
+
+// TODO: styling fonts add to global styling file
+//default systembar and popup menu font properties mixin
+@mixin _systembar_fonts (
+    $mixin--font-color: $systembar__default--font-color,
+    $mixin--font-weight: $systembar__default--font-weight,
+    $mixin--font-size: $systembar__default--font-size,
+    $mixin--font-family: $systembar__default--font-family ) {
+    color: $mixin--font-color;
+    font-weight: $mixin--font-weight;
+    font-size: $mixin--font-size;
+    font-family: $mixin--font-family;
+}
+
+@mixin _systembar_vertical_centering ($width: false, $height: false) {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    @if ($width) {
+        margin-left: -($width/2);
+    }
+    @if ($height) {
+        margin-top: -($height/2);
+    }
+}

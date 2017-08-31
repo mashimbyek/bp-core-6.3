@@ -1,0 +1,25 @@
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/cockpitng/cng/scss/cockpitng-globals.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/scss/backoffice-variables.scss'; 
+
+
+
+
+
+$categorytree__default--bg-color: $black__blueish--200;
+$categorytree__default--color: $white;
+$categorytree__default-hover--color: $blue__greyish--200;
+
+$categorytree__row--padding-xy: 8px 0;
+$categorytree__cell--padding-xy: 5px 0;
+
+$categorytree__row-l1--bg-color: transparent;
+$categorytree__row-l2--bg-color: $black__blueish--100;
+$categorytree__row-l3--bg-color: darken($black__blueish--100, 3%);
+$categorytree__row-l4--bg-color: darken($black__blueish--100, 6%);
+$categorytree__row-l5--bg-color: darken($black__blueish--100, 9%);
+$categorytree__row-l6--bg-color: darken($black__blueish--100, 12%);
+
+$categorytree__treerow-hover--bg-color: transparent;
+$categorytree__treerow-hover--color: $categorytree__default-hover--color;
+$categorytree__treerow-selected--bg-color: transparent;
+$categorytree__treerow-selected--color: $blue__default;

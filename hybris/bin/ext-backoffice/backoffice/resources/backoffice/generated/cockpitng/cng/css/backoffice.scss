@@ -1,0 +1,89 @@
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/cockpitng/cng/scss/cockpitng-globals.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/scss/backoffice-variables.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/backoffice/scss/backoffice-variables.scss'; 
+
+@import url('cockpit.css');/*Import the default css-es */
+
+
+
+$backoffice--warning-button--font-size: $font-size__medium !important;
+$backoffice--warning-button--color: $white !important;
+$backoffice--warning-button--height: 30px;
+$backoffice--warning-button--line-height: 25px;
+$backoffice--warning-button--padding: 0 $container-spacing-default__half;
+
+$backoffice--media-info-container--width: 332px;
+$backoffice--preview-placeholder--width: 300px;
+$backoffice--desc-tooltip--max-width: $backoffice--preview-placeholder--width;
+
+$backoffice--collection-preview-container--bg-color: $grey__light--800;
+$backoffice--collection-preview-list-body--bg-color: $grey__light--1200;
+
+$backoffice--collection-preview-image--border: $boxes--border__thin solid $grey__default--800;
+$backoffice--collection-preview-image--border-radius: $boxes--border__thin;
+
+$backoffice--cng-scripting-action--padding: 6px;
+
+button.z-button.y-btn-warning {
+    background-color: $validation__error--color;
+    border: medium none;
+    border-radius: 0;
+    color: $backoffice--warning-button--color;
+    cursor: pointer;
+    font-size: $backoffice--warning-button--font-size;
+    font-style: normal !important;
+    font-weight: 100 !important;
+    height: $backoffice--warning-button--height;
+    line-height: $backoffice--warning-button--line-height;
+    margin-left: 0;
+    padding: $backoffice--warning-button--padding;
+}
+
+.mediaInfoHeader {
+    font-weight: bold;
+}
+
+.mediaInfoCnt {
+    float: left;
+    width: $backoffice--media-info-container--width;
+}
+
+.previewPlaceholder {
+    width: $backoffice--preview-placeholder--width;
+    display: inline-block;
+    text-align: center;
+}
+
+.small-image-preview-cnt img {
+    display: block;
+    height: auto;
+    max-width: 100%;
+    z-index: 2000;
+    border: $backoffice--collection-preview-image--border;
+    border-radius: $backoffice--collection-preview-image--border-radius;
+}
+
+.yw-collection-preview{
+    &-cnt {
+        background: $backoffice--collection-preview-container--bg-color;
+    }
+    > div{
+        &.z-listbox-body {
+            background: $backoffice--collection-preview-list-body--bg-color;
+        }
+        &.z-listbox {
+            border: none;
+        }
+        &.z-listboxdiv .z-listbox-body .z-listitem {
+            background: none;
+        }
+    }
+}
+
+.ya-com_hybris_cockpitng_actions_scriptingaction {
+    padding: $backoffice--cng-scripting-action--padding;
+}
+
+.yw-desc-tooltip {
+    max-width: $backoffice--desc-tooltip--max-width;
+}

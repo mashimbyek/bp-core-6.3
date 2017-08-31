@@ -1,0 +1,50 @@
+/*================================
+    Refine By
+================================*/
+/*================================
+    Refine By
+================================*/
+.yw-refineby {
+  height: 100%;
+  overflow: auto;
+  background: #1e2830; }
+  .yw-refineby .yw-main-container {
+    padding: 15px;
+    overflow: auto; }
+  .yw-refineby .yw-info-container {
+    font-style: italic; }
+  .yw-refineby .yw-facet-slot {
+    margin-bottom: 10px; }
+  .yw-refineby .yw-facet-name {
+    display: block;
+    font-weight: bold;
+    color: #ffffff;
+    padding: 10px 0 5px; }
+  .yw-refineby .yw-facet-value {
+    margin-bottom: 4px; }
+  .yw-refineby .yw-toggle-facets {
+    display: block;
+    margin: 10px 0 20px;
+    color: #0486e0;
+    cursor: pointer; }
+    .yw-refineby .yw-toggle-facets:hover {
+      color: #0486e0; }
+
+/*================================
+    Refine By
+================================*/
+/*================================
+    Refine By
+================================*/
+.yw-refineby .z-checkbox {
+  display: block;
+  padding-left: 23px; }
+  .yw-refineby .z-checkbox label {
+    vertical-align: middle;
+    color: #fff; }
+    .yw-refineby .z-checkbox label:before {
+      width: 16px;
+      height: 16px;
+      margin-top: -8px; }
+  .yw-refineby .z-checkbox input:checked + label:before {
+    background-size: 16px; }

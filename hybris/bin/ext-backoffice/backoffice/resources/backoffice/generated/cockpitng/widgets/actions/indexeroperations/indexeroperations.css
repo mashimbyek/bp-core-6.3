@@ -1,0 +1,14 @@
+.ya-de_hybris_platform_solrfacetsearchbackoffice_action_indexeroperations:hover {
+  background: #ffffff none repeat scroll 0 0;
+  color: #0486e0;
+  -webkit-transition: background-color 0.3s ease 0s;
+  transition: background-color 0.3s ease 0s; }
+
+.ya-de_hybris_platform_solrfacetsearchbackoffice_action_indexeroperations .z-hbox-separator {
+  display: none; }
+
+.ya-de_hybris_platform_solrfacetsearchbackoffice_action_indexeroperations .cng-action-text {
+  padding-right: 5px;
+  padding-top: 3px;
+  padding-bottom: 0;
+  line-height: 24px; }

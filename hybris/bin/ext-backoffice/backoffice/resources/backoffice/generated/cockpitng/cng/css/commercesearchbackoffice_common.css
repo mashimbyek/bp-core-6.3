@@ -1,0 +1,18 @@
+.yw-collapsibleContainer--dark {
+  background: #1e2830; }
+  .yw-collapsibleContainer--dark .z-north, .yw-collapsibleContainer--dark .z-center, .yw-collapsibleContainer--dark .z-south {
+    background: #1e2830; }
+  .yw-collapsibleContainer--dark .z-north-header,
+  .yw-collapsibleContainer--dark .z-center-header,
+  .yw-collapsibleContainer--dark .z-south-header,
+  .yw-collapsibleContainer--dark .yw-collapsed-down > .z-north-header,
+  .yw-collapsibleContainer--dark .yw-collapsed-down > .z-center-header,
+  .yw-collapsibleContainer--dark .yw-collapsed-down > .z-south-header {
+    background: #1e2830; }
+    .yw-collapsibleContainer--dark .z-north-header .z-label,
+    .yw-collapsibleContainer--dark .z-center-header .z-label,
+    .yw-collapsibleContainer--dark .z-south-header .z-label,
+    .yw-collapsibleContainer--dark .yw-collapsed-down > .z-north-header .z-label,
+    .yw-collapsibleContainer--dark .yw-collapsed-down > .z-center-header .z-label,
+    .yw-collapsibleContainer--dark .yw-collapsed-down > .z-south-header .z-label {
+      color: #ffffff; }

@@ -1,0 +1,121 @@
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/cockpitng/cng/scss/cockpitng-globals.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/scss/backoffice-variables.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/backoffice/scss/backoffice-variables.scss'; 
+
+@import "scss/support/_quicklist-variables.scss";/*================================
+    Quick List Widget Styles
+================================*/
+// Basic style defintions of Quick List Widget
+
+
+.yw-quicklist {
+    height: $quicklist__widget--height;
+    color: $quicklist__widget--color;
+    background: $quicklist__widget--bg-color;
+
+    .yw-main-container {
+        height: $quicklist__widget--height;
+        overflow: $quicklist__widget--overflow;
+        padding: $quicklist__widget--padding;
+    }
+
+    .yw-info-container {
+        text-align: $quickList__info-container--text-align;
+        font-weight: $quickList__info-container--font-weight;
+        padding: $quicklist__info-container--padding;
+    }
+
+    &-tile {
+        line-height: $quickList__tile--line-height;
+        padding: $quickList__tile--padding;
+        border-bottom: $quickList__tile--border;
+
+        &:after {
+            content: "";
+            display: block;
+            clear: both;
+        }
+    }
+
+    &-hyperlink {
+        &:hover {
+            text-decoration: $quickList__hyperlink--text-decoration;
+            cursor: $quickList__hyperlink--cursor;
+            color: $quickList__hyperlink--color;
+        }
+    }
+
+    &-tile-title {
+        @extend .yw-quicklist-hyperlink;
+        max-height: $quickList__tile-title--max-height;
+        font-weight: $quickList__tile-title--font-weight;
+        margin-bottom: $quickList__tile-title--margin-bottom;
+    }
+
+    &-tile-thumbnail {
+        max-width: $quickList__tile-thumbnail--max-width;
+        vertical-align: $quickList__tile-thumbnail--vertical-align;
+        display: $quickList__tile-thumbnail--display;
+    }
+
+    &-tile-subtitle-container {
+        max-width: $quickList__tile-subtitle-container--max-width;
+        vertical-align: $quickList__tile-subtitle-container--vertical-align;
+        padding-left: $quickList__tile-subtitle-container--padding-left;
+        display: $quickList__tile-subtitle-container--display;
+    }
+
+    &-tile-subtitle {
+        max-height: $quickList__tile-subtitle--max-height;
+        font-size: $quickList__tile-subtitle--font-size;
+    }
+
+    &-tile-title,
+    &-tile-subtitle {
+        display: $quickList__tile-title--display;
+        display: $quickList__tile-title--display-webkit;
+        overflow: $quickList__tile-title--overflow;
+        text-overflow: $quickList__tile-title--text-overflow;
+        word-wrap: $quickList__tile-title--word-wrap;
+        -webkit-line-clamp: $quickList__tile-title--webkit-line-clamp;
+        -webkit-box-orient: $quickList__tile-title--webkit-box-orient;
+    }
+
+    .ye-delete-btn {
+        width: 32$quickList__remove-btn--width;
+        height: $quickList__remove-btn--height;
+        min-height: $quickList__remove-btn--min-height;
+        color: $quickList__remove-btn--color;
+        background-color: $quickList__remove-btn--background-color;
+        float: $quickList__remove-btn--float;
+
+        &:hover {
+            background-color: $quickList__remove-btn-hover--background-color;
+            color: $quickList__remove-btn-hover--color;
+        }
+    }
+}
+
+//btn class not used
+.ye-quicklist-remove-btn {
+    width: 32px;
+    height: 32px;
+    min-height: 32px;
+    background-image: url("icons/icon_remove.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 28px 28px;
+    background-color: transparent;
+    float: right;
+
+    &:hover,
+    &:active,
+    &:focus {
+        background-image: url("icons/icon_remove.png");
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 28px 28px;
+        background-color: transparent;
+        border-bottom: 1px solid $blue__default;
+    }
+}

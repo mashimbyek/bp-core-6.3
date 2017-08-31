@@ -1,0 +1,35 @@
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/cockpitng/cng/scss/cockpitng-globals.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/scss/backoffice-variables.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/backoffice/scss/backoffice-variables.scss'; 
+
+@import "support/_catalogSelector-variables.scss";/*================================
+    Catalog Selector Menu Button
+================================*/
+// Relevant Changes applied to the Locale-Toggle Popup and RoleChooser Popup
+
+// Status:
+// - ...
+
+
+
+.yw-catalog-selector {
+  button.z-button {
+    width: $catalogSelector__button--width;
+    height: $catalogSelector__button--height;
+    max-width: $catalogSelector__button--max-width;
+    min-height: $catalogSelector__button--min-height;
+    font-size: $catalogSelector__button--font-size;
+    font-family: $catalogSelector__button--font-family;
+    color: $catalogSelector__button--font-color;
+    background: none;
+    border-left: $catalogSelector__button--border;
+    border-right: $catalogSelector__button--border;
+    padding: $catalogSelector__button--padding;
+    text-overflow: ellipsis;
+    overflow: hidden;
+
+    &:hover, &:focus, &:active {
+      background-color: $catalogSelector__button-hover--bg-color;
+    }
+  }
+}

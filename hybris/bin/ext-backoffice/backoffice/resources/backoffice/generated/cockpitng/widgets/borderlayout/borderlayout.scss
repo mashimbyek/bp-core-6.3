@@ -1,0 +1,16 @@
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/cockpitng/cng/scss/cockpitng-globals.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/scss/backoffice-variables.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/backoffice/scss/backoffice-variables.scss'; 
+
+
+
+$border-layout__region--bg-color: $blue__dark--100;
+$border-layout__region--box-shadow: false;
+
+.yw-borderlayout .opaquetrue .yw-layoutregion {
+	background: $border-layout__region--bg-color;
+	
+	@if $border-layout__region--box-shadow {
+		box-shadow: $border-layout__region--box-shadow;
+	}
+}

@@ -1,0 +1,154 @@
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/cockpitng/cng/scss/cockpitng-globals.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/scss/backoffice-variables.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/backoffice/scss/backoffice-variables.scss'; 
+
+@import "support/_catalogSelector-variables.scss";/*================================
+    Catalog Selector Popup
+================================*/
+// Relevant Changes applied to the Locale-Toggle Popup and RoleChooser Popup
+
+// Status:
+// - ...
+
+
+
+.yw-catalog-selector-popup {
+  max-width: 20%;
+  border: none;
+  border-radius: 0;
+  overflow: auto;
+
+  .z-popup-content {
+    padding: 0;
+  }
+
+  .z-tree {
+    border: none;
+  }
+
+  .z-treerow {
+    display: block;
+    padding: 17px 20px;
+    border-top: $catalogSelector__popup--border;
+
+    &:hover {
+      .z-treecell-text {
+        color: $catalogSelector__popup--item-hover--color;
+      }
+    }
+
+    .z-treecell {
+      background: none;
+
+      .z-treecell-content {
+        padding: 0;
+        color: $catalogSelector__popup--font-color;
+        line-height: normal;
+        position: static;
+
+        .z-treecell-text {
+          display: inline-block;
+          font-size: $catalogSelector__popup--font-size;
+          font-family: $catalogSelector__popup--font-family;
+        }
+
+        .z-tree-icon {
+          width: 15px;
+          height: 15px;
+          text-align: left;
+        }
+
+        .z-tree-line {
+          height: auto;
+        }
+      }
+    }
+
+    &.z-treerow-selected {
+      .z-treecell-text {
+        color: $catalogSelector__popup--item-selected--color;
+      }
+
+      &:hover {
+        .z-treecell-text {
+          color: $catalogSelector__popup--item-hover--color;
+        }
+      }
+    }
+  }
+
+  .z-icon-caret-right,
+  .z-icon-caret-down {
+    width: 25px;
+    height: 15px;
+    vertical-align: middle;
+
+    &:before {
+      color: $catalogSelector__popup--item-caret--color;
+    }
+  }
+
+  .yw-treerow-catalog, .yw-treerow-catalogVersion, .yw-treerow-all {
+    .z-tree-line.z-tree-spacer {
+      display: none;
+    }
+  }
+
+  .yw-treerow-catalog + .yw-treerow-catalogVersion,
+  .yw-treerow-catalogVersion + .yw-treerow-catalogVersion {
+    border-top: none;
+    padding-top: 0px;
+  }
+
+  .yw-treerow-catalogVersion {
+    margin-left: 25px;
+
+    .z-treecell-text {
+      padding-left: 15px;
+    }
+  }
+
+  .yw-treerow-catalog {
+    &.z-treerow-selected {
+      .z-treecell-text {
+        padding-left: 15px;
+      }
+    }
+  }
+
+  .yw-treerow-catalog, .yw-treerow-catalogVersion {
+    &.z-treerow-selected {
+      .z-treecell-text {
+        &:before {
+          content: "\f00c";
+          font-family: FontAwesome;
+          color: $catalogSelector__popup--item-selected--color;
+          text-indent: -15px;
+          display: inline-block;
+        }
+      }
+    }
+  }
+
+  .z-treerow-checkable {
+    display: none;
+  }
+
+  .yw-treerow-all {
+    background-color: $catalogSelector__popup--catalog-all--bg-color;
+
+    .z-treecell-content .z-treecell-text {
+      padding-left: 15px;
+      background-image: url('images/icon_catalog_all_infinity.png');
+      background-position: left center;
+      background-repeat: no-repeat;
+      background-size: 14px 8px;
+    }
+
+    &.z-treerow-selected {
+      .z-treecell-content .z-treecell-text {
+        background-image: url('images/icon_catalog_all_infinity--active.png');
+      }
+    }
+  }
+}

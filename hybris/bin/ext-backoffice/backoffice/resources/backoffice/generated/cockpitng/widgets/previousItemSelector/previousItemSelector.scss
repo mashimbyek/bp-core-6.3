@@ -1,0 +1,30 @@
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/cockpitng/cng/scss/cockpitng-globals.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/scss/backoffice-variables.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/backoffice/scss/backoffice-variables.scss'; 
+
+@import "support/_previousItemSelector-variables.scss";/*================================
+    Previous Item selector Button
+================================*/
+// Styling of the Previous Item selector Button
+// Status:
+// - all ok
+
+
+
+button.z-button {
+    &.yw-previousItemSelector {
+        width: nth($previousItemSelector__button--size, 1);
+        height: nth($previousItemSelector__button--size, 2);
+        background: $previousItemSelector__button--bg;
+
+        &:hover {
+            background: $previousItemSelector__button-hover--bg;
+        }
+
+        &[disabled="disabled"],
+        &[disabled="disabled"]:hover {
+            background: $previousItemSelector__button-disabled--bg;
+            opacity: $previousItemSelector__button-disabled--opacity;
+        }
+    }
+}

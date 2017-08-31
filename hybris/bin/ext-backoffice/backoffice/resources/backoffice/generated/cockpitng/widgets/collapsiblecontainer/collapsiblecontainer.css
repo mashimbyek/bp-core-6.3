@@ -1,0 +1,184 @@
+/*================================
+    Collapsible-Container
+================================*/
+.yw-collapsibleContainer-caption > .z-center-header,
+.yw-collapsibleContainer-caption > .z-north-header,
+.yw-collapsibleContainer-caption > .z-south-header {
+  overflow: visible;
+  padding: 10px 30px;
+  min-height: 40px;
+  height: auto;
+  border: none;
+  background: none; }
+  .yw-collapsibleContainer-caption > .z-center-header .yw-collapsed-down .z-button.yw-expandCollapse,
+  .yw-collapsibleContainer-caption > .z-north-header .yw-collapsed-down .z-button.yw-expandCollapse,
+  .yw-collapsibleContainer-caption > .z-south-header .yw-collapsed-down .z-button.yw-expandCollapse {
+    background-position: -16px 0; }
+    .yw-collapsibleContainer-caption > .z-center-header .yw-collapsed-down .z-button.yw-expandCollapse:hover,
+    .yw-collapsibleContainer-caption > .z-north-header .yw-collapsed-down .z-button.yw-expandCollapse:hover,
+    .yw-collapsibleContainer-caption > .z-south-header .yw-collapsed-down .z-button.yw-expandCollapse:hover {
+      box-shadow: none; }
+    .yw-collapsibleContainer-caption > .z-center-header .yw-collapsed-down .z-button.yw-expandCollapse:hover, .yw-collapsibleContainer-caption > .z-center-header .yw-collapsed-down .z-button.yw-expandCollapse:active,
+    .yw-collapsibleContainer-caption > .z-north-header .yw-collapsed-down .z-button.yw-expandCollapse:hover,
+    .yw-collapsibleContainer-caption > .z-north-header .yw-collapsed-down .z-button.yw-expandCollapse:active,
+    .yw-collapsibleContainer-caption > .z-south-header .yw-collapsed-down .z-button.yw-expandCollapse:hover,
+    .yw-collapsibleContainer-caption > .z-south-header .yw-collapsed-down .z-button.yw-expandCollapse:active {
+      background-position: -16px -16px; }
+  .yw-collapsibleContainer-caption > .z-center-header > [class$=-caption],
+  .yw-collapsibleContainer-caption > .z-north-header > [class$=-caption],
+  .yw-collapsibleContainer-caption > .z-south-header > [class$=-caption] {
+    width: auto !important; }
+
+.yw-collapsibleContainer-caption > .z-south-header {
+  border-top: 5px solid #27394f;
+  background-color: #ffffff; }
+
+.yw-collapsibleContainer-caption > .z-caption-content {
+  overflow: hidden; }
+
+.yw-collapsibleContainer-caption.yw-collapsed-down > .z-center-header .yw-expandCollapse,
+.yw-collapsibleContainer-caption.yw-collapsed-down > .z-north-header .yw-expandCollapse {
+  background-position: -16px 0; }
+
+.yw-collapsibleContainer-caption.yw-collapsed-down > .z-center-header .yw-expandCollapse:hover,
+.yw-collapsibleContainer-caption.yw-collapsed-down > .z-north-header .yw-expandCollapse:hover {
+  background-position: -16px -48px; }
+
+.yw-collapsibleContainer-caption.yw-collapsed-down > .z-north-header {
+  background-color: #ffffff; }
+
+.yw-collapsibleContainer-caption .z-caption-content {
+  text-align: left; }
+
+.yw-collapsibleContainer-caption .z-north-capcnt,
+.yw-collapsibleContainer-caption .z-south-capcnt,
+.yw-collapsibleContainer-caption .z-west-capcnt,
+.yw-collapsibleContainer-caption .z-east-capcnt,
+.yw-collapsibleContainer-caption .z-center-capcnt {
+  height: auto;
+  min-height: 21px; }
+
+.yw-collapsibleContainer-container {
+  overflow: auto;
+  clear: both;
+  width: 100%;
+  height: 100%; }
+
+.yw-caption-container span.z-label {
+  color: #043263;
+  font-size: 16px;
+  float: left; }
+
+button.yw-expandCollapse,
+.z-window-highlighted button.yw-expandCollapse {
+  position: absolute;
+  top: 5px;
+  right: 0;
+  width: 16px;
+  height: 16px;
+  min-height: 16px;
+  padding: 0;
+  background-image: url("images/icon_func_colapse_sprite.png") !important;
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  background-color: transparent; }
+  button.yw-expandCollapse:focus, button.yw-expandCollapse:hover, button.yw-expandCollapse:active,
+  .z-window-highlighted button.yw-expandCollapse:focus,
+  .z-window-highlighted button.yw-expandCollapse:hover,
+  .z-window-highlighted button.yw-expandCollapse:active {
+    background-color: transparent;
+    color: inherit;
+    border-color: transparent;
+    box-shadow: none; }
+  button.yw-expandCollapse:hover, button.yw-expandCollapse:active,
+  .z-window-highlighted button.yw-expandCollapse:hover,
+  .z-window-highlighted button.yw-expandCollapse:active {
+    background-position: 0 -16px; }
+
+button.yw-collapsibleContainer-locked, button.yw-collapsibleContainer-unlocked {
+  position: absolute;
+  top: 5px;
+  right: 21px;
+  width: 16px;
+  height: 16px;
+  min-height: 16px;
+  padding: 0;
+  background: none;
+  background-color: transparent;
+  background-position: center;
+  background-repeat: no-repeat; }
+  button.yw-collapsibleContainer-locked:hover, button.yw-collapsibleContainer-locked:active, button.yw-collapsibleContainer-locked:focus, button.yw-collapsibleContainer-unlocked:hover, button.yw-collapsibleContainer-unlocked:active, button.yw-collapsibleContainer-unlocked:focus {
+    background-color: transparent;
+    box-shadow: none; }
+
+button.yw-collapsibleContainer-locked, button.yw-collapsibleContainer-locked:hover, button.yw-collapsibleContainer-locked:active {
+  background-image: url("images/icon_action_lock_colapse_active.png") !important; }
+
+button.yw-collapsibleContainer-unlocked, button.yw-collapsibleContainer-unlocked:hover, button.yw-collapsibleContainer-unlocked:active {
+  background-image: url("images/icon_action_lock_colapse_default.png") !important; }
+
+.yw-com_hybris_backoffice_perspectiveContainer .yw-collapsibleContainer-caption > .z-center-header .yw-caption-container,
+.yw-com_hybris_backoffice_perspectiveContainer .yw-collapsibleContainer-caption > .z-north-header .yw-caption-container,
+.yw-com_hybris_backoffice_perspectiveContainer .yw-collapsibleContainer-caption > .z-south-header .yw-caption-container {
+  position: relative; }
+  .yw-com_hybris_backoffice_perspectiveContainer .yw-collapsibleContainer-caption > .z-center-header .yw-caption-container button.yw-expandCollapse, .yw-com_hybris_backoffice_perspectiveContainer .yw-collapsibleContainer-caption > .z-center-header .yw-caption-container button.yw-collapsibleContainer-locked, .yw-com_hybris_backoffice_perspectiveContainer .yw-collapsibleContainer-caption > .z-center-header .yw-caption-container button.yw-collapsibleContainer-unlocked,
+  .yw-com_hybris_backoffice_perspectiveContainer .yw-collapsibleContainer-caption > .z-north-header .yw-caption-container button.yw-expandCollapse,
+  .yw-com_hybris_backoffice_perspectiveContainer .yw-collapsibleContainer-caption > .z-north-header .yw-caption-container button.yw-collapsibleContainer-locked,
+  .yw-com_hybris_backoffice_perspectiveContainer .yw-collapsibleContainer-caption > .z-north-header .yw-caption-container button.yw-collapsibleContainer-unlocked,
+  .yw-com_hybris_backoffice_perspectiveContainer .yw-collapsibleContainer-caption > .z-south-header .yw-caption-container button.yw-expandCollapse,
+  .yw-com_hybris_backoffice_perspectiveContainer .yw-collapsibleContainer-caption > .z-south-header .yw-caption-container button.yw-collapsibleContainer-locked,
+  .yw-com_hybris_backoffice_perspectiveContainer .yw-collapsibleContainer-caption > .z-south-header .yw-caption-container button.yw-collapsibleContainer-unlocked {
+    top: 50%;
+    margin-top: -8px; }
+
+button.yw-collapsibleContainer-locked:hover, button.yw-collapsibleContainer-locked:focus {
+  min-height: 16px;
+  background: url("images/icon_action_lock_colapse_active.png");
+  background-color: transparent;
+  box-shadow: none; }
+
+.yw-expandCollapse.z-button[disabled],
+.yw-expandCollapse.z-button[disabled]:hover,
+.yw-expandCollapse.z-button[disabled]:active {
+  opacity: 0.5;
+  background-color: transparent !important;
+  background-position: 0px -64px !important; }
+
+.yw-collapsed-down .yw-expandCollapse.z-button[disabled],
+.yw-collapsed-down .yw-expandCollapse.z-button[disabled]:hover,
+.yw-collapsed-down .yw-expandCollapse.z-button[disabled]:active {
+  opacity: 0.5;
+  background-color: transparent !important;
+  background-position: -16px -64px !important; }
+
+.yw-collapsibleContainer-caption > .z-north-header .yw-caption-container > .z-caption-content,
+.yw-collapsibleContainer-caption > .z-center-header .yw-caption-container > .z-caption-content {
+  margin-right: 37px; }
+  .yw-collapsibleContainer-caption > .z-north-header .yw-caption-container > .z-caption-content .yw-textsearch .yw-textsearch-searchbutton,
+  .yw-collapsibleContainer-caption > .z-center-header .yw-caption-container > .z-caption-content .yw-textsearch .yw-textsearch-searchbutton {
+    float: left; }
+  .yw-collapsibleContainer-caption > .z-north-header .yw-caption-container > .z-caption-content .yw-textsearch-searchbutton,
+  .yw-collapsibleContainer-caption > .z-center-header .yw-caption-container > .z-caption-content .yw-textsearch-searchbutton {
+    margin-left: -1px;
+    border-left-width: 1px !important;
+    display: inline-block; }
+  .yw-collapsibleContainer-caption > .z-north-header .yw-caption-container > .z-caption-content .yw-search-mode-container,
+  .yw-collapsibleContainer-caption > .z-center-header .yw-caption-container > .z-caption-content .yw-search-mode-container {
+    display: inline;
+    float: left;
+    white-space: normal; }
+  .yw-collapsibleContainer-caption > .z-north-header .yw-caption-container > .z-caption-content button.yw-toggle-advanced-search,
+  .yw-collapsibleContainer-caption > .z-center-header .yw-caption-container > .z-caption-content button.yw-toggle-advanced-search {
+    display: inline-block; }
+
+.yw-collapsibleContainer-caption > .z-north-header .yw-caption-container > .z-caption-content {
+  margin-right: 0; }
+  .yw-collapsibleContainer-caption > .z-north-header .yw-caption-container > .z-caption-content > button.yw-expandCollapse, .yw-collapsibleContainer-caption > .z-north-header .yw-caption-container > .z-caption-content > button.yw-collapsibleContainer-locked, .yw-collapsibleContainer-caption > .z-north-header .yw-caption-container > .z-caption-content > button.yw-collapsibleContainer-unlocked {
+    top: 20px; }
+
+.yw-collapsibleContainer-caption.yw-collapsed-down.z-north > .z-north-header .yw-caption-container > .z-caption-content {
+  margin-right: 37px; }
+  .yw-collapsibleContainer-caption.yw-collapsed-down.z-north > .z-north-header .yw-caption-container > .z-caption-content .yw-search-mode-container,
+  .yw-collapsibleContainer-caption.yw-collapsed-down.z-north > .z-north-header .yw-caption-container > .z-caption-content .yw-textsearch.yw-toggle-open {
+    height: 40px;
+    overflow: hidden; }

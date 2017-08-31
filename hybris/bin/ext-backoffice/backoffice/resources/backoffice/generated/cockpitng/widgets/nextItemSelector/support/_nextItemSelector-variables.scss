@@ -1,0 +1,36 @@
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/cockpitng/cng/scss/cockpitng-globals.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/scss/backoffice-variables.scss'; 
+
+/*================================
+    Next Item selector Button
+================================*/
+// Styling of the Next Item selector Button
+// Status:
+// - all ok
+
+
+
+$nextItemSelector__button--bg-color: (
+        default: transparent,
+        hover: $white,
+        disabled: transparent
+);
+$nextItemSelector__button--bg-image: (
+        default: url("icons/icon_action_next_default.png"),
+        hover: url("icons/icon_action_next_hover.png"),
+        disabled: url("icons/icon_action_next_disabled.png")
+);
+$nextItemSelector__button--bg:
+        map-get($nextItemSelector__button--bg-color, default)
+        map-get($nextItemSelector__button--bg-image, default)
+        no-repeat;
+$nextItemSelector__button-hover--bg:
+        map-get($nextItemSelector__button--bg-color, hover)
+        map-get($nextItemSelector__button--bg-image, hover)
+        no-repeat;
+$nextItemSelector__button-disabled--bg:
+        map-get($nextItemSelector__button--bg-color, disabled)
+        map-get($nextItemSelector__button--bg-image, disabled)
+        no-repeat;
+$nextItemSelector__button-disabled--opacity: 1;
+$nextItemSelector__button--size: 30px 28px;

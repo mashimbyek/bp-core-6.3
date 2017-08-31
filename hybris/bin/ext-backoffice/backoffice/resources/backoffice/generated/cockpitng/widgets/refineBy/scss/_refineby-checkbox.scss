@@ -1,0 +1,31 @@
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/cockpitng/cng/scss/cockpitng-globals.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/scss/backoffice-variables.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/backoffice/scss/backoffice-variables.scss'; 
+
+@import "support/_refineby-variables.scss";/*================================
+    Refine By
+================================*/
+
+
+
+.yw-refineby {
+  .z-checkbox {
+    display: block;
+    padding-left: 23px;
+
+    label {
+      vertical-align: middle;
+      color: #fff;
+
+      &:before {
+       width: 16px;
+        height: 16px;
+        margin-top: -8px;
+      }
+    }
+
+    input:checked + label:before {
+      background-size: 16px;
+    }
+  }
+}

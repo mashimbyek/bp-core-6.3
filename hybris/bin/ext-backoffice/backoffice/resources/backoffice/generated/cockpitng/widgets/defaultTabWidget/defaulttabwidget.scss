@@ -1,0 +1,34 @@
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/cockpitng/cng/scss/cockpitng-globals.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/scss/backoffice-variables.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/backoffice/scss/backoffice-variables.scss'; 
+
+
+
+.defaultTabWidget {
+    background-color: #ebecee !important;
+}
+
+.defaultTabWidget .z-tab div {
+    background: #d3d9df !important;
+}
+
+.defaultTabWidget .z-tab .z-tab-text {
+    color: #6f7c91 !important;
+    font-weight: normal !important;
+    line-height: 30px !important;
+    padding: 0 5px !important;
+    font-size: 14px;
+    font-family: 'Roboto', Arial, sans-serif !important;
+}
+
+.defaultTabWidget .z-tab.z-tab-selected div {
+    background: #ffffff !important;
+}
+
+.defaultTabWidget .z-tab.z-tab-selected .z-tab-text {
+    color: #085abc !important;
+}
+
+.defaultTabWidget > .widget_cnt > .z-tabbox > .z-tabs > .z-tabs-header > .z-tabs-content {
+    border-bottom: none;
+}

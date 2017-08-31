@@ -1,0 +1,103 @@
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/cockpitng/cng/scss/cockpitng-globals.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/scss/backoffice-variables.scss'; 
+@import 'C:/y6.3.0.2/hybris/bin/ext-backoffice/backoffice/resources/backoffice/generated/backoffice/scss/backoffice-variables.scss'; 
+
+@import "../support/_cockpit-mixins.scss";/*================================
+    z-Tree
+================================*/
+// Modifications on z-Tree components (and their contents)
+
+// Status:
+// - unchanged
+// - TODO: all
+
+
+
+.z-tree {
+    //overwrite zk styling
+    border: none;
+}
+
+.z-treecell-content, .z-treefooter-content {
+    font-size: $treecell-default__content--font-size;
+    line-height: $treecell-default__content--line-height;
+    color: $treecell-default__content--color;
+    padding: $treecell-default__content--padding;
+}
+
+.z-treecell-content {
+    display: table;
+}
+
+.z-tree-spacer,
+.z-tree-icon,
+.z-treecell-text {
+    display: table-cell;
+}
+
+.z-treecell-text {
+    word-break: break-all;
+}
+
+.z-tree-icon, .z-tree-line {
+    height: 100%;
+    min-height: $treecell-default__content--line-height;
+}
+
+.z-tree-spacer {
+    width: $treecell-default__tree-spacer--width;
+}
+
+// Type selector
+// ====================
+//
+
+.yw-typeSelectorTree,
+.ya-create-type-selector-popup {
+    max-width: $tree-popup__menu--max-width;
+
+    .z-treecell {
+        padding: $treecell-default__type-selector-cell--padding;
+        border-top: $treecell-default__cell--border;
+    }
+    .z-tree-icon {
+        color: $tree-default__icon--color;
+    }
+}
+
+
+
+// Abstract type selector
+// ====================
+//
+
+.ya-create-type-selector-abstracttype {
+    .z-treecell,
+    .z-treecell-content {
+        cursor: $createTypeSelector__abstracttype-cell--cursor;
+    }
+
+    .z-treecell-text {
+        font-style: $createTypeSelector__abstracttype-text--font-style;
+        color: $createTypeSelector__abstracttype-text--color;
+    }
+}
+
+.z-treerow:hover > .z-treecell {
+    //overwrite zk styling
+    background-color: $list-default__content--hover-bg-color;
+    border-color: $treecell-default__cell--border-color;
+
+    > .z-treecell-content {
+        //overwrite zk styling
+        color: $list-default__content--hover-color;
+    }
+}
+
+.z-treerow-selected > .z-treecell {
+    background-color: $blue__light;
+    > .z-treecell-content {
+        //overwrite zk styling
+        color: $list-default__content--selected-color;
+    }
+}

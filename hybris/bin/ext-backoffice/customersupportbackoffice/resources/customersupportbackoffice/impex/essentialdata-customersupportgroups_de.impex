@@ -1,0 +1,16 @@
+# ******************************This file is generated - please do not edit it. It will be regenerated after every build.********************************#
+
+# Language
+$lang=de
+
+UPDATE BackofficeRole;uid[unique=true];locname[lang=$lang]
+ ;customersupportadministratorrole;"Kundensupport - Administratorrolle"
+ ;customersupportagentrole;"Kundensupport - Kundenbetreuerrolle"
+ ;customersupportmanagerrole;"Kundensupport - Managerrolle"
+
+UPDATE UserGroup;uid[unique=true];locname[lang=$lang]
+ ;customersupportadministratorgroup;"Kundensupport - Administratorgruppe"
+
+UPDATE CsAgentGroup;uid[unique=true];locname[lang=$lang]
+ ;customersupportagentgroup;"Kundensupport - Kundenbetreuergruppe"
+ ;customersupportmanagergroup;"Kundensupport - Managergruppe"

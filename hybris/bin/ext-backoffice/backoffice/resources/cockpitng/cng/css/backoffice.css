@@ -1,0 +1,67 @@
+/*Import the default css-es */
+@import url('cockpit.css');
+
+button.z-button.y-btn-warning {
+    background-color: #ff3b30;
+    border: medium none;
+    border-radius: 0 0 0 0;
+    color: #FFFFFF !important;
+    cursor: pointer;
+    font-size: 16px !important;
+    font-style: normal !important;
+    font-weight: 100 !important;
+    height: 30px;
+    line-height: 25px;
+    margin-left: 0;
+    padding: 0 15px;
+}
+
+.mediaInfoHeader {
+    font-weight: bold;
+}
+
+.mediaInfoCnt {
+    float: left;
+    width: 332px;
+}
+
+.previewPlaceholder {
+    width: 300px;
+    display: inline-block;
+    text-align: center;
+}
+
+.small-image-preview-cnt img {
+    display: block;
+    height: auto;
+    max-width: 100%;
+    z-index: 2000;
+    border: 1px solid #b7b7b7;
+    border-radius: 1px;
+}
+
+.yw-collection-preview-cnt {
+    background: #d5d8dc;
+}
+
+.yw-collection-preview > div.z-listbox-body {
+    background: #f6f8fa;
+
+}
+
+.yw-collection-preview > div.z-listbox {
+    border: none;
+}
+
+.yw-collection-preview > div.z-listboxdiv .z-listbox-body .z-listitem {
+    background: none;
+}
+
+/* Aligment Fix for scripting action */
+.ya-com_hybris_cockpitng_actions_scriptingaction {
+    padding: 6px;
+}
+
+.yw-desc-tooltip {
+    max-width: 300px;
+}
