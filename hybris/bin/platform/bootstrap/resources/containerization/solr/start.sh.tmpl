@@ -1,0 +1,15 @@
+#! /bin/bash
+
+set -e
+
+MODE=${1:-cloud}
+CONF=${2:-default}
+ADDITIONAL_SOLR_OPTS=""
+
+if [ ${MODE} == "cloud" ]; then
+	${solr_dir}/server/scripts/cloud-scripts/zkcli.sh -cmd upconfig -confdir ${solr_dir}/server/solr/configsets/$conf/conf -confname $conf -z ${ZK_HOSTS}
+	${solr_dir}/server/scripts/cloud-scripts/zkcli.sh -zkhost ${ZK_HOSTS} -cmd putfile /solr.xml ${solr_dir}/server/solr/solr.xml
+	${solr_dir}/bin/solr -cloud -f -p ${port} -s ${NODE_DIR} -z ${ZK_HOSTS} -h ${SOLR_HOST} ${ADDITIONAL_SOLR_OPTS}
+else
+	${solr_dir}/bin/solr start -f -p ${port} ${ADDITIONAL_SOLR_OPTS}
+fi
