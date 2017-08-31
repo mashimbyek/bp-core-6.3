@@ -1,0 +1,51 @@
+{
+  "name": "yCommerceLibrary",
+  "version": "5.6",
+  "summary": "Hybris Mobile [y] Commerce Library that contains all SDK functionality for mobile commerce apps.",
+  "description": "Hybris Mobile [y] Commerce Library with all domain specific libraries that can be used to build mobile commerce apps.\nYou should reference this pod from your app and use the domain specific library interface (e.g. b2b) in your controllers.",
+  "homepage": "https://wiki.hybris.com/display/b2b/IOS+Architecture+-+5.5",
+  "license": "Commercial",
+  "authors": {
+    "Playmobile IOS Team Hybris": "yann.bouschet@hybris.com"
+  },
+  "source": {
+    "git": "https://stash.hybris.com/projects/MOBILE/repos/b2bios/browse/yCommerceLibrary",
+    "tag": "5.6"
+  },
+  "platforms": {
+    "ios": "7.1"
+  },
+  "requires_arc": true,
+  "source_files": "Pod/Classes/**/*.{h,m}",
+  "resource_bundles": {
+    "yCommerceLibrary": [
+      "Pod/Assets/*.png"
+    ]
+  },
+  "dependencies": {
+    "Mantle": [
+      "~>1.5.4"
+    ],
+    "CocoaLumberjack": [
+      "1.8.1"
+    ],
+    "AFNetworking": [
+      "2.5.1"
+    ],
+    "MyEnvironmentConfig": [
+
+    ],
+    "libextobjc": [
+      "0.4.1"
+    ],
+    "PromiseKit": [
+      "~>1.5"
+    ],
+    "PromiseKit-AFNetworking": [
+      "0.1.6"
+    ],
+    "OMGHTTPURLRQ": [
+      "2.1"
+    ]
+  }
+}

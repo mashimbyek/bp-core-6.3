@@ -1,0 +1,151 @@
+PODS:
+  - AFNetworking (2.5.1):
+    - AFNetworking/NSURLConnection (= 2.5.1)
+    - AFNetworking/NSURLSession (= 2.5.1)
+    - AFNetworking/Reachability (= 2.5.1)
+    - AFNetworking/Security (= 2.5.1)
+    - AFNetworking/Serialization (= 2.5.1)
+    - AFNetworking/UIKit (= 2.5.1)
+  - AFNetworking/NSURLConnection (2.5.1):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/NSURLSession (2.5.1):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/Reachability (2.5.1)
+  - AFNetworking/Security (2.5.1)
+  - AFNetworking/Serialization (2.5.1)
+  - AFNetworking/UIKit (2.5.1):
+    - AFNetworking/NSURLConnection
+    - AFNetworking/NSURLSession
+  - CocoaLumberjack (1.8.1):
+    - CocoaLumberjack/Extensions (= 1.8.1)
+  - CocoaLumberjack/Core (1.8.1)
+  - CocoaLumberjack/Extensions (1.8.1):
+    - CocoaLumberjack/Core
+  - Expecta (1.0.5)
+  - libextobjc (0.4.1):
+    - libextobjc/EXTADT (= 0.4.1)
+    - libextobjc/EXTConcreteProtocol (= 0.4.1)
+    - libextobjc/EXTKeyPathCoding (= 0.4.1)
+    - libextobjc/EXTNil (= 0.4.1)
+    - libextobjc/EXTSafeCategory (= 0.4.1)
+    - libextobjc/EXTScope (= 0.4.1)
+    - libextobjc/EXTSelectorChecking (= 0.4.1)
+    - libextobjc/EXTSynthesize (= 0.4.1)
+    - libextobjc/NSInvocation+EXT (= 0.4.1)
+    - libextobjc/NSMethodSignature+EXT (= 0.4.1)
+    - libextobjc/RuntimeExtensions (= 0.4.1)
+    - libextobjc/UmbrellaHeader (= 0.4.1)
+  - libextobjc/EXTADT (0.4.1):
+    - libextobjc/RuntimeExtensions
+  - libextobjc/EXTConcreteProtocol (0.4.1):
+    - libextobjc/RuntimeExtensions
+  - libextobjc/EXTKeyPathCoding (0.4.1):
+    - libextobjc/RuntimeExtensions
+  - libextobjc/EXTNil (0.4.1):
+    - libextobjc/RuntimeExtensions
+  - libextobjc/EXTSafeCategory (0.4.1):
+    - libextobjc/RuntimeExtensions
+  - libextobjc/EXTScope (0.4.1):
+    - libextobjc/RuntimeExtensions
+  - libextobjc/EXTSelectorChecking (0.4.1):
+    - libextobjc/RuntimeExtensions
+  - libextobjc/EXTSynthesize (0.4.1):
+    - libextobjc/RuntimeExtensions
+  - libextobjc/NSInvocation+EXT (0.4.1):
+    - libextobjc/RuntimeExtensions
+  - libextobjc/NSMethodSignature+EXT (0.4.1):
+    - libextobjc/RuntimeExtensions
+  - libextobjc/RuntimeExtensions (0.4.1)
+  - libextobjc/UmbrellaHeader (0.4.1)
+  - Mantle (1.5.6):
+    - Mantle/extobjc (= 1.5.6)
+  - Mantle/extobjc (1.5.6)
+  - MyEnvironmentConfig (1.0.0)
+  - OMGHTTPURLRQ (2.1):
+    - OMGHTTPURLRQ/RQ (= 2.1)
+  - OMGHTTPURLRQ/FormURLEncode (2.1)
+  - OMGHTTPURLRQ/RQ (2.1):
+    - OMGHTTPURLRQ/FormURLEncode
+    - OMGHTTPURLRQ/UserAgent
+  - OMGHTTPURLRQ/UserAgent (2.1)
+  - PromiseKit (1.6.0):
+    - PromiseKit/CALayer (= 1.6.0)
+    - PromiseKit/NSNotificationCenter (= 1.6.0)
+    - PromiseKit/NSURLConnection (= 1.6.0)
+    - PromiseKit/Pause (= 1.6.0)
+    - PromiseKit/UIActionSheet (= 1.6.0)
+    - PromiseKit/UIAlertView (= 1.6.0)
+    - PromiseKit/UIView (= 1.6.0)
+    - PromiseKit/UIViewController (= 1.6.0)
+    - PromiseKit/Until (= 1.6.0)
+    - PromiseKit/When (= 1.6.0)
+  - PromiseKit-AFNetworking (0.1.6):
+    - AFNetworking (~> 2.0)
+    - PromiseKit/Promise
+    - PromiseKit/When
+  - PromiseKit/CALayer (1.6.0):
+    - PromiseKit/Promise
+  - PromiseKit/NSNotificationCenter (1.6.0):
+    - PromiseKit/Promise
+  - PromiseKit/NSURLConnection (1.6.0):
+    - OMGHTTPURLRQ (~> 2.1)
+    - PromiseKit/Promise
+  - PromiseKit/Pause (1.6.0):
+    - PromiseKit/Promise
+  - PromiseKit/Promise (1.6.0)
+  - PromiseKit/UIActionSheet (1.6.0):
+    - PromiseKit/Promise
+  - PromiseKit/UIAlertView (1.6.0):
+    - PromiseKit/Promise
+  - PromiseKit/UIView (1.6.0):
+    - PromiseKit/Promise
+  - PromiseKit/UIViewController (1.6.0):
+    - PromiseKit/Promise
+  - PromiseKit/Until (1.6.0):
+    - PromiseKit/Promise
+    - PromiseKit/When
+  - PromiseKit/When (1.6.0):
+    - PromiseKit/Promise
+  - Specta (1.0.5)
+  - yCommerceLibrary (5.6):
+    - AFNetworking (= 2.5.1)
+    - CocoaLumberjack (= 1.8.1)
+    - libextobjc (= 0.4.1)
+    - Mantle (~> 1.5.4)
+    - MyEnvironmentConfig
+    - OMGHTTPURLRQ (= 2.1)
+    - PromiseKit (~> 1.5)
+    - PromiseKit-AFNetworking (= 0.1.6)
+
+DEPENDENCIES:
+  - AFNetworking (= 2.5.1)
+  - Expecta (~> 1.0)
+  - libextobjc (~> 0.4)
+  - OMGHTTPURLRQ (= 2.1)
+  - PromiseKit (~> 1.5)
+  - PromiseKit-AFNetworking (= 0.1.6)
+  - Specta (~> 1.0)
+  - yCommerceLibrary (from `../`)
+
+EXTERNAL SOURCES:
+  yCommerceLibrary:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  AFNetworking: 10e85a00bb0f475124e4ff2677bf15693b2c1523
+  CocoaLumberjack: 944738b29d757439ed513db94d7e5cd74f90b849
+  Expecta: e1c022fcd33910b6be89c291d2775b3fe27a89fe
+  libextobjc: a650fc1bf489a3d3a9bc2e621efa3e1006fc5471
+  Mantle: a197db93e0f1e36194b1fdbc078219a8492eaef2
+  MyEnvironmentConfig: db8aafd6c178d3ac5f17f06a6e10ea0dba2fdc4a
+  OMGHTTPURLRQ: f8c515dfd2f57a5d74c710978f600231f52afec5
+  PromiseKit: 6be651503d4af22830b5313be993c5a0ef77bf77
+  PromiseKit-AFNetworking: fbdd97205d6a78bb94d96d0d56311d1733569aae
+  Specta: ac94d110b865115fe60ff2c6d7281053c6f8e8a2
+  yCommerceLibrary: 1917ceab226b517d9e9a57b7ee87f662ae124856
+
+COCOAPODS: 0.39.0
