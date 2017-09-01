@@ -1,0 +1,44 @@
+# -----------------------------------------------------------------------
+# [y] hybris Platform
+#
+# Copyright (c) 2017 SAP SE or an SAP affiliate company.  All rights reserved.
+#
+# This software is the confidential and proprietary information of SAP
+# ("Confidential Information"). You shall not disclose such Confidential
+# Information and shall use it only in accordance with the terms of the
+# license agreement you entered into with SAP.
+# -----------------------------------------------------------------------
+
+
+INSERT_UPDATE DroolsRule;code[unique=true];uuid;rulePackage;active[default=false];maxAllowedRuns;globals;ruleType(code)[default=DEFAULT];currentVersion[default=false];
+;01agendafilter-limitexecutionsrule.drl;01agendafilter-limitexecutionsrule;de.hybris.platform.droolsruleengineservices.test;false;5;ruleOrderPercentageDiscountAction->ruleOrderPercentageDiscountAction;
+
+# load the drl content into the rules
+UPDATE DroolsRule;code[unique=true];ruleContent;active[default=false];currentVersion[default=false];
+;01agendafilter-limitexecutionsrule.drl;"package de.hybris.platform.droolsruleengineservices.test
+import java.math.*;
+import de.hybris.platform.ruleengineservices.rao.*;
+import de.hybris.platform.ruleengineservices.rrd.*;
+import java.util.Map;
+import de.hybris.platform.droolsruleengineservices.compiler.impl.DefaultDroolsRuleActionContext;
+
+global de.hybris.platform.ruleengineservices.rule.evaluation.RuleExecutableAction ruleOrderPercentageDiscountAction;
+
+rule ""01agendafilter-limitexecutionsrule""
+@ruleCode(""01agendafilter-limitexecutionsrule.drl"")
+dialect ""mvel"" 
+
+    when
+        $config : RuleConfigurationRRD(ruleCode == ""01agendafilter-limitexecutionsrule.drl"")
+    	$cart : CartRAO()
+		$result : RuleEngineResultRAO()
+    then
+        Map variables = [
+      		""de.hybris.platform.ruleengineservices.rao.CartRAO"" : $cart,
+      		""de.hybris.platform.ruleengineservices.rao.RuleEngineResultRAO"" : $result
+   		];
+		ruleOrderPercentageDiscountAction.executeAction(new DefaultDroolsRuleActionContext(variables, kcontext), [""value"":[""USD"":new BigDecimal(0)]]);
+end
+";true;true;
+INSERT_UPDATE DroolsKIEBase;name[unique=true];kieModule(name)[unique=true];rules(code)[mode=append];
+;rules-base-junit;rules-module-junit;01agendafilter-limitexecutionsrule.drl

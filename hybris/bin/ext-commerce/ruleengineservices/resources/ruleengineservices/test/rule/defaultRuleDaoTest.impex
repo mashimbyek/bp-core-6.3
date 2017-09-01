@@ -1,0 +1,28 @@
+# -----------------------------------------------------------------------
+# [y] hybris Platform
+#
+# Copyright (c) 2017 SAP SE or an SAP affiliate company.  All rights reserved.
+#
+# This software is the confidential and proprietary information of SAP
+# ("Confidential Information"). You shall not disclose such Confidential
+# Information and shall use it only in accordance with the terms of the
+# license agreement you entered into with SAP.
+# -----------------------------------------------------------------------
+
+$lang=en
+
+INSERT_UPDATE SourceRule;code[unique=true];name[lang=en];description[lang=en];priority;startDate[default=01-01-2000,dateformat=dd-MM-yyyy];endDate[default=01-01-2099,dateformat=dd-MM-yyyy];
+;rule1;rule1;description1;1;
+;rule2;rule2;description2;1;
+;rule3;rule3;description3;1;
+;rule4;rule4;description4;1;01-01-2000;01-01-2001;
+;rule5;rule5;description5;1;01-01-2098;01-01-2099;
+
+INSERT_UPDATE SourceRule;code[unique=true];name[lang=en];description[lang=en];priority;
+;rule6;rule6;description6;1;
+
+INSERT_UPDATE SourceRule;code[unique=true];startDate[dateformat=yyyy-MM-dd];endDate[dateformat=yyyy-MM-dd]
+;rule3;2015-11-01;2015-11-01
+
+INSERT_UPDATE RuleToEngineRuleTypeMapping;ruleType(code)[unique=true];engineRuleType(code)
+;SourceRule;DEFAULT

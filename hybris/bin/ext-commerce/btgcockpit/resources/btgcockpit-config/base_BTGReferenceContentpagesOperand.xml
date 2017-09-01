@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ [y] hybris Platform
+
+ Copyright (c) 2017 SAP SE or an SAP affiliate company.  All rights reserved.
+
+ This software is the confidential and proprietary information of SAP
+ ("Confidential Information"). You shall not disclose such Confidential
+ Information and shall use it only in accordance with the terms of the
+ license agreement you entered into with SAP.
+-->
+<base>
+	<search>
+		<search-properties>
+			<property qualifier="BTGReferenceContentpagesOperand.code"/>
+		</search-properties>
+		<sort-properties>
+			<property qualifier="BTGReferenceContentpagesOperand.code"/>
+		</sort-properties>
+	</search>
+	<label spring-bean="btgReferenceContentpagesOperandLabelProvider"/>
+	<default-property-settings>	
+		<property qualifier="BTGReferenceContentpagesOperand.contentpages" baseProperty="true">
+			<parameter>
+				<name>allowCreate</name>
+				<value>false</value>
+			</parameter>
+			<parameter>
+				<name>allowActivate</name>
+				<value>false</value>
+			</parameter>
+			<parameter>
+				<name>displaySubtypes</name>
+				<value>false</value>
+			</parameter>			
+		</property>
+	</default-property-settings>	
+</base>

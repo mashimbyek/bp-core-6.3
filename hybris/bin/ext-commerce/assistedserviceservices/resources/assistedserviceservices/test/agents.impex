@@ -1,0 +1,19 @@
+$defaultPassword=12341234
+
+INSERT_UPDATE UserGroup;uid[unique=true];locname[lang=en];
+;salesemployeegroup;Sales Employee;
+;salesapprovergroup;Sales Approver;
+;customergroup;Customer;
+;orgemployeegroup;Organization Employee Group;
+
+INSERT_UPDATE PrincipalGroupRelation;source(uid)[unique=true];target(uid)[unique=true]
+;salesapprovergroup;salesemployeegroup;
+;orgemployeegroup;employeegroup;
+
+INSERT_UPDATE Employee;name;groups(uid);password[default=$defaultPassword];uid[unique=true]
+;Sales employee;salesemployeegroup,orgemployeegroup;;salesemployee@nakano.com
+;Sales approver;salesapprovergroup,orgemployeegroup;;salesapprover@ichikawa.com
+;Assisted Service Agent;;;asagent;
+
+INSERT_UPDATE Customer;uid[unique=true];name;groups(uid)
+;customer@ichikawa.com;Test Quote Buyer;customergroup

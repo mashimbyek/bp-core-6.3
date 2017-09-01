@@ -1,0 +1,119 @@
+# -----------------------------------------------------------------------
+# [y] hybris Platform
+#
+# Copyright (c) 2017 SAP SE or an SAP affiliate company.  All rights reserved.
+#
+# This software is the confidential and proprietary information of SAP
+# ("Confidential Information"). You shall not disclose such Confidential
+# Information and shall use it only in accordance with the terms of the
+# license agreement you entered into with SAP.
+# -----------------------------------------------------------------------
+
+$lang=en
+
+INSERT_UPDATE PromotionGroup;identifier[unique=true]
+;website1
+
+INSERT_UPDATE PromotionSourceRule;code[unique=true];name[lang=en];description[lang=en];priority;status(code);website(identifier);startDate[default=01-01-2000,dateformat=dd-MM-yyyy];endDate[default=01-01-2099,dateformat=dd-MM-yyyy];
+;rule1;rule1;description1;1;PUBLISHED;website1
+;rule2;rule2;description2;1;PUBLISHED;website1
+;rule3;rule3;description3;1;MODIFIED;website1
+;rule4;rule4;description4;1;ARCHIVED;website1
+;rule5;rule5;description5;1;MODIFIED;website1
+;rule6;rule6;Test findLastConditionIdForRule, rule with already existing combined categories in two conditions;1;PUBLISHED;website1
+;rule7;rule7;Test findLastConditionIdForRule, rule without combined categories;1;PUBLISHED;website1
+;rule8;rule8;Test findAllExcludedCatForPromotionSourceRule and findAllExcludedProductForPromotionSourceRule, has excluded cat and prod;1;PUBLISHED;website1
+;rule9;rule9;Test findAllExcludedCatForPromotionSourceRule and findAllExcludedProductForPromotionSourceRule, no excluded cat and prod;1;PUBLISHED;website1
+#Rules for testsing findPromotions with combined categories and excluded products/categories
+;rule10;rule10;Rule has 2 conditions with combined categories and excluded product;1;PUBLISHED;website1
+;rule11;rule11;Rule has qualifying category condition with excluded products;1;PUBLISHED;website1 
+# rule for testing excludeFromStorefrontDisplay
+;rule12;rule12;Rule has qualifying category condition with excluded products and excluded categories;1;PUBLISHED;website1 
+
+INSERT_UPDATE PromotionSourceRule;code[unique=true];name[lang=en];description[lang=en];priority;status(code);website(identifier);startDate[dateformat=dd-MM-yyyy];endDate[dateformat=dd-MM-yyyy];
+;rule13;rule13;Valid until 2037 - published;1;PUBLISHED;website1;01-01-2016;31-12-2037
+;rule14;rule14;Outdated;1;PUBLISHED;website1;01-01-2015;31-12-2015
+;rule15;rule15;Valid until 2037 but archived;1;ARCHIVED;website1;01-01-2016;31-12-2037
+;rule16;rule16;Valid until 2037 - modified;1;MODIFIED;website1;01-01-2016;31-12-2037
+;rule17;rule17;Outdated;1;MODIFIED;website1;01-01-2015;31-12-2015
+;rule18;rule18;Unpublished;1;UNPUBLISHED;website1;01-01-2015;31-12-2037
+;rule19;rule19;Expired Rule having a condition with combined categories;1;PUBLISHED;website1;01-01-2015;31-12-2015
+
+INSERT_UPDATE RuleBasedPromotion;code[unique=true]
+;promotion1
+;promotion2
+;promotion3
+;promotion4
+;promotion5
+;promotion6
+;promotion7
+;promotion10
+;promotion11
+;promotion12
+
+INSERT_UPDATE RuleBasedPromotion;code[unique=true]
+;promotion13
+;promotion14
+;promotion15
+;promotion16
+;promotion17
+;promotion18
+;promotion19
+
+INSERT_UPDATE ProductForPromotionSourceRule;productCode[unique=true];rule(code)[unique=true];promotion(code)
+;111111;rule2;promotion2
+;111111;rule3;promotion3
+;111111;rule4;promotion4
+;222222;rule2;promotion2
+;333333;rule3;promotion3
+;555555;rule4;promotion4
+;13;rule13;promotion13
+;14;rule14;promotion14
+;15;rule15;promotion15
+;16;rule16;promotion16
+;17;rule17;promotion17
+;18;rule18;promotion18
+
+INSERT_UPDATE CatForPromotionSourceRule;categoryCode[unique=true];rule(code)[unique=true];promotion(code)
+;576;rule2;promotion2
+;576;rule3;promotion3
+;brand_5;rule2;promotion2
+;578;rule3;promotion3
+;123;rule5;promotion5
+#
+;cat11_1;rule11;promotion11
+;cat11_2;rule11;promotion11
+;cat12_1;rule12;promotion12
+;cat12_2;rule12;promotion12
+#
+;580;rule13;promotion13
+;581;rule14;promotion14
+;582;rule15;promotion15
+;583;rule16;promotion16
+;584;rule17;promotion17
+;585;rule18;promotion18
+
+INSERT_UPDATE CombinedCatsForRule;rule(code)[unique=true];conditionId[unique=true];categoryCode[unique=true];promotion(code)
+;rule6;1;cat1;promotion6
+;rule6;1;cat2;promotion6
+;rule6;2;cat3;promotion6
+;rule6;2;cat4;promotion6
+#
+;rule10;1;cat10_1;promotion10
+;rule10;1;cat10_2;promotion10
+;rule10;2;cat10_3;promotion10
+;rule10;2;cat10_4;promotion10
+;rule19;1;cat19_1;promotion19
+;rule19;1;cat19_2;promotion19
+
+INSERT_UPDATE ExcludedCatForRule;rule(code)[unique=true];categoryCode[unique=true]
+;rule8;cat1
+;rule8;cat2
+
+INSERT_UPDATE ExcludedProductForRule;rule(code)[unique=true];productCode[unique=true]
+;rule8;prod1
+;rule8;prod2
+#
+;rule10;exclProd10_1
+;rule10;exclProd10_2
+;rule11;exclProd11_1

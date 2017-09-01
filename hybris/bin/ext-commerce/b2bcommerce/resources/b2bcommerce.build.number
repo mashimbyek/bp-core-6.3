@@ -1,0 +1,9 @@
+#Ant properties
+#Tue Mar 14 16:31:53 CET 2017
+builddate=20170314 1626
+description=b2bcommerce
+name=b2bcommerce
+releasedate=20161216 2030
+vendor=hybris
+version=6.3.0.2
+version.api=6.3.0

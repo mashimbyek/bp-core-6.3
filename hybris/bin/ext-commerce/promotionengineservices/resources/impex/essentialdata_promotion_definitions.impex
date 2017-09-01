@@ -1,0 +1,53 @@
+# -----------------------------------------------------------------------
+# [y] hybris Platform
+#
+# Copyright (c) 2017 SAP SE or an SAP affiliate company.  All rights reserved.
+#
+# This software is the confidential and proprietary information of SAP
+# ("Confidential Information"). You shall not disclose such Confidential
+# Information and shall use it only in accordance with the terms of the
+# license agreement you entered into with SAP.
+# -----------------------------------------------------------------------
+
+$lang=en
+############################# CONDITON DEFINITION RULE TYPE MAPPINGS ##########################
+INSERT_UPDATE RuleConditionDefinitionRuleTypeMapping;definition(id)[unique=true];ruleType(code)[default=PromotionSourceRule][unique=true]
+;y_cart_total;
+;y_qualifying_products;
+;y_qualifying_categories;
+;y_target_customers;
+;y_product_price;
+;y_customer_support;
+
+############################# ACTION DEFINITION RULE TYPE MAPPINGS ##########################
+INSERT_UPDATE RuleActionDefinitionRuleTypeMapping;definition(id)[unique=true];ruleType(code)[default=PromotionSourceRule][unique=true]
+;y_order_percentage_discount;
+;y_order_fixed_discount;
+;y_order_entry_percentage_discount;
+;y_order_entry_fixed_discount;
+;y_order_entry_fixed_price;
+;y_target_bundle_price;
+;y_free_gift;
+;y_partner_order_entry_percentage_discount;
+;y_partner_order_entry_fixed_discount;
+;y_partner_order_entry_fixed_price;
+;y_change_delivery_mode;
+;y_trigger_message;
+;y_trigger_message_parameterized_cart_total_threshold;
+;y_trigger_message_parameterized_category;
+;y_trigger_message_parameterized_product;
+
+INSERT_UPDATE RuleToEngineRuleTypeMapping;ruleType(code)[unique=true];engineRuleType(code)[default=PROMOTION]
+;PromotionSourceRule;
+
+INSERT_UPDATE RuleActionDefinition;id[unique=true];name[lang=$lang];priority;breadcrumb[lang=$lang];translatorId;translatorParameters;categories(id)
+;y_trigger_message_parameterized_cart_total_threshold;Trigger rule message (cart total threshold);100;Display message for the rule depending on rule condition fulfillment;ruleExecutableActionTranslator;actionId->ruleTriggerMessageAction;general
+;y_trigger_message_parameterized_category;Trigger rule message (category);100;Display message for the rule depending on rule condition fulfillment;ruleExecutableActionTranslator;actionId->ruleTriggerMessageAction;general
+;y_trigger_message_parameterized_product;Trigger rule message (product);100;Display message for the rule depending on rule condition fulfillment;ruleExecutableActionTranslator;actionId->ruleTriggerMessageAction;general
+
+INSERT_UPDATE RuleActionDefinitionParameter;definition(id)[unique=true];id[unique=true];priority;name[lang=$lang];description[lang=$lang];type;value;required[default=true];validators
+;y_trigger_message_parameterized_cart_total_threshold;cart_total_threshold_parameter;100;Cart total threshold;Cart total threshold to control;Map(ItemType(Currency),java.math.BigDecimal);;false;rulePositiveNumberParameterValidator
+;y_trigger_message_parameterized_category;qualifying_categorizied_products_quantity;90;Quantity;Quantity of products required from qualifying category;java.lang.Integer;;false;rulePositiveNumberParameterValidator
+;y_trigger_message_parameterized_category;qualifying_category;100;Category;Qualifying category;ItemType(Category);;false;
+;y_trigger_message_parameterized_product;qualifying_products_quantity;90;Quantity;Quantity of required qualifying products;java.lang.Integer;;false;rulePositiveNumberParameterValidator
+;y_trigger_message_parameterized_product;qualifying_product;100;Product;Qualifying product;ItemType(Product);;false;

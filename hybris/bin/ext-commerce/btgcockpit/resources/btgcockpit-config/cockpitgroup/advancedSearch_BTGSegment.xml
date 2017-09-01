@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ [y] hybris Platform
+
+ Copyright (c) 2017 SAP SE or an SAP affiliate company.  All rights reserved.
+
+ This software is the confidential and proprietary information of SAP
+ ("Confidential Information"). You shall not disclose such Confidential
+ Information and shall use it only in accordance with the terms of the
+ license agreement you entered into with SAP.
+-->
+<advanced-search>
+
+	<group name="root" type="btgsegment">
+		<label key="config.general.searchfor" />
+
+		<group name="general">
+			<label key="cockpit.config.label.General" />
+			<property qualifier="btgsegment.name" sort-enabled="true" visible="true"/>
+			<property qualifier="btgsegment.uid" sort-enabled="true" visible="true"/>
+			<property qualifier="btgsegment.active" sort-enabled="false" visible="true"/>
+			<property qualifier="btgsegment.activefrom" sort-enabled="false" visible="false"/>
+			<property qualifier="btgsegment.activeto" sort-enabled="false" visible="false"/>
+			<property qualifier="btgsegment.rules" sort-enabled="false" visible="false"/>
+			<property qualifier="btgsegment.catalogversion" sort-enabled="false" visible="false"/>
+			<property qualifier="btgsegment.sites" sort-enabled="false" visible="false"/>
+		</group>
+
+		<group name="other">
+			<label key="cockpit.config.label.Other" />
+			<property qualifier="item.pk" sort-enabled="true" visible="false"/>
+		</group>
+	</group>
+	
+</advanced-search>

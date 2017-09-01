@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ [y] hybris Platform
+
+ Copyright (c) 2017 SAP SE or an SAP affiliate company.  All rights reserved.
+
+ This software is the confidential and proprietary information of SAP
+ ("Confidential Information"). You shall not disclose such Confidential
+ Information and shall use it only in accordance with the terms of the
+ license agreement you entered into with SAP.
+-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/aop
+           http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+	<bean class="de.hybris.platform.customerinterestsservices.setup.CustomerInterestSetup" parent="abstractCoreSystemSetup" />
+
+	<bean id="productInterestDao" class="de.hybris.platform.customerinterestsservices.productinterest.daos.impl.DefaultProductInterestDao">
+		<property name="pagedFlexibleSearchService" ref="pagedFlexibleSearchService"></property>
+	</bean>
+			
+	<bean id="productInterestService" class="de.hybris.platform.customerinterestsservices.productinterest.impl.DefaultProductInterestService">
+    	<property name="modelService" ref="modelService"></property>
+    	<property name="productInterestDao" ref="productInterestDao"></property>
+    	<property name="userService" ref="userService"></property>
+    	<property name="baseStoreService" ref="baseStoreService"></property>
+    	<property name="baseSiteService" ref="baseSiteService"/>
+    </bean>
+    
+    <bean id="expiredInterestsCleanUpJob" class="de.hybris.platform.customerinterestsservices.productinterest.cronjob.ExpiredInterestsCleanUpJob" parent="abstractJobPerformable">
+    	<property name="productInterestDao" ref="productInterestDao"></property>
+    </bean>
+</beans>

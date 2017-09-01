@@ -1,0 +1,17 @@
+# -----------------------------------------------------------------------
+# [y] hybris Platform
+#
+# Copyright (c) 2017 SAP SE or an SAP affiliate company.  All rights reserved.
+#
+# This software is the confidential and proprietary information of SAP
+# ("Confidential Information"). You shall not disclose such Confidential
+# Information and shall use it only in accordance with the terms of the
+# license agreement you entered into with SAP.
+# -----------------------------------------------------------------------
+
+# Old Result Cleanup CronJobs
+INSERT_UPDATE BTGResultCleaningCronJob;code[unique=true];job(code);resultMaxAge;resultScope(code);active;sessionLanguage(isoCode)[default=en]
+;btgResultCleaningCronJob;btgResultCleaningJob;86400;SESSION;false
+
+INSERT_UPDATE Trigger;cronJob(code)[unique=true];second;minute;hour;day;month;year;relative;active;maxAcceptableDelay
+;btgResultCleaningCronJob;0;30;3;-1;-1;-1;false;true;-1

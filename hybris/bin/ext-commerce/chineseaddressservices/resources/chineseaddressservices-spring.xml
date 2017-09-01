@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ [y] hybris Platform
+
+ Copyright (c) 2017 SAP SE or an SAP affiliate company.  All rights reserved.
+
+ This software is the confidential and proprietary information of SAP
+ ("Confidential Information"). You shall not disclose such Confidential
+ Information and shall use it only in accordance with the terms of the
+ license agreement you entered into with SAP.
+-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/aop
+           http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+	<bean id="chineseAddressDao" class="de.hybris.platform.addressservices.address.daos.impl.ChineseAddressDao" parent="addressDao" />
+
+	<bean id="chineseAddressService" class="de.hybris.platform.addressservices.address.impl.ChineseAddressService"
+		parent="addressService">
+		<property name="chineseAddressDao" ref="chineseAddressDao" />
+	</bean>
+
+	<bean id="chineseaddressservicesCoreDataImportedEventListener" parent="abstractCoreDataImportedEventListener">
+		<property name="supportedChannels">
+			<list value-type="de.hybris.platform.commerceservices.enums.SiteChannel">
+				<value>B2C</value>
+				<!-- <value>B2B</value> -->
+			</list>
+		</property>
+		<property name="addonExtensionMetadata">
+			<bean class="de.hybris.platform.addonsupport.data.AddonExtensionMetadata">
+				<property name="suffixChannel" value="false" />
+				<property name="baseExtensionName" value="chineseaddressservices" />
+			</bean>
+		</property>
+	</bean>
+	
+	<alias name="chinesePostcodeValidateStrategy" alias="postcodeValidateStrategy"/>
+	<bean id="chinesePostcodeValidateStrategy" class="de.hybris.platform.addressservices.strategies.impl.ChinesePostcodeValidateStrategy">
+		<property name="regex" value="${post.code.validate.regex}"/>
+	</bean>
+	
+	<!-- ************ name with title format ************ -->
+	<bean id="nameWithTitleFormatStrategy" class="de.hybris.platform.addressservices.strategies.impl.ChineseNameWithTitleFormatStrategy">
+		<property name="userService" ref="userService" />
+		<property name="commonI18NService" ref="commonI18NService" />
+	</bean>
+	
+	<bean class="de.hybris.platform.addressservices.setup.ChineseAddressServiceSystemSetup" parent="abstractCoreSystemSetup" />
+			
+</beans>

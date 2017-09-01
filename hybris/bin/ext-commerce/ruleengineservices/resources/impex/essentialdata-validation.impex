@@ -1,0 +1,16 @@
+# -----------------------------------------------------------------------
+# [y] hybris Platform
+#
+# Copyright (c) 2017 SAP SE or an SAP affiliate company.  All rights reserved.
+#
+# This software is the confidential and proprietary information of SAP
+# ("Confidential Information"). You shall not disclose such Confidential
+# Information and shall use it only in accordance with the terms of the
+# license agreement you entered into with SAP.
+# -----------------------------------------------------------------------
+
+insert_update NotNullConstraint;active[allownull=true];descriptor(enclosingType(code),qualifier);id[unique=true,allownull=true];message[lang=de];message[lang=en];qualifier;severity(code,itemtype(code));target;type(code)
+;true;SourceRule:code;sourceRuleCode;Code cannot be null or empty;Code cannot be null or empty;code;ERROR:Severity;de.hybris.platform.ruleengineservices.model.SourceRuleModel;SourceRule
+
+insert_update NotNullConstraint;active[allownull=true];descriptor(enclosingType(code),qualifier);id[unique=true,allownull=true];message[lang=de];message[lang=en];qualifier;severity(code,itemtype(code));target;type(code)
+;true;SourceRuleTemplate:code;sourceRuleTemplateCode;Code cannot be null or empty;Code cannot be null or empty;code;ERROR:Severity;de.hybris.platform.ruleengineservices.model.SourceRuleTemplateModel;SourceRuleTemplate

@@ -1,0 +1,17 @@
+# -----------------------------------------------------------------------
+# [y] hybris Platform
+#
+# Copyright (c) 2017 SAP SE or an SAP affiliate company.  All rights reserved.
+#
+# This software is the confidential and proprietary information of SAP
+# ("Confidential Information"). You shall not disclose such Confidential
+# Information and shall use it only in accordance with the terms of the
+# license agreement you entered into with SAP.
+# -----------------------------------------------------------------------
+
+$defaultCatalog=Default
+$defaultCatalogVersion=Staged
+$catalogVersion=catalogVersion(catalog(id[default='$defaultCatalog']),version[default='$defaultCatalogVersion'])[unique=true,default='$defaultCatalog:$defaultCatalogVersion']
+
+INSERT_UPDATE CompiledJasperMedia;code[unique=true];title[lang=en];reportDescription[lang=en];$catalogVersion;mime;realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true]
+;AuthAnonymReport;Known/Unknown users;Known/Unknown users;;text/xml;AuthAnonymReport.jrxml;jar:de.hybris.platform.btgcockpit.jalo.BtgcockpitManager&/reports/mysql/AuthAnonymReport.jrxml
